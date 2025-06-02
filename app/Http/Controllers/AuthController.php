@@ -39,12 +39,14 @@ class AuthController extends Controller
             }
 
             if (Auth::attempt(['user_id' => $user->user_id, 'password' => $credentials['password']])) {
+                $token = $user->createToken('api-token')->plainTextToken;
                 $request->session()->regenerate();
 
                 return response()->json([
                     'status' => true,
                     'message' => 'Login berhasil!',
                     'redirect' => $this->getRoute($user->role),
+                    'token' => $token,
                 ]);
             } else {
                 return response()->json([
@@ -52,7 +54,6 @@ class AuthController extends Controller
                     'message' => 'NIM/NIP atau password salah!',
                 ]);
             }
-
         } catch (Exception $e) {
             return response()->json([
                 'status' => false,
@@ -170,4 +171,3 @@ class AuthController extends Controller
         return redirect()->route('home');
     }
 }
-

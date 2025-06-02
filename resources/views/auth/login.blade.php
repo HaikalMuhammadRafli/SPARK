@@ -67,6 +67,9 @@
                         data: $(form).serialize(),
                         success: function(response) {
                             if (response.status) {
+                                if (response.token) {
+                                    localStorage.setItem('api_token', response.token);
+                                }
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Login Berhasil',
