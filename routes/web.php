@@ -60,6 +60,7 @@ Route::middleware(['auth'])->group(function () {
             // Route Periode 
             Route::prefix('periode')->name('periode.')->group(function () {
                 Route::get('/', [PeriodeController::class, 'index'])->name('index');
+                Route::get('/data', [PeriodeController::class, 'data'])->name('data');
                 Route::post('/list', [PeriodeController::class, 'list'])->name('list');
                 Route::get('/create', [PeriodeController::class, 'create'])->name('create');
                 Route::post('/', [PeriodeController::class, 'store'])->name('store');
