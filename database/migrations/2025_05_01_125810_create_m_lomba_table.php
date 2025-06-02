@@ -25,7 +25,9 @@ class CreateMLombaTable extends Migration
             $table->date('lomba_mulai_pelaksanaan');
             $table->date('lomba_selesai_pelaksanaan');
             $table->integer('lomba_ukuran_kelompok')->default(1);
+            $table->enum('lomba_status', ['buka', 'tutup', 'ditolak'])->default('tutup');
             $table->unsignedBigInteger('periode_id');
+            $table->timestamp('validated_at')->nullable();
             $table->timestamps();
 
             $table->foreign('periode_id')->references('periode_id')->on('m_periode');

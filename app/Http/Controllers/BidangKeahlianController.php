@@ -26,6 +26,26 @@ class BidangKeahlianController extends Controller
         ]);
     }
 
+    public function data()
+    {
+        $bidang_keahlians = BidangKeahlianModel::all();
+
+        return response()->json([
+            'status' => true,
+            'data' => $bidang_keahlians->map(function ($item, $index) {
+                return [
+                    'no' => $index + 1,
+                    'id' => $item->bidang_keahlian_id,
+                    'nama' => $item->bidang_keahlian_nama,
+                    'actions' => view('components.buttons.action', [
+                        'route_prefix' => 'admin.master.bidang-keahlian',
+                        'id' => $item->bidang_keahlian_id
+                    ])->render()
+                ];
+            })
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

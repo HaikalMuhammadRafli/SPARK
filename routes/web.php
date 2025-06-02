@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
         route::prefix('master')->name('master.')->group(function () {
             Route::prefix('bidang-keahlian')->name('bidang-keahlian.')->group(function () {
                 Route::get('/', [BidangKeahlianController::class, 'index'])->name('index');
+                Route::get('/data', [BidangKeahlianController::class, 'data'])->name('data');
                 Route::post('/list', [BidangKeahlianController::class, 'list'])->name('list');
                 Route::get('/create', [BidangKeahlianController::class, 'create'])->name('create');
                 Route::post('/', [BidangKeahlianController::class, 'store'])->name('store');

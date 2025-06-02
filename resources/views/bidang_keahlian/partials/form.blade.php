@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -46,7 +46,7 @@
                                 text: response.message
                             }).then(() => {
                                 disposeModal();
-                                location.reload();
+                                reloadDataTable();
                             });
                         } else {
                             $('.error-text, .invalid-feedback').text('');

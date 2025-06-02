@@ -66,7 +66,7 @@
                                 text: response.message
                             }).then(() => {
                                 disposeModal();
-                                location.reload();
+                                reloadDataTable();
                             });
                         } else {
                             disposeModal();
@@ -76,7 +76,7 @@
                                 text: response.message
                             }).then(() => {
                                 disposeModal();
-                                location.reload();
+                                reloadDataTable();
                             });
                         }
                     },

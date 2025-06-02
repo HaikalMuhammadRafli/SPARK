@@ -16,7 +16,7 @@ class LombaModel extends Model
         'lomba_nama',
         'lomba_kategori',
         'lomba_penyelenggara',
-        'lomba_lokasi',
+        'lomba_lokasi_preferensi',
         'lomba_tingkat',
         'lomba_persyaratan',
         'lomba_mulai_pendaftaran',
@@ -24,8 +24,10 @@ class LombaModel extends Model
         'lomba_link_registrasi',
         'lomba_mulai_pelaksanaan',
         'lomba_selesai_pelaksanaan',
+        'lomba_ukuran_kelompok',
         'periode_id',
-        'lomba_bidang_keahlian'
+        'lomba_status',
+        'validated_at',
     ];
 
     public function periode()
