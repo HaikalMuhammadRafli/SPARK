@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class ProgramStudiStoreRequest extends FormRequest
 {
@@ -24,7 +25,20 @@ class ProgramStudiStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'program_studi_nama' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('m_program_studi', 'program_studi_nama'),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'program_studi_nama.required' => 'Nama program studi wajib diisi.',
+            'program_studi_nama.unique' => 'Nama program studi sudah digunakan.',
         ];
     }
 
