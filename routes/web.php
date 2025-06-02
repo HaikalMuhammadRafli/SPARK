@@ -9,7 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MahasiswaController;
-
+use App\Http\Controllers\PeriodeController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
@@ -53,6 +53,19 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}', [BidangKeahlianController::class, 'update'])->name('update');
                 Route::get('/{id}/delete', [BidangKeahlianController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [BidangKeahlianController::class, 'destroy'])->name('destroy');
+            });
+
+            // Route Periode 
+            Route::prefix('periode')->name('periode.')->group(function () {
+                Route::get('/', [PeriodeController::class, 'index'])->name('index');
+                Route::post('/list', [PeriodeController::class, 'list'])->name('list');
+                Route::get('/create', [PeriodeController::class, 'create'])->name('create');
+                Route::post('/', [PeriodeController::class, 'store'])->name('store');
+                Route::get('/{id}', [PeriodeController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [PeriodeController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [PeriodeController::class, 'update'])->name('update');
+                Route::get('/{id}/delete', [PeriodeController::class, 'delete'])->name('delete');
+                Route::delete('/{id}', [PeriodeController::class, 'destroy'])->name('destroy');
             });
         });
     });

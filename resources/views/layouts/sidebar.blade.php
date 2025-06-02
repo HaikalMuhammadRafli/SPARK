@@ -30,7 +30,7 @@
         <ul class="space-y-2 font-medium bg-white rounded-xl p-2 mb-3">
             <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">MASTER DATA</h6>
             <x-sidebar.menu-item route="" icon='fa-solid fa-calendar-days' title="Kelola Periode" />
-            <x-sidebar.menu-item route="" icon='fa-solid fa-building-columns' title="Kelola Program Studi" />
+            <x-sidebar.menu-item route="admin.master.periode.index" icon='fa-solid fa-building-columns' title="Kelola Program Studi" />
             <x-sidebar.menu-item route="" icon='fa-solid fa-layer-group' title="Kelola Kompetensi" />
             <x-sidebar.menu-item route="admin.master.bidang-keahlian.index" icon='fa-solid fa-briefcase'
                 title="Kelola Keahlian" />
