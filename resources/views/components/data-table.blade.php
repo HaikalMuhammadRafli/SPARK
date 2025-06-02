@@ -2,11 +2,9 @@
     'headers' => [],
     'searchPlaceholder' => 'Search...',
     'dataRoute' => '',
-    'tableId' => 'table',
-    'searchId' => 'datatable-search',
 ])
 
-<table id="{{ $tableId }}" class="table-auto w-full text-left border-collapse border border-gray-200">
+<table id="table" class="table-auto w-full text-left border-collapse border border-gray-200">
     <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-medium">
         <tr>
             @foreach ($headers as $header)
@@ -36,22 +34,58 @@
 @push('js')
     <script>
         $(document).ready(function() {
-            console.log("Checking for {{ $tableId }} and DataTable...");
-            if (document.getElementById("{{ $tableId }}") && typeof simpleDatatables.DataTable !==
-                'undefined') {
+            setTimeout(function() {
+                initializeDataTable();
+            }, 100);
+
+            function initializeDataTable() {
+                console.log("Checking for table and DataTable...");
+
+                const tableElement = document.getElementById("table");
+
+                if (!tableElement) {
+                    console.error("Table element not found!");
+                    return;
+                }
+
+                if (typeof simpleDatatables === 'undefined' || typeof simpleDatatables.DataTable === 'undefined') {
+                    console.error("Simple-DataTables library not loaded!");
+                    return;
+                }
+
+                // Destroy existing instance if it exists
+                if (window.dataTable) {
+                    try {
+                        window.dataTable.destroy();
+                    } catch (e) {
+                        console.log("No existing DataTable to destroy");
+                    }
+                }
+
                 console.log("Initializing DataTable...");
+
                 try {
-                    window.dataTable = new simpleDatatables.DataTable("#{{ $tableId }}", {
+                    // Check if table has rows
+                    const rows = tableElement.querySelectorAll('tbody tr');
+                    if (rows.length === 0) {
+                        console.warn("Table has no data rows");
+                    }
+
+                    window.dataTable = new simpleDatatables.DataTable("#table", {
                         searchable: false,
                         perPage: 10,
                         perPageSelect: false,
                         nextPrev: true,
+                        sortable: true,
                         columns: [
                             @foreach ($headers as $index => $header)
                                 {
                                     select: {{ $index }},
                                     sortable: {{ $header['sortable'] ?? true ? 'true' : 'false' }}
-                                },
+                                }
+                                @if (!$loop->last)
+                                    ,
+                                @endif
                             @endforeach
                         ],
                         labels: {
@@ -63,9 +97,15 @@
                         }
                     });
 
-                    $('#datatable-search').on('input', function() {
-                        dataTable.search($(this).val());
+                    console.log("DataTable initialized successfully");
+
+                    // Setup search functionality
+                    $('#datatable-search').off('input').on('input', function() {
+                        if (window.dataTable && typeof window.dataTable.search === 'function') {
+                            window.dataTable.search($(this).val());
+                        }
                     });
+
                 } catch (error) {
                     console.error("DataTable initialization failed:", error);
                     Swal.fire({
@@ -74,31 +114,22 @@
                         text: 'Gagal menginisialisasi tabel. Silakan coba lagi.'
                     });
                 }
-            } else {
-                console.error("Table or DataTable library not found!");
             }
 
-            @if ($dataRoute)
-                window.reloadDataTable = function() {
-                    console.log("Refreshing DataTable data...");
+            // Define reloadDataTable function
+            window.reloadDataTable = function() {
+                console.log("Reloading DataTable...");
 
+                @if ($dataRoute)
                     $.ajax({
                         url: '{{ $dataRoute }}',
                         type: 'GET',
                         success: function(response) {
-                            if (response.status && window.dataTable) {
-                                const newData = response.data.map(item => [
-                                    @foreach ($headers as $header)
-                                        @if (isset($header['key']))
-                                            item.{{ $header['key'] }},
-                                        @endif
-                                    @endforeach
-                                ]);
+                            console.log("AJAX Response:", response);
 
-                                window.dataTable.data = newData;
-                                window.dataTable.refresh();
-
-                                console.log("DataTable refreshed successfully!");
+                            if (response.status && response.data) {
+                                // Simple approach: reload the page
+                                location.reload();
                             }
                         },
                         error: function(xhr) {
@@ -110,8 +141,10 @@
                             });
                         }
                     });
-                };
-            @endif
+                @else
+                    location.reload();
+                @endif
+            };
         });
     </script>
 @endpush
