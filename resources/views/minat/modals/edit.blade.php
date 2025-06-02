@@ -14,5 +14,5 @@
     'action' => route('admin.master.minat.update', $minat->minat_id),
     'method' => 'PUT',
     'buttonText' => 'Update',
-    'buttonIcon' => 'fa-solid fa-plus',
+    'buttonIcon' => 'fa-solid fa-edit',
 ])

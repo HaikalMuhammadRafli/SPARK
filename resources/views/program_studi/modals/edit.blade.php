@@ -14,5 +14,5 @@
     'action' => route('admin.master.program-studi.update', $program_studi->program_studi_id),
     'method' => 'PUT',
     'buttonText' => 'Update',
-    'buttonIcon' => 'fa-solid fa-plus',
+    'buttonIcon' => 'fa-solid fa-edit',
 ])

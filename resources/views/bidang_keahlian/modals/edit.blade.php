@@ -14,5 +14,5 @@
     'action' => route('admin.master.bidang-keahlian.update', $bidang_keahlian->bidang_keahlian_id),
     'method' => 'PUT',
     'buttonText' => 'Update',
-    'buttonIcon' => 'fa-solid fa-plus',
+    'buttonIcon' => 'fa-solid fa-edit',
 ])
