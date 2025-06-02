@@ -34,7 +34,7 @@
             <x-sidebar.menu-item route="" icon='fa-solid fa-layer-group' title="Kelola Kompetensi" />
             <x-sidebar.menu-item route="admin.master.bidang-keahlian.index" icon='fa-solid fa-briefcase'
                 title="Kelola Keahlian" />
-            <x-sidebar.menu-item route="" icon='fa-solid fa-heart' title="Kelola Minat" />
+            <x-sidebar.menu-item route="admin.master.minat.index" icon='fa-solid fa-heart' title="Kelola Minat" />
         </ul>
 
         <ul class="space-y-2 font-medium bg-white rounded-xl p-2 mb-3">

@@ -11,6 +11,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
+use App\Http\Controllers\MinatController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
@@ -81,6 +82,20 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}', [ProgramStudiController::class, 'update'])->name('update');
                 Route::get('/{id}/delete', [ProgramStudiController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('destroy');
+            });
+
+            // Route minat 
+            Route::prefix('minat')->name('minat.')->group(function () {
+                Route::get('/', [MinatController::class, 'index'])->name('index');
+                Route::get('/data', [MinatController::class, 'data'])->name('data');
+                Route::post('/list', [MinatController::class, 'list'])->name('list');
+                Route::get('/create', [MinatController::class, 'create'])->name('create');
+                Route::post('/', [MinatController::class, 'store'])->name('store');
+                Route::get('/{id}', [MinatController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [MinatController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [MinatController::class, 'update'])->name('update');
+                Route::get('/{id}/delete', [MinatController::class, 'delete'])->name('delete');
+                Route::delete('/{id}', [MinatController::class, 'destroy'])->name('destroy');
             });
         });
     });
