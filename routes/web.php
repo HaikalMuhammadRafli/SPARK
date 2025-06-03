@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DosenPembimbingController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MahasiswaController;
 
@@ -55,6 +56,29 @@ Route::middleware(['auth'])->group(function () {
                 Route::delete('/{id}', [BidangKeahlianController::class, 'destroy'])->name('destroy');
             });
         });
+
+        route::prefix('manajemen-pengguna')->name('manajemen-pengguna.')->group(function () {
+            Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+                Route::get('/', [MahasiswaController::class, 'indexView'])->name('index');
+                Route::get('/create', [MahasiswaController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [MahasiswaController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [MahasiswaController::class, 'deleteView'])->name('delete');
+            });
+
+            Route::prefix('admin')->name('admin.')->group(function () {
+                Route::get('/', [AdminController::class, 'indexView'])->name('index');
+                Route::get('/create', [AdminController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [AdminController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [AdminController::class, 'deleteView'])->name('delete');
+            });
+
+            Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
+                Route::get('/', [DosenPembimbingController::class, 'indexView'])->name('index');
+                Route::get('/create', [DosenPembimbingController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [DosenPembimbingController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [DosenPembimbingController::class, 'deleteView'])->name('delete');
+            });
+        });
     });
 
     Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
@@ -64,5 +88,4 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
     });
-
 });

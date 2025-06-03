@@ -163,4 +163,34 @@ class MahasiswaController extends Controller
             ], 500);
         }
     }
+
+    public function indexView()
+    {
+        $breadcrumbs = [
+            ['name' => 'Mahasiswa', 'url' => route('admin.manajemen-pengguna.mahasiswa.index')],
+        ];
+        return view('mahasiswa.index', [
+            'breadcrumbs' => $breadcrumbs,
+            'title' => 'Mahasiswa'
+        ]);
+    }
+
+    public function createView()
+    {
+        return view('mahasiswa.modals.create');
+    }
+
+    public function editView(string $id)
+    {
+        return view('mahasiswa.modals.edit', [
+            'mahasiswa' => MahasiswaModel::findOrFail($id),
+        ]);
+    }
+
+    public function deleteView(string $id)
+    {
+        return view('mahasiswa.modals.delete', [
+            'mahasiswa' => MahasiswaModel::findOrFail($id),
+        ]);
+    }
 }

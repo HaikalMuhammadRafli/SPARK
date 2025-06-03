@@ -15,9 +15,10 @@
 
         <ul class="space-y-2 font-medium bg-white rounded-xl px-2 py-3 mb-3">
             <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">MANAJEMEN PENGGUNA</h6>
-            <x-sidebar.menu-item route="" icon='fa-solid fa-user-graduate' title="Kelola Mahasiswa" />
-            <x-sidebar.menu-item route="" icon='fa-solid fa-chalkboard-teacher' title="Kelola Dosen" />
-            <x-sidebar.menu-item route="" icon='fa-solid fa-user-shield' title="Kelola Admin" />
+            <x-sidebar.menu-item route="admin.manajemen-pengguna.mahasiswa.index" icon='fa-solid fa-user-graduate'
+                title="Kelola Mahasiswa" />
+            <x-sidebar.menu-item route="admin.manajemen-pengguna.dosen-pembimbing.index" icon='fa-solid fa-chalkboard-teacher' title="Kelola Dosen" />
+            <x-sidebar.menu-item route="admin.manajemen-pengguna.admin.index" icon='fa-solid fa-user-shield' title="Kelola Admin" />
         </ul>
 
         <ul class="space-y-2 font-medium bg-white rounded-xl p-2 mb-3">
