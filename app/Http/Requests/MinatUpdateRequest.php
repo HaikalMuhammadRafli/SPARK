@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class MinatUpdateRequest extends FormRequest
 {
@@ -24,7 +25,21 @@ class MinatUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'minat_nama' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('m_minat', 'minat_nama')
+                    ->ignore($this->route('minat'), 'minat_id')
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'minat_nama.required' => 'Nama minat wajib diisi.',
+            'minat_nama.unique' => 'Nama minat sudah digunakan.',
         ];
     }
 
