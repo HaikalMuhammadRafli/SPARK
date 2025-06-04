@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DosenPembimbingController;
+use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
@@ -58,7 +59,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::delete('/{id}', [BidangKeahlianController::class, 'destroy'])->name('destroy');
             });
 
-            // Route Periode 
+            // Route Periode
             Route::prefix('periode')->name('periode.')->group(function () {
                 Route::get('/', [PeriodeController::class, 'index'])->name('index');
                 Route::get('/data', [PeriodeController::class, 'data'])->name('data');
@@ -72,7 +73,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::delete('/{id}', [PeriodeController::class, 'destroy'])->name('destroy');
             });
 
-            // Route prodi 
+            // Route prodi
             Route::prefix('program-studi')->name('program-studi.')->group(function () {
                 Route::get('/', [ProgramStudiController::class, 'index'])->name('index');
                 Route::get('/data', [ProgramStudiController::class, 'data'])->name('data');
@@ -86,7 +87,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::delete('/{id}', [ProgramStudiController::class, 'destroy'])->name('destroy');
             });
 
-            // Route minat 
+            // Route minat
             Route::prefix('minat')->name('minat.')->group(function () {
                 Route::get('/', [MinatController::class, 'index'])->name('index');
                 Route::get('/data', [MinatController::class, 'data'])->name('data');
@@ -98,6 +99,13 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}', [MinatController::class, 'update'])->name('update');
                 Route::get('/{id}/delete', [MinatController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [MinatController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('kompetensi')->name('kompetensi.')->group(function () {
+                Route::get('/', [KompetensiController::class, 'indexView'])->name('index');
+                Route::get('/create', [KompetensiController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [KompetensiController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [KompetensiController::class, 'deleteView'])->name('delete');
             });
         });
 

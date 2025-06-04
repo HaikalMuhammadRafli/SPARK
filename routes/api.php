@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DosenPembimbingController;
+use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\MahasiswaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,5 +39,12 @@ Route::middleware(['auth:sanctum', 'authorize:admin'])->group(function () {
         Route::get('/{nip}', [DosenPembimbingController::class, 'show']);
         Route::put('/{nip}', [DosenPembimbingController::class, 'update']);
         Route::delete('/{nip}', [DosenPembimbingController::class, 'destroy']);
+    });
+    Route::prefix('kompetensi')->group(function () {
+        Route::post('/', [KompetensiController::class, 'store']);
+        Route::get('/', [KompetensiController::class, 'index']);
+        Route::get('/{id}', [KompetensiController::class, 'show']);
+        Route::put('/{id}', [KompetensiController::class, 'update']);
+        Route::delete('/{id}', [KompetensiController::class, 'destroy']);
     });
 });
