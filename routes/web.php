@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BidangKeahlianController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -39,18 +40,38 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::get('/bidang-keahlian/{id}', [ProfileController::class, 'deleteBidangKeahlian'])->name('destroy.bidang-keahlian');
+        Route::get('/minat/{id}', [ProfileController::class, 'deleteMinat'])->name('destroy.minat');
+        Route::get('/add/bidang-keahlian', [ProfileController::class, 'addBidangKeahlianForm'])->name('add.bidang-keahlian.form');
+        Route::get('/add/minat', [ProfileController::class, 'addMinatForm'])->name('add.minat.form');
+        Route::post('/add/bidang-keahlian', [ProfileController::class, 'addBidangKeahlian'])->name('add.bidang-keahlian');
+        Route::post('/add/minat', [ProfileController::class, 'addMinat'])->name('add.minat');
     });
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware(['authorize:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
 
+        Route::prefix('manajemen')->name('manajemen.')->group(function () {
+            // Kelompok Routes
+            Route::prefix('kelompok')->name('kelompok.')->group(function () {
+                Route::get('/', [KelompokController::class, 'index'])->name('index');
+                Route::get('/data', [KelompokController::class, 'data'])->name('data');
+                Route::get('/create', [KelompokController::class, 'create'])->name('create');
+                Route::post('/', [KelompokController::class, 'store'])->name('store');
+                Route::get('/{id}', [KelompokController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [KelompokController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [KelompokController::class, 'update'])->name('update');
+                Route::get('/{id}/delete', [KelompokController::class, 'delete'])->name('delete');
+                Route::delete('/{id}', [KelompokController::class, 'destroy'])->name('destroy');
+            });
+        });
+
         // Master Data Routes
-        route::prefix('master')->name('master.')->group(function () {
+        Route::prefix('master')->name('master.')->group(function () {
             Route::prefix('bidang-keahlian')->name('bidang-keahlian.')->group(function () {
                 Route::get('/', [BidangKeahlianController::class, 'index'])->name('index');
                 Route::get('/data', [BidangKeahlianController::class, 'data'])->name('data');
-                Route::post('/list', [BidangKeahlianController::class, 'list'])->name('list');
                 Route::get('/create', [BidangKeahlianController::class, 'create'])->name('create');
                 Route::post('/', [BidangKeahlianController::class, 'store'])->name('store');
                 Route::get('/{id}', [BidangKeahlianController::class, 'show'])->name('show');
@@ -78,7 +99,6 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('program-studi')->name('program-studi.')->group(function () {
                 Route::get('/', [ProgramStudiController::class, 'index'])->name('index');
                 Route::get('/data', [ProgramStudiController::class, 'data'])->name('data');
-                Route::post('/list', [ProgramStudiController::class, 'list'])->name('list');
                 Route::get('/create', [ProgramStudiController::class, 'create'])->name('create');
                 Route::post('/', [ProgramStudiController::class, 'store'])->name('store');
                 Route::get('/{id}', [ProgramStudiController::class, 'show'])->name('show');
@@ -92,7 +112,6 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('minat')->name('minat.')->group(function () {
                 Route::get('/', [MinatController::class, 'index'])->name('index');
                 Route::get('/data', [MinatController::class, 'data'])->name('data');
-                Route::post('/list', [MinatController::class, 'list'])->name('list');
                 Route::get('/create', [MinatController::class, 'create'])->name('create');
                 Route::post('/', [MinatController::class, 'store'])->name('store');
                 Route::get('/{id}', [MinatController::class, 'show'])->name('show');

@@ -14,7 +14,7 @@ class CreateMMahasiswaTable extends Migration
         Schema::create('m_mahasiswa', function (Blueprint $table) {
             $table->string('nim', 10)->primary();
             $table->string('nama');
-            $table->string('lokasi_preferensi');
+            $table->enum('lokasi_preferensi',['Kota','Provinsi', 'Nasional', 'Internasional']);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('program_studi_id');
             $table->timestamps();

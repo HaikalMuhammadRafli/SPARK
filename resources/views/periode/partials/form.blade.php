@@ -4,15 +4,14 @@
         @method($method)
     @endif
     <div class="gap-4 mb-4">
-        <x-forms.default-input id="periode_nama" label="Nama Periode"
-            placeholder="Masukkan Nama Periode (Contoh: Genap 2023/2024)" value="{{ $periode->periode_nama ?? '' }}"
-            isRequired />
+        <x-forms.input id="periode_nama" label="Nama Periode" placeholder="Masukkan Nama Periode (Contoh: Genap 2023/2024)"
+            value="{{ $periode->periode_nama ?? '' }}" isRequired />
     </div>
     <div class="grid grid-cols-2 gap-4 mb-4">
-        <x-forms.default-input id="periode_tahun_awal" label="Tahun Awal" type="number"
-            placeholder="2023" value="{{ $periode->periode_tahun_awal ?? '' }}" isRequired />
-        <x-forms.default-input id="periode_tahun_akhir" label="Tahun Akhir" type="number"
-            placeholder="2024" value="{{ $periode->periode_tahun_akhir ?? '' }}" isRequired />
+        <x-forms.input id="periode_tahun_awal" label="Tahun Awal" type="number" placeholder="2023"
+            value="{{ $periode->periode_tahun_awal ?? '' }}" isRequired />
+        <x-forms.input id="periode_tahun_akhir" label="Tahun Akhir" type="number" placeholder="2024"
+            value="{{ $periode->periode_tahun_akhir ?? '' }}" isRequired />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />
@@ -60,11 +59,11 @@
             },
             submitHandler: function(form, event) {
                 event.preventDefault();
-                
+
                 // Validasi tambahan
                 const tahunAwal = parseInt($('#periode_tahun_awal').val());
                 const tahunAkhir = parseInt($('#periode_tahun_akhir').val());
-                
+
                 if (tahunAkhir <= tahunAwal) {
                     Swal.fire({
                         icon: 'error',
@@ -73,7 +72,7 @@
                     });
                     return false;
                 }
-                
+
                 var formData = new FormData(form);
                 $.ajax({
                     url: form.action,
@@ -102,7 +101,8 @@
                                 if ($field.length) {
                                     $field.addClass('is-invalid');
                                 } else {
-                                    $('[name="' + prefix + '"]').addClass('is-invalid');
+                                    $('[name="' + prefix + '"]').addClass(
+                                        'is-invalid');
                                 }
                             });
                         }
