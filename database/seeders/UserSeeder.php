@@ -10,160 +10,103 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('m_user')->insert([
-            // 5 Users untuk Mahasiswa
-            [
-                'email' => 'mahasiswa1@polinema.ac.id',
+        // === Mahasiswa: user_id 1–15 ===
+        $mahasiswa_nim = [
+            '2341760001',
+            '2341760002',
+            '2341760003',
+            '2341760004',
+            '2341760005',
+            '2341760006',
+            '2341760007',
+            '2341760008',
+            '2341760009',
+            '2341760010',
+            '2341760011',
+            '2341760012',
+            '2341760013',
+            '2341760014',
+            '2341760015'
+        ];
+
+        $mahasiswa = array_map(function ($nim, $index) {
+            return [
+                'email' => "$nim@polinema.ac.id",
                 'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=M1',
+                'foto_profil_url' => "https://via.placeholder.com/150?text=M" . ($index + 1),
                 'role' => 'mahasiswa',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
-            ],
-            [
-                'email' => 'mahasiswa2@polinema.ac.id',
+            ];
+        }, $mahasiswa_nim, array_keys($mahasiswa_nim));
+
+        // === Admin: user_id 16–30 ===
+        $admin_nip = [
+            '199001012015011001',
+            '199002022015022002',
+            '199003032015033003',
+            '199004042015044004',
+            '199005052015055005',
+            '199006062015066006',
+            '199007072015077007',
+            '199008082015088008',
+            '199009092015099009',
+            '199010102015101010',
+            '199011112015111011',
+            '199012122015122012',
+            '199101132016011013',
+            '199102142016022014',
+            '199103152016033015'
+        ];
+
+        $admin = array_map(function ($nip, $index) {
+            return [
+                'email' => "$nip@polinema.ac.id",
                 'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=M2',
-                'role' => 'mahasiswa',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'mahasiswa3@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=M3',
-                'role' => 'mahasiswa',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'mahasiswa4@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=M4',
-                'role' => 'mahasiswa',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'mahasiswa5@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=M5',
-                'role' => 'mahasiswa',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            // 5 Users untuk Dosen
-            [
-                'email' => 'dosen1@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=D1',
-                'role' => 'dosen_pembimbing',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'dosen2@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=D2',
-                'role' => 'dosen_pembimbing',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'dosen3@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=D3',
-                'role' => 'dosen_pembimbing',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'dosen4@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=D4',
-                'role' => 'dosen_pembimbing',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'dosen5@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=D5',
-                'role' => 'dosen_pembimbing',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            // 5 Users untuk Admin
-            [
-                'email' => 'admin1@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=A1',
+                'foto_profil_url' => "https://via.placeholder.com/150?text=A" . ($index + 1),
                 'role' => 'admin',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
-            ],
-            [
-                'email' => 'admin2@polinema.ac.id',
+            ];
+        }, $admin_nip, array_keys($admin_nip));
+
+        // === Dosen Pembimbing: user_id 31–45 ===
+        $dosen_nip = [
+            '198501012010121001',
+            '198502022011122002',
+            '198503032012123003',
+            '198504042013124004',
+            '198505052014125005',
+            '198506062015126006',
+            '198507072016127007',
+            '198508082017128008',
+            '198509092018129009',
+            '198510102019130010',
+            '198511112020131011',
+            '198512122021132012',
+            '198601132022133013',
+            '198602142023134014',
+            '198603152024135015'
+        ];
+
+        $dosen = array_map(function ($nip, $index) {
+            return [
+                'email' => "$nip@polinema.ac.id",
                 'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=A2',
-                'role' => 'admin',
+                'foto_profil_url' => "https://via.placeholder.com/150?text=D" . ($index + 1),
+                'role' => 'dosen_pembimbing',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
-            ],
-            [
-                'email' => 'admin3@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=A3',
-                'role' => 'admin',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'admin4@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=A4',
-                'role' => 'admin',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'email' => 'admin5@polinema.ac.id',
-                'password' => Hash::make('password123'),
-                'foto_profil_url' => 'https://via.placeholder.com/150?text=A5',
-                'role' => 'admin',
-                'status_akun' => 'aktif',
-                'last_login_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]
-        ]);
+            ];
+        }, $dosen_nip, array_keys($dosen_nip));
+
+        // Gabungkan dan masukkan ke dalam tabel
+        DB::table('m_user')->insert(array_merge($mahasiswa, $admin, $dosen));
     }
 }
