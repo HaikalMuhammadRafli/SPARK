@@ -27,9 +27,9 @@ class MahasiswaModel extends Model
         return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
     }
 
-    public function programStudi()
+    public function program_studi()
     {
-        return $this->belongsTo(ProgramStudiModel::class, 'prodi_id', 'prodi_id');
+        return $this->belongsTo(ProgramStudiModel::class, 'program_studi_id', 'program_studi_id');
     }
 
     public function periode()
@@ -39,11 +39,36 @@ class MahasiswaModel extends Model
 
     public function minats()
     {
-        return $this->belongsToMany(MinatMahasiswaModel::class, 't_minat_mahasiswa', 'nim', 'minat_id')->withTimestamps();
+        return $this->belongsToMany(MinatModel::class, 't_minat_mahasiswa', 'nim', 'minat_id')->withTimestamps();
     }
 
     public function bidang_keahlians()
     {
-        return $this->belongsToMany(KeahlianMahasiswaModel::class, 't_keahlian_mahasiswa', 'nim', 'bidang_keahlian_id')->withTimestamps();
+        return $this->belongsToMany(BidangKeahlianModel::class, 't_keahlian_mahasiswa', 'nim', 'bidang_keahlian_id')->withTimestamps();
+    }
+
+    public function kompetensis()
+    {
+        return $this->belongsToMany(KompetensiModel::class, 't_kompetensi_mahasiswa', 'nim', 'kompetensi_id')->withTimestamps();
+    }
+
+    public function perans()
+    {
+        return $this->hasMany(MahasiswaPeranModel::class, 'nim', 'nim');
+    }
+
+    public function keahlian_mahasiswas()
+    {
+        return $this->hasMany(KeahlianMahasiswaModel::class, 'nim', 'nim');
+    }
+
+    public function minat_mahasiswas()
+    {
+        return $this->hasMany(MinatMahasiswaModel::class, 'nim', 'nim');
+    }
+
+    public function kompetensi_mahasiswas()
+    {
+        return $this->hasMany(KompetensiMahasiswaModel::class, 'nim', 'nim');
     }
 }
