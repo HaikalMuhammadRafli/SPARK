@@ -12,6 +12,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
+use App\Http\Controllers\LombaController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
@@ -97,6 +98,20 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}', [MinatController::class, 'update'])->name('update');
                 Route::get('/{id}/delete', [MinatController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [MinatController::class, 'destroy'])->name('destroy');
+            });
+
+            // Route data lomba 
+            Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
+                Route::get('/', [LombaController::class, 'index'])->name('index');
+                Route::get('/data', [LombaController::class, 'data'])->name('data');
+                Route::post('/list', [LombaController::class, 'list'])->name('list');
+                Route::get('/create', [LombaController::class, 'create'])->name('create');
+                Route::post('/', [LombaController::class, 'store'])->name('store');
+                Route::get('/{id}', [LombaController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [LombaController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [LombaController::class, 'update'])->name('update');
+                Route::get('/{id}/delete', [LombaController::class, 'delete'])->name('delete');
+                Route::delete('/{id}', [LombaController::class, 'destroy'])->name('destroy');
             });
         });
     });
