@@ -34,7 +34,57 @@ class BidangKeahlianSeeder extends Seeder
                 'bidang_keahlian_nama' => 'Network Security',
                 'created_at' => now(),
                 'updated_at' => now()
-            ]
+            ],
+            [
+                'bidang_keahlian_nama' => 'Cloud Computing',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'UI/UX Design',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'Cybersecurity',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'DevOps Engineering',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'Mobile App Development',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'Data Engineering',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'Artificial Intelligence',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'Software Testing & QA',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'Blockchain Development',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'bidang_keahlian_nama' => 'IT Project Management',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ]);
     }
 }
