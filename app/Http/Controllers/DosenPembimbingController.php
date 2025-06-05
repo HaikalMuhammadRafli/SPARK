@@ -162,4 +162,33 @@ class DosenPembimbingController extends Controller
             ], 500);
         }
     }
+    public function indexView()
+    {
+        $breadcrumbs = [
+            ['name' => 'Dosen Pembimbing', 'url' => route('admin.manajemen-pengguna.dosen-pembimbing.index')],
+        ];
+        return view('dosen-pembimbing.index', [
+            'breadcrumbs' => $breadcrumbs,
+            'title' => 'Dosen Pembimbing'
+        ]);
+    }
+
+    public function createView()
+    {
+        return view('dosen-pembimbing.modals.create');
+    }
+
+    public function editView(string $id)
+    {
+        return view('dosen-pembimbing.modals.edit', [
+            'dosenPembimbing' => DosenPembimbingModel::findOrFail($id),
+        ]);
+    }
+
+    public function deleteView(string $id)
+    {
+        return view('dosen-pembimbing.modals.delete', [
+            'dosenPembimbing' => DosenPembimbingModel::findOrFail($id),
+        ]);
+    }
 }

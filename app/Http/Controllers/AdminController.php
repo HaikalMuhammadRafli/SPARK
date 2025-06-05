@@ -80,10 +80,10 @@ class AdminController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($nip)
     {
         try {
-            $admin = AdminModel::findOrFail($id);
+            $admin = AdminModel::findOrFail($nip);
 
             return response()->json([
                 'success' => true,
@@ -161,5 +161,35 @@ class AdminController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function indexView()
+    {
+        $breadcrumbs = [
+            ['name' => 'Admin', 'url' => route('admin.manajemen-pengguna.admin.index')],
+        ];
+        return view('admin.index', [
+            'breadcrumbs' => $breadcrumbs,
+            'title' => 'Admin'
+        ]);
+    }
+
+    public function createView()
+    {
+        return view('admin.modals.create');
+    }
+
+    public function editView(string $id)
+    {
+        return view('admin.modals.edit', [
+            'admin' => AdminModel::findOrFail($id),
+        ]);
+    }
+
+    public function deleteView(string $id)
+    {
+        return view('admin.modals.delete', [
+            'admin' => AdminModel::findOrFail($id),
+        ]);
     }
 }

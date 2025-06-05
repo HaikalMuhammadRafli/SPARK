@@ -31,7 +31,7 @@ class UpdateMahasiswaRequest extends FormRequest
                 'required',
                 'string',
                 'max:20',
-                Rule::unique('m_mahasiswa', 'nim')->ignore($nim)
+                Rule::unique('m_mahasiswa', 'nim')->ignore($this->nim, 'nim')
             ],
             'nama' => [
                 'sometimes',
@@ -49,13 +49,13 @@ class UpdateMahasiswaRequest extends FormRequest
                 'sometimes',
                 'nullable',
                 'integer',
-                'exists:m_users,user_id'
+                'exists:m_user,user_id'
             ],
             'prodi_id' => [
                 'sometimes',
                 'required',
                 'integer',
-                'exists:m_prodi,prodi_id'
+                'exists:m_program_studi,prodi_id'
             ]
         ];
     }

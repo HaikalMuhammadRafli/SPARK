@@ -54,7 +54,97 @@ class MahasiswaSeeder extends Seeder
                 'program_studi_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now()
-            ]
+            ],
+            [
+                'nim' => '2341760006',
+                'nama' => 'Fitriani Zahra',
+                'lokasi_preferensi' => 'Malang',
+                'user_id' => 6,
+                'program_studi_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760007',
+                'nama' => 'Gilang Saputra',
+                'lokasi_preferensi' => 'Surabaya',
+                'user_id' => 7,
+                'program_studi_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760008',
+                'nama' => 'Hana Maharani',
+                'lokasi_preferensi' => 'Jakarta',
+                'user_id' => 8,
+                'program_studi_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760009',
+                'nama' => 'Iqbal Maulana',
+                'lokasi_preferensi' => 'Bandung',
+                'user_id' => 9,
+                'program_studi_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760010',
+                'nama' => 'Jessica Anjani',
+                'lokasi_preferensi' => 'Yogyakarta',
+                'user_id' => 10,
+                'program_studi_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760011',
+                'nama' => 'Kurniawan Dwi',
+                'lokasi_preferensi' => 'Malang',
+                'user_id' => 11,
+                'program_studi_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760012',
+                'nama' => 'Laras Sekar',
+                'lokasi_preferensi' => 'Surabaya',
+                'user_id' => 12,
+                'program_studi_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760013',
+                'nama' => 'Muhammad Faisal',
+                'lokasi_preferensi' => 'Jakarta',
+                'user_id' => 13,
+                'program_studi_id' => 2,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760014',
+                'nama' => 'Nina Lestari',
+                'lokasi_preferensi' => 'Bandung',
+                'user_id' => 14,
+                'program_studi_id' => 3,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'nim' => '2341760015',
+                'nama' => 'Oscar Prabowo',
+                'lokasi_preferensi' => 'Yogyakarta',
+                'user_id' => 15,
+                'program_studi_id' => 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
         ]);
     }
 }

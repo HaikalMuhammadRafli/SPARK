@@ -9,118 +9,48 @@ class DosenPembimbingPeranKompetensiSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('t_dosen_pembimbing_peran_kompetensi')->insert([
-            // Peran ID 1 (Pembimbing Utama) - multiple kompetensi
-            [
-                'peran_id' => 1,
-                'kompetensi_id' => 1, // Leadership
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 1,
-                'kompetensi_id' => 2, // Project Management
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 1,
-                'kompetensi_id' => 3, // Communication
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        $data = [];
 
-            // Peran ID 2 (Co-Pembimbing) - kompetensi teknis
-            [
-                'peran_id' => 2,
-                'kompetensi_id' => 4, // Technical Skills
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 2,
-                'kompetensi_id' => 5, // Problem Solving
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        // Mapping kompetensi per role
+        $roleMap = [
+            'Pembimbing Utama' => [1, 2, 3], // Leadership, Project Management, Communication
+            'Co-Pembimbing' => [3, 4, 5], // Communication, Technical Skills, Problem Solving
+            'Mentor Teknis' => [4, 5], // Technical Skills, Problem Solving
+            'Mentor Strategis' => [1, 2] // Leadership, Project Management
+        ];
 
-            // Peran ID 3 (Pembimbing Utama kelompok 2)
-            [
-                'peran_id' => 3,
-                'kompetensi_id' => 1, // Leadership
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 3,
-                'kompetensi_id' => 3, // Communication
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        // Generate for 30 peran_id (from DosenPembimbingPeranSeeder)
+        for ($peranId = 1; $peranId <= 30; $peranId++) {
+            // Simulasikan nama_peran berdasarkan urutan seperti di seeder sebelumnya
+            switch (true) {
+                case in_array($peranId, [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]):
+                    $role = 'Pembimbing Utama';
+                    break;
+                case in_array($peranId, [2, 6, 10, 12, 14, 18, 20, 22, 24, 26, 28, 30]):
+                    $role = 'Co-Pembimbing';
+                    break;
+                case in_array($peranId, [4, 8, 16]):
+                    $role = 'Mentor Teknis';
+                    break;
+                case in_array($peranId, [20]):
+                    $role = 'Mentor Strategis';
+                    break;
+                default:
+                    $role = 'Pembimbing Utama'; // fallback
+            }
 
-            // Peran ID 4 (Mentor Teknis)
-            [
-                'peran_id' => 4,
-                'kompetensi_id' => 4, // Technical Skills
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 4,
-                'kompetensi_id' => 5, // Problem Solving
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            $kompetensiIds = $roleMap[$role] ?? [1];
 
-            // Peran ID 5 (Pembimbing Utama kelompok 3)
-            [
-                'peran_id' => 5,
-                'kompetensi_id' => 2, // Project Management
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 5,
-                'kompetensi_id' => 1, // Leadership
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+            foreach ($kompetensiIds as $kompetensiId) {
+                $data[] = [
+                    'peran_id' => $peranId,
+                    'kompetensi_id' => $kompetensiId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
 
-            // Peran ID 6 (Co-Pembimbing kelompok 4)
-            [
-                'peran_id' => 6,
-                'kompetensi_id' => 3, // Communication
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            // Peran ID 7 (Pembimbing Utama kelompok 4)
-            [
-                'peran_id' => 7,
-                'kompetensi_id' => 1, // Leadership
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 7,
-                'kompetensi_id' => 2, // Project Management
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-
-            // Peran ID 8 (Mentor Strategis)
-            [
-                'peran_id' => 8,
-                'kompetensi_id' => 1, // Leadership
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'peran_id' => 8,
-                'kompetensi_id' => 2, // Project Management
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+        DB::table('t_dosen_pembimbing_peran_kompetensi')->insert($data);
     }
 }
