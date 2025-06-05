@@ -52,9 +52,6 @@ class StoreMahasiswaRequest extends FormRequest
             'lokasi_preferensi.required' => 'Lokasi preferensi is required',
             'lokasi_preferensi.max' => 'Lokasi preferensi cannot exceed 255 characters',
 
-            'user_id.integer' => 'User ID must be an integer',
-            'user_id.exists' => 'Selected user does not exist',
-
             'prodi_id.required' => 'Program studi is required',
             'prodi_id.exists' => 'Selected program studi does not exist'
         ];

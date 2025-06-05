@@ -2,7 +2,7 @@
 <div class="flex items-center justify-between px-4 py-3 border-b rounded-t-xl bg-primary border-gray-200">
     <h3 class="text-sm font-semibold text-white">
         <i class="fa-solid fa-file-circle-plus me-1"></i>
-        Edit Program Studi
+        Create Kompetensi
     </h3>
     <button type="button" class="text-white bg-transparent text-sm text-center" data-modal-hide="modal">
         <i class="fa-solid fa-xmark"></i>
@@ -10,9 +10,9 @@
     </button>
 </div>
 <!-- Modal body -->
-@include('program_studi.partials.form', [
-    'action' => route('admin.master.program-studi.update', $program_studi->program_studi_id),
-    'method' => 'PUT',
-    'buttonText' => 'Update',
-    'buttonIcon' => 'fa-solid fa-edit',
+@include('kompetensi.partials.form', [
+    'action' => 'http://127.0.0.1:8000/api/kompetensi',
+    'method' => 'POST',
+    'buttonText' => 'Tambah',
+    'buttonIcon' => 'fa-solid fa-plus',
 ])

@@ -8,6 +8,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DosenPembimbingController;
+use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
@@ -81,6 +83,8 @@ Route::middleware(['auth'])->group(function () {
             // Route Periode
             Route::prefix('periode')->name('periode.')->group(function () {
                 Route::get('/', [PeriodeController::class, 'index'])->name('index');
+                Route::get('/data', [PeriodeController::class, 'data'])->name('data');
+                Route::post('/list', [PeriodeController::class, 'list'])->name('list');
                 Route::get('/create', [PeriodeController::class, 'create'])->name('create');
                 Route::post('/', [PeriodeController::class, 'store'])->name('store');
                 Route::get('/{id}', [PeriodeController::class, 'show'])->name('show');
@@ -115,6 +119,36 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/delete', [MinatController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [MinatController::class, 'destroy'])->name('destroy');
             });
+
+            Route::prefix('kompetensi')->name('kompetensi.')->group(function () {
+                Route::get('/', [KompetensiController::class, 'indexView'])->name('index');
+                Route::get('/create', [KompetensiController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [KompetensiController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [KompetensiController::class, 'deleteView'])->name('delete');
+            });
+        });
+
+        route::prefix('manajemen-pengguna')->name('manajemen-pengguna.')->group(function () {
+            Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+                Route::get('/', [MahasiswaController::class, 'indexView'])->name('index');
+                Route::get('/create', [MahasiswaController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [MahasiswaController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [MahasiswaController::class, 'deleteView'])->name('delete');
+            });
+
+            Route::prefix('admin')->name('admin.')->group(function () {
+                Route::get('/', [AdminController::class, 'indexView'])->name('index');
+                Route::get('/create', [AdminController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [AdminController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [AdminController::class, 'deleteView'])->name('delete');
+            });
+
+            Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
+                Route::get('/', [DosenPembimbingController::class, 'indexView'])->name('index');
+                Route::get('/create', [DosenPembimbingController::class, 'createView'])->name('create');
+                Route::get('/{id}/edit', [DosenPembimbingController::class, 'editView'])->name('edit');
+                Route::get('/{id}/delete', [DosenPembimbingController::class, 'deleteView'])->name('delete');
+            });
         });
     });
 
@@ -125,5 +159,4 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
     });
-
 });

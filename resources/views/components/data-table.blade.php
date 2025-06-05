@@ -121,15 +121,20 @@
                 console.log("Reloading DataTable...");
 
                 @if ($dataRoute)
-                    $.ajax({
-                        url: '{{ $dataRoute }}',
+                    const url = '{{ $dataRoute }}';
+
+                    const isApi = url.includes('/api');
+                    const ajaxOptions = {
+                        url: url,
                         type: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        },
                         success: function(response) {
                             console.log("AJAX Response:", response);
 
                             if (response.status && response.data) {
-                                // Simple approach: reload the page
-                                location.reload();
+                                location.reload(); // or custom row update logic
                             }
                         },
                         error: function(xhr) {
@@ -140,11 +145,23 @@
                                 text: 'Gagal memuat ulang data tabel.'
                             });
                         }
-                    });
+                    };
+
+                    if (isApi) {
+                        const token = localStorage.getItem('api_token');
+                        if (token) {
+                            ajaxOptions.headers['Authorization'] = 'Bearer ' + token;
+                        } else {
+                            console.warn('API token not found in localStorage.');
+                        }
+                    }
+
+                    $.ajax(ajaxOptions);
                 @else
                     location.reload();
                 @endif
             };
+
         });
     </script>
 @endpush

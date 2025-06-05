@@ -14,5 +14,5 @@
     'action' => route('admin.master.periode.update', $periode->periode_id),
     'method' => 'PUT',
     'buttonText' => 'Update',
-    'buttonIcon' => 'fa-solid fa-plus',
+    'buttonIcon' => 'fa-solid fa-edit',
 ])
