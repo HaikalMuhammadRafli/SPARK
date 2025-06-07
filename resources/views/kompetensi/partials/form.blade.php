@@ -9,8 +9,8 @@
 
         {{-- Nama (multiline) --}}
         <div class="md:col-span-2">
-            <x-forms.default-input id="kompetensi_nama" name="kompetensi_nama" label="Nama Kompetensi" placeholder="Masukkan Nama Kompetensi"
-                value="{{ $kompetensi->kompetensi_nama ?? '' }}" rows="3" />
+            <x-forms.input name="kompetensi_nama" label="Nama Kompetensi"
+                placeholder="Masukkan Nama Kompetensi" value="{{ $kompetensi->kompetensi_nama ?? '' }}" rows="3" />
             <span id="error-nama" class="text-sm text-red-500 mt-1 block"></span>
         </div>
 

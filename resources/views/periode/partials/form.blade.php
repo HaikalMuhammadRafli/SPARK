@@ -4,14 +4,14 @@
         @method($method)
     @endif
     <div class="gap-4 mb-4">
-        <x-forms.input id="periode_nama" label="Nama Periode" placeholder="Masukkan Nama Periode (Contoh: Genap 2023/2024)"
-            value="{{ $periode->periode_nama ?? '' }}" isRequired />
+        <x-forms.input name="periode_nama" label="Nama Periode" placeholder="Masukkan Nama Periode (Contoh: Genap 2023/2024)"
+            value="{{ $periode->periode_nama ?? '' }}" required />
     </div>
     <div class="grid grid-cols-2 gap-4 mb-4">
-        <x-forms.input id="periode_tahun_awal" label="Tahun Awal" type="number" placeholder="2023"
-            value="{{ $periode->periode_tahun_awal ?? '' }}" isRequired />
-        <x-forms.input id="periode_tahun_akhir" label="Tahun Akhir" type="number" placeholder="2024"
-            value="{{ $periode->periode_tahun_akhir ?? '' }}" isRequired />
+        <x-forms.input name="periode_tahun_awal" label="Tahun Awal" type="number" placeholder="2023"
+            value="{{ $periode->periode_tahun_awal ?? '' }}" required />
+        <x-forms.input name="periode_tahun_akhir" label="Tahun Akhir" type="number" placeholder="2024"
+            value="{{ $periode->periode_tahun_akhir ?? '' }}" required />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />

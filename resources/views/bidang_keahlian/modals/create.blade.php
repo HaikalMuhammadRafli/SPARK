@@ -4,7 +4,7 @@
         <i class="fa-solid fa-file-circle-plus me-1"></i>
         Create Bidang Keahlian
     </h3>
-    <button type="button" class="text-white bg-transparent text-sm text-center" data-modal-hide="modal">
+    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer" data-modal-hide="modal">
         <i class="fa-solid fa-xmark"></i>
         <span class="sr-only">Close modal</span>
     </button>

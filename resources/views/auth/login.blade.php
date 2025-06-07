@@ -12,10 +12,9 @@
                 <form id="form" action="{{ route('login') }}" method="POST">
                     @csrf
                     <div class="grid grid-cols-1 gap-2 mb-6">
-                        <x-forms.default-input id="identifier" label="NIM / NIP" placeholder="Masukkan NIM atau NIP"
-                            isRequired />
-                        <x-forms.default-input type="password" id="password" label="Password"
-                            placeholder="Masukkan Password" isRequired />
+                        <x-forms.input name="identifier" label="NIM / NIP" placeholder="Masukkan NIM atau NIP" required />
+                        <x-forms.input name="password" label="Password" type="password" placeholder="Masukkan Password"
+                            required />
                     </div>
                     <x-buttons.default type="submit" title="Login" color="primary"
                         icon="fa-solid fa-arrow-right-to-bracket" class="w-full" />

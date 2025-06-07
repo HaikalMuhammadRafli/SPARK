@@ -6,9 +6,8 @@
     @endif
 
     <div class="gap-4 mb-4">
-        <x-forms.default-input id="minat_nama" label="Nama Minat"
-            placeholder="Masukkan Nama Minat" value="{{ $minat->minat_nama ?? '' }}"
-            isRequired />
+        <x-forms.input name="minat_nama" label="Nama Minat" placeholder="Masukkan Nama Minat"
+            value="{{ $minat->minat_nama ?? '' }}" required />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />
@@ -53,7 +52,7 @@
                             $('.is-invalid').removeClass('is-invalid');
                             $.each(response.msgField, function(prefix, val) {
                                 $('#error-' + prefix).text(val[0]);
-                                
+
                                 const $field = $('#' + prefix);
                                 if ($field.length) {
                                     $field.addClass('is-invalid');

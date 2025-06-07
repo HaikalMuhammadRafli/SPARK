@@ -6,9 +6,8 @@
     @endif
 
     <div class="gap-4 mb-4">
-        <x-forms.default-input id="bidang_keahlian_nama" label="Nama Bidang Lomba"
-            placeholder="Masukkan Nama Bidang Keahlian" value="{{ $bidang_keahlian->bidang_keahlian_nama ?? '' }}"
-            isRequired />
+        <x-forms.input name="bidang_keahlian_nama" label="Nama Bidang Lomba" placeholder="Masukkan Nama Bidang Keahlian"
+            value="{{ $bidang_keahlian->bidang_keahlian_nama ?? '' }}" required />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />

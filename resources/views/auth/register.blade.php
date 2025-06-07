@@ -30,16 +30,15 @@
                     @csrf
                     <div id="step-1" class="">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-6">
-                            <x-forms.default-input id="nim" label="NIM" placeholder="Masukkan NIM" isRequired />
-                            <x-forms.default-input id="nama" label="Nama Lengkap" placeholder="Masukkan Nama Lengkap"
-                                isRequired />
-                            <x-forms.default-input type="email" id="email" label="Email" placeholder="Masukkan Email"
-                                isRequired />
-                            <x-forms.default-input type="password" id="password" label="Password"
-                                placeholder="Masukkan Password" isRequired />
-                            <x-forms.select-input id="program_studi" label="Program Studi" :data="$program_studis" isRequired />
-                            <x-forms.select-input id="lokasi_preferensi" label="Lokasi Preferensi" :data="$lokasi_preferensis"
-                                isRequired />
+                            <x-forms.input name="nim" label="NIM" placeholder="Masukkan NIM" required />
+                            <x-forms.input name="nama" label="Nama Lengkap" placeholder="Masukkan Nama Lengkap"
+                                required />
+                            <x-forms.input name="email" type="email" label="Email" placeholder="Masukkan Email"
+                                required />
+                            <x-forms.input name="password" type="password" label="Password" placeholder="Masukkan Password"
+                                required />
+                            <x-forms.select name="program_studi" label="Program Studi" :options="$program_studis" required />
+                            <x-forms.select name="lokasi_preferensi" label="Lokasi Preferensi" :options="$lokasi_preferensis" required />
                         </div>
                         <x-buttons.default id="next-step" type="button" title="Selanjutnya" color="primary"
                             icon="fa-solid fa-arrow-right" class="w-full" />
