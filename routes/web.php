@@ -3,14 +3,12 @@
 use App\Http\Controllers\BidangKeahlianController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KelompokController;
-use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DosenPembimbingController;
 use App\Http\Controllers\KompetensiController;
-use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
@@ -64,6 +62,19 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}', [KelompokController::class, 'update'])->name('update');
                 Route::get('/{id}/delete', [KelompokController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [KelompokController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('lomba')->name('lomba.')->group(function () {
+                Route::get('/', [LombaController::class, 'index'])->name('index');
+                Route::get('/data', [LombaController::class, 'data'])->name('data');
+                Route::post('/list', [LombaController::class, 'list'])->name('list');
+                Route::get('/create', [LombaController::class, 'create'])->name('create');
+                Route::post('/', [LombaController::class, 'store'])->name('store');
+                Route::get('/{id}', [LombaController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [LombaController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [LombaController::class, 'update'])->name('update');
+                Route::get('/{id}/delete', [LombaController::class, 'delete'])->name('delete');
+                Route::delete('/{id}', [LombaController::class, 'destroy'])->name('destroy');
             });
         });
 
