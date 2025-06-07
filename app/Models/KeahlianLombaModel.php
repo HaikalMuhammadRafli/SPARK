@@ -14,7 +14,7 @@ class KeahlianLombaModel extends Model
 
     protected $fillable = [
         'lomba_id',
-        'keahlian_id'
+        'bidang_keahlian_id'
     ];
 
     public function lomba()

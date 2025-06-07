@@ -19,7 +19,7 @@ class MahasiswaModel extends Model
         'nim',
         'nama',
         'lokasi_preferensi',
-        'prodi_id'
+        'program_studi_id',
     ];
 
     public function user()
@@ -35,6 +35,38 @@ class MahasiswaModel extends Model
     public function periode()
     {
         return $this->belongsTo(PeriodeModel::class, 'periode_id', 'periode_id');
+    }
+
+    public function kelompoks()
+    {
+        return $this->belongsToMany(KelompokModel::class, 't_mahasiswa_peran', 'nim', 'kelompok_id');
+    }
+
+    public function lombas()
+    {
+        return $this->hasManyThrough(
+            LombaModel::class,
+            KelompokModel::class,
+            'kelompok_id', // Foreign key on kelompok table
+            'lomba_id',    // Foreign key on lomba table
+            'nim',         // Local key on mahasiswa table
+            'lomba_id'     // Local key on kelompok table
+        )->join('t_mahasiswa_peran', 't_mahasiswa_peran.kelompok_id', '=', 'm_kelompok.kelompok_id')
+            ->where('t_mahasiswa_peran.nim', $this->nim);
+    }
+
+    public function prestasis()
+    {
+        return $this->hasManyThrough(
+            PrestasiModel::class,
+            LombaModel::class,
+            'lomba_id',    // Foreign key on lomba table (through kelompok->lomba)
+            'lomba_id',    // Foreign key on prestasi table
+            'nim',         // Local key on mahasiswa table
+            'lomba_id'     // Local key on lomba table
+        )->join('m_kelompok', 'm_kelompok.lomba_id', '=', 'm_lomba.lomba_id')
+            ->join('t_mahasiswa_peran', 't_mahasiswa_peran.kelompok_id', '=', 'm_kelompok.kelompok_id')
+            ->where('t_mahasiswa_peran.nim', $this->nim);
     }
 
     public function minats()

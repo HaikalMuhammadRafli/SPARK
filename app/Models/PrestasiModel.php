@@ -21,12 +21,12 @@ class PrestasiModel extends Model
         'prestasi_sertifikat_url',
         'prestasi_status',
         'prestasi_catatan',
-        'lomba_id',
+        'kelompok_id',
         'validated_at'
     ];
-    
-    public function lomba()
+
+    public function kelompok()
     {
-        return $this->belongsTo(LombaModel::class, 'lomba_id', 'lomba_id');
+        return $this->belongsTo(KelompokModel::class, 'kelompok_id', 'kelompok_id');
     }
 }

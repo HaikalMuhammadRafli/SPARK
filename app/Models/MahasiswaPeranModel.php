@@ -22,4 +22,9 @@ class MahasiswaPeranModel extends Model
     {
         return $this->belongsTo(MahasiswaModel::class, 'nim', 'nim');
     }
+
+    public function kelompok()
+    {
+        return $this->belongsTo(KelompokModel::class, 'kelompok_id', 'kelompok_id');
+    }
 }

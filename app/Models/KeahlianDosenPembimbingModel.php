@@ -14,7 +14,7 @@ class KeahlianDosenPembimbingModel extends Model
 
     protected $fillable = [
         'nip',
-        'keahlian_id'
+        'bidang_keahlian_id'
     ];
 
     public function dosenPembimbing()

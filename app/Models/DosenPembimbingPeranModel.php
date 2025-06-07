@@ -18,8 +18,13 @@ class DosenPembimbingPeranModel extends Model
         'nama_peran'
     ];
 
-    public function dosenPembimbing()
+    public function dosen_pembimbing()
     {
         return $this->belongsTo(DosenPembimbingModel::class, 'nip', 'nip');
+    }
+
+    public function kelompok()
+    {
+        return $this->belongsTo(KelompokModel::class, 'kelompok_id', 'kelompok_id');
     }
 }

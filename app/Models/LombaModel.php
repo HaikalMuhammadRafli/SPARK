@@ -34,4 +34,14 @@ class LombaModel extends Model
     {
         return $this->belongsTo(PeriodeModel::class, 'periode_id', 'periode_id');
     }
+
+    public function kelompoks()
+    {
+        return $this->hasMany(KelompokModel::class, 'lomba_id', 'lomba_id');
+    }
+
+    public function prestasis()
+    {
+        return $this->hasManyThrough(PrestasiModel::class, KelompokModel::class, 'lomba_id', 'kelompok_id', 'lomba_id', 'kelompok_id');
+    }
 }
