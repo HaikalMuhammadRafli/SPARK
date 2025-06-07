@@ -15,6 +15,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
+use App\Http\Controllers\LombaController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
