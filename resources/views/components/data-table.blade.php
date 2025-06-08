@@ -111,7 +111,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: 'Gagal menginisialisasi tabel. Silakan coba lagi.'
+                        text: 'Gagal menginisialisasi tabel. Silakan coba lagi.' + error.message
                     });
                 }
             }

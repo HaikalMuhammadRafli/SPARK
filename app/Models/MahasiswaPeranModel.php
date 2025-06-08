@@ -8,14 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class MahasiswaPeranModel extends Model
 {
     use HasFactory;
+
     protected $table = 't_mahasiswa_peran';
     protected $primaryKey = 'peran_id';
 
     protected $fillable = [
-        'peran_id',
         'nim',
         'kelompok_id',
-        'nama_peran'
+        'peran_nama'
     ];
 
     public function mahasiswa()
@@ -26,5 +26,10 @@ class MahasiswaPeranModel extends Model
     public function kelompok()
     {
         return $this->belongsTo(KelompokModel::class, 'kelompok_id', 'kelompok_id');
+    }
+
+    public function kompetensis()
+    {
+        return $this->belongsToMany(KompetensiModel::class, 't_mahasiswa_peran_kompetensi', 'peran_id', 'kompetensi_id');
     }
 }

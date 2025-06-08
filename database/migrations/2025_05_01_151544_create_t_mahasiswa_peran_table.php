@@ -15,7 +15,7 @@ class CreateTMahasiswaPeranTable extends Migration
             $table->id('peran_id');
             $table->string('nim');
             $table->unsignedBigInteger('kelompok_id');
-            $table->string('nama_peran');
+            $table->string('peran_nama');
             $table->timestamps();
 
             $table->foreign('nim')->references('nim')->on('m_mahasiswa');
@@ -30,4 +30,5 @@ class CreateTMahasiswaPeranTable extends Migration
     {
         Schema::dropIfExists('t_mahasiswa_peran');
     }
-};
+}
+;

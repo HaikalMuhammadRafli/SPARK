@@ -21,7 +21,7 @@ class DosenPembimbingPeranKompetensiSeeder extends Seeder
 
         // Generate for 30 peran_id (from DosenPembimbingPeranSeeder)
         for ($peranId = 1; $peranId <= 30; $peranId++) {
-            // Simulasikan nama_peran berdasarkan urutan seperti di seeder sebelumnya
+            // Simulasikan peran_nama berdasarkan urutan seperti di seeder sebelumnya
             switch (true) {
                 case in_array($peranId, [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29]):
                     $role = 'Pembimbing Utama';

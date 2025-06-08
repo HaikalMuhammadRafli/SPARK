@@ -15,7 +15,7 @@ class CreateTDosenPembimbingPeranTable extends Migration
             $table->id('peran_id');
             $table->string('nip');
             $table->unsignedBigInteger('kelompok_id');
-            $table->string('nama_peran');
+            $table->string('peran_nama');
             $table->timestamps();
 
             $table->foreign('nip')->references('nip')->on('m_dosen_pembimbing');

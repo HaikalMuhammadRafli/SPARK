@@ -15,7 +15,7 @@ class DosenPembimbingPeranModel extends Model
         'peran_id',
         'nip',
         'kelompok_id',
-        'nama_peran'
+        'peran_nama'
     ];
 
     public function dosen_pembimbing()
@@ -26,5 +26,10 @@ class DosenPembimbingPeranModel extends Model
     public function kelompok()
     {
         return $this->belongsTo(KelompokModel::class, 'kelompok_id', 'kelompok_id');
+    }
+
+    public function kompetensis()
+    {
+        return $this->belongsToMany(KompetensiModel::class, 't_dosen_pembimbing_peran_kompetensi', 'peran_id', 'kompetensi_id');
     }
 }
