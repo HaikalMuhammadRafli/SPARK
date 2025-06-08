@@ -102,10 +102,10 @@ class AuthController extends Controller
             'bidang_keahlians' => BidangKeahlianModel::all(),
             'minats' => MinatModel::all(),
             'lokasi_preferensis' => [
-                'Kota',
-                'Provinsi',
-                'Nasional',
-                'Internasional',
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
             ],
         ]);
     }

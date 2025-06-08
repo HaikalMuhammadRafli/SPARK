@@ -6,7 +6,6 @@ use App\Http\Requests\BidangKeahlianStoreRequest;
 use App\Http\Requests\BidangKeahlianUpdateRequest;
 use App\Models\BidangKeahlianModel;
 use Exception;
-use Illuminate\Http\Request;
 
 class BidangKeahlianController extends Controller
 {
@@ -28,7 +27,7 @@ class BidangKeahlianController extends Controller
 
     public function data()
     {
-        $bidang_keahlians = BidangKeahlianModel::all();
+        $bidang_keahlians = BidangKeahlianModel::all(); 
 
         return response()->json([
             'status' => true,
