@@ -1,13 +1,20 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" enctype="multipart/form-data" data-reload-table
+    class="p-4 md:p-5">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
         @method($method)
     @endif
 
-    <div class="gap-4 mb-4">
-        <x-forms.input name="program_studi_nama" label="Nama Program Studi" placeholder="Masukkan Nama Program Studi"
-            value="{{ $program_studi->program_studi_nama ?? '' }}" required />
+    <div class="space-y-2 mb-4">
+        <x-forms.input name="foto_profil_url" type="file" label="Foto Profil" placeholder="Pilih Foto Profil Anda"
+            accept="image/*" required />
+        <x-forms.input name="nama" label="Nama Lengkap" placeholder="Masukkan Nama Lengkap Anda"
+            value="{{ auth()->user()->getCurrentData()->nama ?? '' }}" required />
+        <x-forms.input name="email" type="email" label="Email" placeholder="Masukkan Email Anda"
+            value="{{ auth()->user()->email ?? '' }}" required />
+        <x-forms.select name="lokasi_preferensi" label="Lokasi Preferensi" placeholder="Pilih Lokasi Preferensi"
+            :options="$lokasi_preferensis" selected="{{ auth()->user()->getCurrentData()->lokasi_preferensi ?? '' }}" required />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />
@@ -18,18 +25,33 @@
     $(document).ready(function() {
         $("#form").validate({
             rules: {
-                program_studi_nama: {
-                    required: true
+                nama: {
+                    required: true,
                 },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                lokasi_preferensi: {
+                    required: true
+                }
             },
             messages: {
-                program_studi_nama: {
-                    required: "Nama Program Studi wajib diisi."
+                nama: {
+                    required: "Nama lengkap harus diisi."
                 },
+                email: {
+                    required: "Email harus diisi.",
+                    email: "Format email tidak valid."
+                },
+                lokasi_preferensi: {
+                    required: "Lokasi preferensi harus dipilih."
+                }
             },
             submitHandler: function(form, event) {
                 event.preventDefault();
                 var formData = new FormData(form);
+
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -45,7 +67,7 @@
                                 text: response.message
                             }).then(() => {
                                 disposeModal();
-                                reloadDataTable();
+                                window.location.reload();
                             });
                         } else {
                             $('.error-text, .invalid-feedback').text('');

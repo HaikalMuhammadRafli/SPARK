@@ -18,8 +18,10 @@ class UserModel extends Authenticatable
         'name',
         'email',
         'password',
+        'foto_profil_url',
         'role',
-        'status_akun'
+        'status_akun',
+        'last_login_at',
     ];
 
     protected $hidden = [

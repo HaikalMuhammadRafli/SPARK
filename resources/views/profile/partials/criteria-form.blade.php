@@ -1,13 +1,13 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" class="p-4 md:p-5">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
         @method($method)
     @endif
 
-    <div class="gap-4 mb-4">
-        <x-forms.input name="program_studi_nama" label="Nama Program Studi" placeholder="Masukkan Nama Program Studi"
-            value="{{ $program_studi->program_studi_nama ?? '' }}" required />
+    <div class="mb-4 w-full">
+        <x-forms.checkbox-dropdown title="{{ $title }}" name="{{ $nama }}[]" :options="$datas->pluck($nama . '_nama', $nama . '_id')->toArray()"
+            :selected="[]" searchable="true" />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />
@@ -18,18 +18,28 @@
     $(document).ready(function() {
         $("#form").validate({
             rules: {
-                program_studi_nama: {
-                    required: true
-                },
+                "{{ $nama }}[]": {
+                    required: true,
+                    minlength: 1
+                }
             },
             messages: {
-                program_studi_nama: {
-                    required: "Nama Program Studi wajib diisi."
-                },
+                "{{ $nama }}[]": {
+                    required: "{{ $title }} wajib dipilih minimal satu.",
+                    minlength: "{{ $title }} wajib dipilih minimal satu."
+                }
             },
             submitHandler: function(form, event) {
                 event.preventDefault();
+
                 var formData = new FormData(form);
+                var selectedItems = $('input[name="{{ $nama }}[]"]:checked').length;
+                if (selectedItems === 0) {
+                    $('#error-{{ $nama }}').text(
+                        '{{ $title }} wajib dipilih minimal satu.');
+                    return false;
+                }
+
                 $.ajax({
                     url: form.action,
                     type: form.method,
@@ -45,7 +55,7 @@
                                 text: response.message
                             }).then(() => {
                                 disposeModal();
-                                reloadDataTable();
+                                window.location.reload();
                             });
                         } else {
                             $('.error-text, .invalid-feedback').text('');
@@ -82,11 +92,9 @@
             }
         });
 
-        $('#form input').on('input', function() {
-            const fieldId = $(this).attr('id');
-            $('#error-' + fieldId).text('');
+        $('input[name="{{ $nama }}[]"]').on('change', function() {
+            $('#error-{{ $nama }}').text('');
             $(this).removeClass('is-invalid');
         });
-
     });
 </script>

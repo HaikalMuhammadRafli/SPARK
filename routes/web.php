@@ -4,6 +4,7 @@ use App\Http\Controllers\BidangKeahlianController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SPKController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -34,10 +35,13 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::put('/mahasiswa', [ProfileController::class, 'updateMahasiswa'])->name('update.mahasiswa');
+        Route::put('/staff', [ProfileController::class, 'updateStaff'])->name('update.staff');
         Route::get('/bidang-keahlian/{id}', [ProfileController::class, 'deleteBidangKeahlian'])->name('destroy.bidang-keahlian');
         Route::get('/minat/{id}', [ProfileController::class, 'deleteMinat'])->name('destroy.minat');
         Route::get('/add/bidang-keahlian', [ProfileController::class, 'addBidangKeahlianForm'])->name('add.bidang-keahlian.form');
@@ -45,10 +49,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/add/bidang-keahlian', [ProfileController::class, 'addBidangKeahlian'])->name('add.bidang-keahlian');
         Route::post('/add/minat', [ProfileController::class, 'addMinat'])->name('add.minat');
     });
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     Route::middleware(['authorize:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+
+        Route::get('/spk', [SPKController::class, 'index'])->name('spk.index');
+        Route::get('/spk/data', [SPKController::class, 'data'])->name('spk.data');
+        Route::post('/spk/submit', [SPKController::class, 'submit'])->name('spk.submit');
 
         Route::prefix('manajemen')->name('manajemen.')->group(function () {
             // Kelompok Routes
