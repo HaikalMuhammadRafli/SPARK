@@ -12,16 +12,16 @@ class DashboardController extends Controller
      */
     public function admin()
     {
-        return view('admin.dashboard');
+        return view('pages.admin.dashboard');
     }
 
     public function dosenPembimbing()
     {
-        return view('dosen_pembimbing.dashboard');
+        return view('pages.dosen-pembimbing.dashboard');
     }
 
     public function mahasiswa()
     {
-        return view('mahasiswa.dashboard');
+        return view('pages.mahasiswa.dashboard');
     }
 }
