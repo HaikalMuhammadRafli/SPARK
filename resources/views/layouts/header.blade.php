@@ -20,7 +20,7 @@
             <span class="sr-only">Icon description</span>
         </button>
         <div class="flex items-center gap-2">
-            <img src="{{ Storage::url(auth()->user()->foto_profil_url) ?? asset('images/default-profile.svg') }}"
+            <img src="{{ auth()->user()->foto_profil_url ? Storage::url(auth()->user()->foto_profil_url) : asset('images/default-profile.svg') }}"
                 alt="Foto Profil" class="w-10 h-10 rounded-full object-cover">
             <div>
                 <div class="font-bold text-sm">{{ auth()->user()->getCurrentData()->nama }}</div>

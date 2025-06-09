@@ -33,7 +33,6 @@ class UserSeeder extends Seeder
             return [
                 'email' => "$nim@polinema.ac.id",
                 'password' => Hash::make('password123'),
-                'foto_profil_url' => "https://via.placeholder.com/150?text=M" . ($index + 1),
                 'role' => 'mahasiswa',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),
@@ -65,7 +64,6 @@ class UserSeeder extends Seeder
             return [
                 'email' => "$nip@polinema.ac.id",
                 'password' => Hash::make('password123'),
-                'foto_profil_url' => "https://via.placeholder.com/150?text=A" . ($index + 1),
                 'role' => 'admin',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),
@@ -97,7 +95,6 @@ class UserSeeder extends Seeder
             return [
                 'email' => "$nip@polinema.ac.id",
                 'password' => Hash::make('password123'),
-                'foto_profil_url' => "https://via.placeholder.com/150?text=D" . ($index + 1),
                 'role' => 'dosen_pembimbing',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),

@@ -142,7 +142,20 @@ class KelompokController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return view('kelompok.detail', [
+            'title' => 'Detail Kelompok',
+            'breadcrumbs' => [
+                ['name' => 'Kelompok', 'url' => route('admin.manajemen.kelompok.index')],
+                ['name' => 'Detail'],
+            ],
+            'kelompok' => KelompokModel::with([
+                'lomba',
+                'mahasiswa_perans.mahasiswa',
+                'mahasiswa_perans.kompetensis',
+                'dosen_pembimbing_peran.dosen_pembimbing',
+                'dosen_pembimbing_peran.kompetensis',
+            ])->findOrFail($id),
+        ]);
     }
 
     /**

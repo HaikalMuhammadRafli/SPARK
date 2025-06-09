@@ -23,7 +23,7 @@
     @stack('css')
 </head>
 
-<body class="bg-white text-gray-900 antialiased">
+<body class="bg-purple-200/80 text-gray-900 antialiased">
 
     @if (Route::is('login') || Route::is('register') || Route::is('home'))
         <main class="min-h-screen">

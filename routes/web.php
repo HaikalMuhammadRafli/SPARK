@@ -177,5 +177,6 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
+        Route::get('/kelompok', [MahasiswaController::class, 'kelompok'])->name('kelompok');
     });
 });

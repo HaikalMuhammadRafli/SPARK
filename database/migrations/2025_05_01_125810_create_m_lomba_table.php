@@ -16,6 +16,7 @@ class CreateMLombaTable extends Migration
             $table->string('lomba_nama');
             $table->string('lomba_kategori');
             $table->string('lomba_penyelenggara');
+            $table->string('lomba_poster_url')->nullable();
             $table->string('lomba_lokasi_preferensi');
             $table->string('lomba_tingkat');
             $table->text('lomba_persyaratan');

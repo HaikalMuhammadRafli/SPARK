@@ -16,6 +16,7 @@ class LombaModel extends Model
         'lomba_nama',
         'lomba_kategori',
         'lomba_penyelenggara',
+        'lomba_poster_url',
         'lomba_lokasi_preferensi',
         'lomba_tingkat',
         'lomba_persyaratan',
