@@ -27,14 +27,12 @@
         </div>
         <x-data-table :headers="[
             ['title' => 'No', 'key' => 'no', 'sortable' => true],
-            ['title' => 'ID', 'key' => 'id', 'sortable' => true],
             ['title' => 'Nama Minat', 'key' => 'nama', 'sortable' => true],
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
         ]" :data-route="route('admin.master.minat.data')">
             @foreach ($minats as $minat)
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-1">{{ $minat->minat_id }}</td>
                     <td class="px-4 py-1">{{ $minat->minat_nama }}</td>
                     <td class="px-4 py-1 text-right">
                         <x-buttons.action route_prefix="admin.master.minat"

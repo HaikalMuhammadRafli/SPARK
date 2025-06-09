@@ -27,7 +27,6 @@
         </div>
         <x-data-table :headers="[
             ['title' => 'No', 'key' => 'no', 'sortable' => true],
-            ['title' => 'ID', 'key' => 'id', 'sortable' => true],
             ['title' => 'Nama Periode', 'key' => 'nama', 'sortable' => true],
             ['title' => 'Tahun Awal', 'key' => 'tahun_awal', 'sortable' => true],
             ['title' => 'Tahun Akhir', 'key' => 'tahun_akhir', 'sortable' => true],
@@ -37,7 +36,6 @@
             @foreach ($periodes as $periode)
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-1">{{ $periode->periode_id }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_nama }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_tahun_awal }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_tahun_akhir }}</td>
