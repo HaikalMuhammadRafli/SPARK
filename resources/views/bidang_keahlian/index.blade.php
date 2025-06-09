@@ -8,12 +8,12 @@
         </div>
         <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
             <div class="flex flex-row gap-2 flex-wrap">
-                <x-buttons.default type="button" title="Export PDF" color="primary" onclick="" />
-                <x-buttons.default type="button" title="Export Excel" color="primary" onclick="" />
+                <x-buttons.table-actions type="button" title="Export PDF" color="primary" onclick="" />
+                <x-buttons.table-actions type="button" title="Export Excel" color="primary" onclick="" />
             </div>
             <div class="flex flex-row gap-2 flex-wrap">
-                <x-buttons.default type="button" title="Import Excel" color="primary" onclick="" />
-                <x-buttons.default type="button" title="Tambah Baru" color="primary"
+                <x-buttons.table-actions type="button" title="Import Excel" color="primary" onclick="" />
+                <x-buttons.table-actions type="button" title="Tambah Baru" color="primary"
                     onclick="modalAction('{{ route('admin.master.bidang-keahlian.create') }}')" />
             </div>
         </div>
