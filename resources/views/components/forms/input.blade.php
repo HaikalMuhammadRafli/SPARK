@@ -2,7 +2,7 @@
     'name' => 'input',
     'label' => 'Default Label',
     'icon' => null,
-    'placeholder' => 'Choose file...',
+    'placeholder' => '',
     'info' => null,
     'type' => 'text',
     'value' => '',

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BidangKeahlianController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KelompokController;
+use App\Http\Controllers\MahasiswaPagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SPKController;
 use Illuminate\Support\Facades\Route;
@@ -53,16 +54,14 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['authorize:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
 
-        Route::get('/spk', [SPKController::class, 'index'])->name('spk.index');
-        Route::get('/spk/data', [SPKController::class, 'data'])->name('spk.data');
-        Route::post('/spk/submit', [SPKController::class, 'submit'])->name('spk.submit');
-
         Route::prefix('manajemen')->name('manajemen.')->group(function () {
             // Kelompok Routes
             Route::prefix('kelompok')->name('kelompok.')->group(function () {
                 Route::get('/', [KelompokController::class, 'index'])->name('index');
                 Route::get('/data', [KelompokController::class, 'data'])->name('data');
                 Route::get('/create', [KelompokController::class, 'create'])->name('create');
+                Route::get('/spk/data', [KelompokController::class, 'spkData'])->name('spk.data');
+                Route::post('/spk', [KelompokController::class, 'spk'])->name('spk');
                 Route::post('/', [KelompokController::class, 'store'])->name('store');
                 Route::get('/{id}', [KelompokController::class, 'show'])->name('show');
                 Route::get('/{id}/edit', [KelompokController::class, 'edit'])->name('edit');
@@ -177,6 +176,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard');
-        Route::get('/kelompok', [MahasiswaController::class, 'kelompok'])->name('kelompok');
+        Route::prefix('kelompok')->name('kelompok.')->group(function () {
+            Route::get('/', [MahasiswaPagesController::class, 'kelompokIndex'])->name('index');
+            Route::get('/data', [MahasiswaPagesController::class, 'kelompokData'])->name('data');
+            Route::get('/create', [MahasiswaPagesController::class, 'kelompokCreate'])->name('create');
+            Route::post('/', [MahasiswaPagesController::class, 'kelompokStore'])->name('store');
+            Route::get('/{id}', [MahasiswaPagesController::class, 'kelompokShow'])->name('show');
+            Route::get('/{id}/edit', [MahasiswaPagesController::class, 'kelompokEdit'])->name('edit');
+            Route::put('/{id}', [MahasiswaPagesController::class, 'kelompokUpdate'])->name('update');
+            Route::get('/{id}/delete', [MahasiswaPagesController::class, 'kelompokDelete'])->name('delete');
+            Route::delete('/{id}', [MahasiswaPagesController::class, 'kelompokDestroy'])->name('destroy');
+        });
     });
 });

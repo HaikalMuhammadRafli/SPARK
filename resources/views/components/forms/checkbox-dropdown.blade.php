@@ -16,7 +16,7 @@
 
 <fieldset class="relative w-full">
     <button type="button" onclick="toggleDropdown('{{ $uniqueId }}')"
-        class="w-full text-left bg-white border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium rounded-lg text-xs px-4 py-2.5 flex items-center justify-between {{ $required ? 'required' : '' }}"
+        class="w-full text-left bg-white border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium rounded-lg text-xs px-4 py-2 flex items-center justify-between {{ $required ? 'required' : '' }}"
         data-title="{{ $title }}">
         <span class="truncate">
             @if ($selectedCount == 0)

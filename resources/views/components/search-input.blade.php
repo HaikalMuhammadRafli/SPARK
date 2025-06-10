@@ -14,7 +14,7 @@
         </div>
         <input type="search" id="{{ $id }}" name="{{ $id }}"
             value="{{ old($id) }}"
-            class="block w-full pe-5 ps-13 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+            class="block w-full pe-5 ps-13 text-xs text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
             placeholder="{{ $placeholder }}" />
     </div>
 </div>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen min-w-screen bg-primary">
+    <div class="min-h-screen min-w-screen bg-gradient-to-bl from-secondary to-primary">
         <a href="{{ route('home') }}" class="absolute bg-white/80 backdrop-blur-md text-sm rounded-lg px-3 py-1 m-3"><i
                 class="fa-solid fa-arrow-left-long"></i> Kembali</a>
         <section class="h-screen w-full flex items-center justify-center">

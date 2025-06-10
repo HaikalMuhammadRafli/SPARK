@@ -9,7 +9,7 @@
         <x-forms.input name="kelompok_nama" label="Nama Kelompok" placeholder="Masukkan Nama Kelompok"
             value="{{ $kelompok->kelompok_nama ?? '' }}" required />
         <x-forms.select name="lomba_id" label="Lomba" :options="$lombas->pluck('lomba_nama', 'lomba_id')->toArray()" placeholder="Pilih Lomba" required
-            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" />
+            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" disabled />
     </div>
 
     <!-- Dosen Pembimbing Section -->
@@ -103,13 +103,16 @@
                                         :selected="$mahasiswa_peran->kompetensis->pluck('kompetensi_id')->toArray()" searchable="true" required />
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <button type="button" class="text-red-600 hover:text-red-900 remove-row-btn"
-                                        onclick="removeRow(this)">
+                                    <button type="button"
+                                        class="text-red-600 hover:text-red-900 remove-row-btn {{ $mahasiswa_peran->nim == auth()->user()->mahasiswa->nim ? 'opacity-50 cursor-not-allowed' : '' }}"
+                                        onclick="removeRow(this)" data-original-nim="{{ $mahasiswa_peran->nim }}"
+                                        data-is-current-user="{{ $mahasiswa_peran->nim == auth()->user()->mahasiswa->nim ? 'true' : 'false' }}"
+                                        {{ $mahasiswa_peran->nim == auth()->user()->mahasiswa->nim ? 'disabled' : '' }}>
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 18 20">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                                 stroke-width="2"
-                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
+                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1-1H4a1 1 0 0 1-1-1V5Z" />
                                         </svg>
                                     </button>
                                 </td>
@@ -191,36 +194,9 @@
     ) !!};
 
     $(document).ready(function() {
-        console.log('DOM ready, initializing...');
-
-        // Make sure the button exists before binding
-        if ($('#addRowBtn').length === 0) {
-            console.error('Add button not found!');
-            return;
-        }
-
-        $('#addRowBtn').off('click').on('click', function(e) {
-            e.preventDefault();
-            console.log('Add button clicked, currentRowCount:', currentRowCount, 'maxMembers:',
-                maxMembers);
-
-            if (!lombaSelected) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Peringatan',
-                    text: 'Pilih lomba terlebih dahulu!'
-                });
-                return;
-            }
-
+        $('#addRowBtn').on('click', function() {
             if (currentRowCount < maxMembers) {
                 addNewRow();
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Batas Maksimal',
-                    text: 'Maksimal ' + maxMembers + ' anggota dapat ditambahkan.'
-                });
             }
         });
 
@@ -234,7 +210,6 @@
 
         updateRemoveButtonStates();
         updateSubmitButtonState();
-        updateAddButtonState(); // Add this line
         updateRowNumbers();
     });
 
@@ -244,7 +219,6 @@
             $('#lombaNotice').show();
             lombaSelected = false;
             updateSubmitButtonState();
-            updateAddButtonState(); // Add this line
             return;
         }
 
@@ -369,27 +343,26 @@
     function updateAddButtonState() {
         const addBtn = $('#addRowBtn');
 
-        if (!lombaSelected) {
-            addBtn.prop('disabled', true)
-                .addClass('opacity-50 cursor-not-allowed')
-                .attr('title', 'Pilih lomba terlebih dahulu');
-        } else if (currentRowCount >= maxMembers) {
-            addBtn.prop('disabled', true)
-                .addClass('opacity-50 cursor-not-allowed')
-                .attr('title', 'Maksimal ' + maxMembers + ' anggota');
+        if (currentRowCount >= maxMembers) {
+            addBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
         } else {
-            addBtn.prop('disabled', false)
-                .removeClass('opacity-50 cursor-not-allowed')
-                .attr('title', 'Tambah Anggota');
+            addBtn.prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
         }
     }
 
     function updateRemoveButtonStates() {
         $('.member-row .remove-row-btn').each(function() {
-            if (currentRowCount <= 1) {
-                $(this).addClass('opacity-50 cursor-not-allowed').prop('disabled', true);
+            const button = $(this);
+            const isCurrentUser = button.data('is-current-user') === true || button.data('is-current-user') ===
+                'true';
+
+            if (currentRowCount <= 1 || isCurrentUser) {
+                button.addClass('opacity-50 cursor-not-allowed').prop('disabled', true);
             } else {
-                $(this).removeClass('opacity-50 cursor-not-allowed').prop('disabled', false);
+                // Only enable if it's not the current user's row
+                if (!isCurrentUser) {
+                    button.removeClass('opacity-50 cursor-not-allowed').prop('disabled', false);
+                }
             }
         });
     }

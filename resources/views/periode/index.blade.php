@@ -35,7 +35,7 @@
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
         ]" :data-route="route('admin.master.periode.data')">
             @foreach ($periodes as $periode)
-                <tr class="border-b hover:bg-gray-50">
+                <tr class="border-b hover:bg-gray-50 text-xs">
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_id }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_nama }}</td>
@@ -44,27 +44,30 @@
                     <td class="px-4 py-1">
                         @php
                             $currentYear = date('Y');
-                            $isActive = $currentYear >= $periode->periode_tahun_awal && $currentYear <= $periode->periode_tahun_akhir;
+                            $isActive =
+                                $currentYear >= $periode->periode_tahun_awal &&
+                                $currentYear <= $periode->periode_tahun_akhir;
                         @endphp
-                        @if($isActive)
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        @if ($isActive)
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                 <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
-                                    <circle cx="4" cy="4" r="3"/>
+                                    <circle cx="4" cy="4" r="3" />
                                 </svg>
                                 Aktif
                             </span>
                         @else
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                 <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
-                                    <circle cx="4" cy="4" r="3"/>
+                                    <circle cx="4" cy="4" r="3" />
                                 </svg>
                                 Tidak Aktif
                             </span>
                         @endif
                     </td>
                     <td class="px-4 py-1 text-right">
-                        <x-buttons.action route_prefix="admin.master.periode"
-                            id="{{ $periode->periode_id }}" />
+                        <x-buttons.action route_prefix="admin.master.periode" id="{{ $periode->periode_id }}" />
                     </td>
                 </tr>
             @endforeach

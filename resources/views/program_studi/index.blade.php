@@ -32,7 +32,7 @@
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
         ]" :data-route="route('admin.master.program-studi.data')">
             @foreach ($program_studis as $program_studi)
-                <tr class="border-b hover:bg-gray-50">
+                <tr class="border-b hover:bg-gray-50 text-xs">
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-1">{{ $program_studi->program_studi_id }}</td>
                     <td class="px-4 py-1">{{ $program_studi->program_studi_nama }}</td>
