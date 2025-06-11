@@ -88,8 +88,7 @@
                     <option value="">{{ $clearText }}</option>
                 @endif
                 @foreach ($options as $optionValue => $optionLabel)
-                    <option
-                        value="{{ is_array($optionLabel) ? $optionLabel['value'] ?? $optionValue : $optionValue }}"
+                    <option value="{{ is_array($optionLabel) ? $optionLabel['value'] ?? $optionValue : $optionValue }}"
                         {{ $value == (is_array($optionLabel) ? $optionLabel['value'] ?? $optionValue : $optionValue) ? 'selected' : '' }}>
                         {{ is_array($optionLabel) ? $optionLabel['label'] ?? ($optionLabel['text'] ?? $optionValue) : $optionLabel }}
                     </option>
@@ -107,15 +106,14 @@
                 @endif
 
                 @foreach ($options as $optionValue => $optionLabel)
-                    <option
-                        value="{{ is_array($optionLabel) ? $optionLabel['value'] ?? $optionValue : $optionValue }}"
+                    <option value="{{ is_array($optionLabel) ? $optionLabel['value'] ?? $optionValue : $optionValue }}"
                         {{ $value == (is_array($optionLabel) ? $optionLabel['value'] ?? $optionValue : $optionValue) ? 'selected' : '' }}>
                         {{ is_array($optionLabel) ? $optionLabel['label'] ?? ($optionLabel['text'] ?? $optionValue) : $optionLabel }}
                     </option>
                 @endforeach
             </select>
 
-            @if (!$multiple)
+            @if (!$multiple && false)
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
