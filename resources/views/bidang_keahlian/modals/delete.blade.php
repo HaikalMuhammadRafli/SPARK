@@ -16,7 +16,7 @@
         <span class="sr-only">Info</span>
         <div>
             <h6 class="font-medium text-sm">Konfirmasi Penghapusan!</h6>
-            <p class="font-normal text-xs">Apakah Anda yakin ingin menghapus data lomba ini?</p>
+            <p class="font-normal text-xs">Apakah Anda yakin ingin menghapus bidang keahlian ini?</p>
         </div>
     </div>
 

@@ -6,7 +6,8 @@
     @endif
 
     <div>
-        <h3 class="text-lg font-semibold mb-3">Kriteria Rekomendasi</h3>
+        <h3 class="text-md font-semibold">Kriteria Decision Maker</h3>
+        <p class="text-xs text-gray-500 mb-3">Pilih kriteria yang dibutuhkan!</p>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <x-forms.select name="lokasi_preferensi_spk" :options="$lokasi_preferensis" placeholder="Lokasi Preferensi" required />
             <x-forms.checkbox-dropdown name="minat_spk[]" title="Minat" :options="$minats->pluck('minat_nama', 'minat_id')->toArray()" searchable required />
@@ -18,7 +19,8 @@
     </div>
 
     <div>
-        <h3 class="text-lg font-semibold mb-3">Prioritas Bobot (1=Tertinggi, 6=Terendah)</h3>
+        <h3 class="text-md font-semibold">Prioritas Bobot</h3>
+        <p class="text-xs text-gray-500 mb-3">( 1 = Tertinggi, 6 = Terendah )</p>
         <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
             <x-forms.select name="bobot_lokasi_preferensi_spk" label="Lokasi Preferensi" :options="$weight_ranks"
                 selected="6" required />

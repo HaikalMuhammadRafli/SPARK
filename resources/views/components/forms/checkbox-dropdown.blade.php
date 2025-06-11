@@ -16,7 +16,7 @@
 
 <fieldset class="relative w-full">
     <button type="button" onclick="toggleDropdown('{{ $uniqueId }}')"
-        class="w-full text-left bg-white border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-medium rounded-lg text-xs px-4 py-2 flex items-center justify-between {{ $required ? 'required' : '' }}"
+        class="w-full text-left bg-white border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg text-xs px-4 py-2 flex items-center justify-between {{ $required ? 'required' : '' }}"
         data-title="{{ $title }}">
         <span class="truncate">
             @if ($selectedCount == 0)
@@ -73,7 +73,7 @@
             </button>
         </div>
 
-        <ul class="max-h-48 overflow-y-auto text-sm">
+        <ul class="max-h-48 overflow-y-auto text-xs">
             @foreach ($options as $value => $label)
                 <li class="dropdown-item" data-search="{{ strtolower($label) }}">
                     <div class="flex items-center px-2 py-1.5 rounded hover:bg-gray-50">
@@ -83,7 +83,7 @@
                             onchange="updateDropdownTitle('{{ $uniqueId }}')"
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 {{ $required ? 'required' : '' }}">
                         <label for="checkbox-{{ $uniqueId }}-{{ $value }}"
-                            class="flex-1 ml-2 text-sm font-medium text-gray-900 cursor-pointer">
+                            class="flex-1 ml-2 text-xs text-gray-900 cursor-pointer">
                             {{ $label }}
                         </label>
                     </div>

@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\KelompokModel;
+use DB;
 use Illuminate\Http\Request;
 use App\Models\LombaModel;
 use App\Models\DosenPembimbingModel;
 use App\Models\KompetensiModel;
 use App\Models\MahasiswaModel;
+use App\Models\DosenPembimbingPeranModel;
+use Exception;
 
 class MahasiswaPagesController extends Controller
 {
@@ -141,5 +144,51 @@ class MahasiswaPagesController extends Controller
             ],
             'kompetensis' => KompetensiModel::all(),
         ]);
+    }
+
+    public function kelompokDelete(string $id)
+    {
+        return view('pages.mahasiswa.kelompok.modals.delete', [
+            'kelompok' => KelompokModel::findOrFail($id),
+        ]);
+    }
+
+    public function kelompokDestroy(string $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $kelompok = KelompokModel::with([
+                'mahasiswa_perans.kompetensis',
+                'dosen_pembimbing_peran.kompetensis'
+            ])->findOrFail($id);
+
+            foreach ($kelompok->mahasiswa_perans as $mahasiswaPeran) {
+                $mahasiswaPeran->kompetensis()->detach();
+                $mahasiswaPeran->delete();
+            }
+
+            $dosenPembimbingPerans = DosenPembimbingPeranModel::where('kelompok_id', $id)->get();
+            foreach ($dosenPembimbingPerans as $dosenPembimbingPeran) {
+                $dosenPembimbingPeran->kompetensis()->detach();
+                $dosenPembimbingPeran->delete();
+            }
+
+            $kelompok->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Kelompok berhasil dihapus.',
+                'redirect' => route('mahasiswa.kelompok.index'),
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menghapus kelompok: ' . $e->getMessage(),
+            ]);
+        }
     }
 }

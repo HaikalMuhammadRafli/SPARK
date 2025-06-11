@@ -336,9 +336,27 @@ class KelompokController extends Controller
     public function destroy(string $id)
     {
         try {
-            $kelompok = KelompokModel::findOrFail($id);
-            $kelompok->mahasiswa_perans()->delete();
+            DB::beginTransaction();
+
+            $kelompok = KelompokModel::with([
+                'mahasiswa_perans.kompetensis',
+                'dosen_pembimbing_peran.kompetensis'
+            ])->findOrFail($id);
+
+            foreach ($kelompok->mahasiswa_perans as $mahasiswaPeran) {
+                $mahasiswaPeran->kompetensis()->detach();
+                $mahasiswaPeran->delete();
+            }
+
+            $dosenPembimbingPerans = DosenPembimbingPeranModel::where('kelompok_id', $id)->get();
+            foreach ($dosenPembimbingPerans as $dosenPembimbingPeran) {
+                $dosenPembimbingPeran->kompetensis()->detach();
+                $dosenPembimbingPeran->delete();
+            }
+
             $kelompok->delete();
+
+            DB::commit();
 
             return response()->json([
                 'status' => true,
@@ -346,6 +364,7 @@ class KelompokController extends Controller
                 'redirect' => route('admin.manajemen.kelompok.index'),
             ]);
         } catch (Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal menghapus kelompok: ' . $e->getMessage(),
@@ -650,12 +669,6 @@ class KelompokController extends Controller
                 ];
             }
 
-            $this->logMatrixPretty('Data Skoring', $data_skoring);
-            $this->logMatrixPretty('Data Normalisasi', $data_normalisasi);
-            $this->logMatrixPretty('Bobot', $bobot);
-            $this->logMatrixPretty('Data Optimasi', $data_optimasi);
-            $this->logMatrixPretty('Data Preferensi', $data_preferensi);
-
             // Perangkingan MOORA
             usort($data_preferensi, function ($a, $b) {
                 return $b['nilai_preferensi'] <=> $a['nilai_preferensi'];
@@ -693,40 +706,5 @@ class KelompokController extends Controller
                 'message' => 'Gagal melakukan SPK: ' . $e->getMessage(),
             ]);
         }
-    }
-
-
-    private function logMatrixPretty($title, $data)
-    {
-        // Convert mahasiswa objects to simple arrays for better logging
-        $cleanData = $this->cleanDataForLogging($data);
-
-        \Log::info("=== $title ===");
-        \Log::info(json_encode($cleanData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-    }
-
-    private function cleanDataForLogging($data)
-    {
-        if (!is_array($data))
-            return $data;
-
-        $cleaned = [];
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                if (isset($value['mahasiswa'])) {
-                    $cleaned[$key] = $value;
-                    $cleaned[$key]['mahasiswa'] = [
-                        'id' => $value['mahasiswa']->mahasiswa_id ?? null,
-                        'nama' => $value['mahasiswa']->mahasiswa_nama ?? null,
-                        'nim' => $value['mahasiswa']->nim ?? null,
-                    ];
-                } else {
-                    $cleaned[$key] = $this->cleanDataForLogging($value);
-                }
-            } else {
-                $cleaned[$key] = $value;
-            }
-        }
-        return $cleaned;
     }
 }

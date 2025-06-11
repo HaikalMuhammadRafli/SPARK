@@ -31,10 +31,10 @@
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
         ]" :data-route="route('admin.master.bidang-keahlian.data')">
             @foreach ($bidang_keahlians as $bidang_keahlian)
-                <tr class="border-b hover:bg-gray-50 text-xs">
+                <tr class="border-b hover:bg-gray-50">
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-1">{{ $bidang_keahlian->bidang_keahlian_nama }}</td>
-                    <td class="px-4 py-1 text-right">
+                    <td class="px-4 py-1">
                         <x-buttons.action route_prefix="admin.master.bidang-keahlian"
                             id="{{ $bidang_keahlian->bidang_keahlian_id }}" />
                     </td>

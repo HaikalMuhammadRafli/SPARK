@@ -29,7 +29,7 @@
         @if ($searchable)
             <!-- Searchable Dropdown Button -->
             <button type="button"
-                class="w-full px-3 py-2 text-xs text-left bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
+                class="w-full px-3 py-2 text-xs text-left bg-white border border-gray-300 rounded-md hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
                 onclick="toggleFilterDropdown('{{ $uniqueId }}')" {{ $disabled ? 'disabled' : '' }}>
                 <span class="block truncate text-xs" data-selected-text="{{ $uniqueId }}">
                     {{ $placeholder }}
@@ -98,7 +98,7 @@
         @else
             <!-- Regular Select -->
             <select id="{{ $uniqueId }}" name="{{ $name ?: $uniqueId }}"
-                class="w-full px-3 py-2 text-xs bg-white border border-gray-300 rounded-md shadow-sm hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
+                class="w-full px-3 py-2 text-xs bg-white border border-gray-300 rounded-md hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none {{ $disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
                 {{ $multiple ? 'multiple' : '' }} {{ $disabled ? 'disabled' : '' }}>
                 @if ($allowClear)
                     <option value="">{{ $clearText }}</option>

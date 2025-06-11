@@ -7,7 +7,7 @@
 <div class="inline-flex rounded-md shadow-xs" role="group">
     @if ($showDetail)
         <button type="button" onclick="window.location.href='{{ route($route_prefix . '.show', $id) }}'"
-            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-500 rounded-s-lg cursor-pointer">
+            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-s-lg cursor-pointer">
             <i class="fa-solid fa-receipt me-2"></i>
             Detail
         </button>

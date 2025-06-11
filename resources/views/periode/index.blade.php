@@ -34,7 +34,7 @@
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
         ]" :data-route="route('admin.master.periode.data')">
             @foreach ($periodes as $periode)
-                <tr class="border-b hover:bg-gray-50 text-xs">
+                <tr class="border-b hover:bg-gray-50">
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_nama }}</td>
                     <td class="px-4 py-1">{{ $periode->periode_tahun_awal }}</td>

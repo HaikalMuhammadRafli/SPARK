@@ -17,3 +17,42 @@ html {
     visibility: visible !important;
     opacity: 1 !important;
 }
+
+/* DATATABLE */
+#table {
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    width: 100%;
+    border: 1px solid var(--color-gray-300);
+}
+
+#table thead th {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-500);
+    font-weight: 700;
+    font-size: 9pt;
+}
+
+#table thead th:first-child {
+    text-align: center;
+}
+
+#table thead th:last-child {
+    text-align: center;
+}
+
+#table tbody tr {
+    font-size: 9pt;
+    color: var(--color-gray-500);
+    font-weight: 500;
+}
+
+#table tbody td:first-child {
+    text-align: center;
+}
+
+#table tbody td:last-child {
+    text-align: center;
+}

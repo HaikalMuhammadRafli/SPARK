@@ -7,10 +7,10 @@
 ])
 
 <table id="table" class="table-auto w-full text-left border-collapse border border-gray-200">
-    <thead class="bg-gray-100 text-gray-700 uppercase text-sm font-medium">
+    <thead class="uppercase text-sm font-medium">
         <tr>
             @foreach ($headers as $header)
-                <th class="px-4 py-3">
+                <th class="px-4 py-4">
                     @if ($header['sortable'] ?? true)
                         <span class="flex items-center gap-1">
                             {{ $header['title'] }}
@@ -207,7 +207,7 @@
                     @if (!empty($filters))
                         @foreach ($filters as $filterId)
                             const {{ str_replace('-', '_', $filterId) }}Value = $('#{{ $filterId }}')
-                            .val();
+                                .val();
                             if ({{ str_replace('-', '_', $filterId) }}Value) {
                                 filterParams['{{ str_replace('filter-', '', $filterId) }}'] =
                                     {{ str_replace('-', '_', $filterId) }}Value;

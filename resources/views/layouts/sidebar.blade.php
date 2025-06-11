@@ -4,7 +4,8 @@
     <div class="h-full px-3 py-3 overflow-y-auto bg-gray-100 rounded-xl">
         <a href="/" class="bg-white flex items-center justify-center rounded-xl px-3 py-4 mb-8">
             <img src="{{ asset('spark/spark-logo.png') }}" class="h-6 me-1 sm:h-7" alt="Spark Logo" />
-            <span class="self-center text-primary text-xl font-bold whitespace-nowrap ">{{ config('app.name') }}
+            <span
+                class="self-center text-transparent bg-clip-text bg-gradient-to-bl from-secondary to-primary text-xl font-bold whitespace-nowrap ">{{ config('app.name') }}
             </span>
         </a>
         @if (auth()->user()->role == 'admin')
@@ -15,7 +16,7 @@
             </ul>
 
             <ul class="space-y-2 font-medium bg-white rounded-xl px-2 py-3 mb-3">
-                <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">MANAJEMEN PENGGUNA</h6>
+                <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-3">MANAJEMEN PENGGUNA</h6>
                 <x-sidebar.menu-item route="admin.manajemen-pengguna.mahasiswa.index" icon='fa-solid fa-user-graduate'
                     title="Kelola Mahasiswa" />
                 <x-sidebar.menu-item route="admin.manajemen-pengguna.dosen-pembimbing.index"
