@@ -29,8 +29,10 @@
                 <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">MANAJEMEN LOMBA</h6>
                 <x-sidebar.menu-item route="admin.manajemen.kelompok.index" icon='fa-solid fa-users'
                     title="Kelola Kelompok" />
+                <x-sidebar.menu-item route="" icon='fa-solid fa-clipboard-check' title="Verifikasi Lomba" />
                 <x-sidebar.menu-item route="admin.manajemen.lomba.index" icon='fa-solid fa-trophy'
                     title="Kelola Lomba" />
+                <x-sidebar.menu-item route="" icon='fa-solid fa-award' title="Verifikasi Prestasi" />
                 <x-sidebar.menu-item route="" icon='fa-solid fa-medal' title="Kelola Prestasi" />
             </ul>
 
