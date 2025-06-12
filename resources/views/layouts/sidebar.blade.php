@@ -65,7 +65,6 @@
                 <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">LOMBA</h6>
                 <x-sidebar.menu-item route="" icon='fa-solid fa-list' title="Daftar Lomba" />
                 <x-sidebar.menu-item route="" icon='fa-solid fa-trophy' title="Lomba Saya" />
-                <x-sidebar.menu-item route="" icon='fa-solid fa-plus' title="Daftarkan Lomba" />
             </ul>
 
             <ul class="space-y-2 font-medium bg-white rounded-xl px-2 py-3 mb-3">
