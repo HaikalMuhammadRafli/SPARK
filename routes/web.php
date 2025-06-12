@@ -16,8 +16,6 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
 use App\Http\Controllers\LombaController;
-use App\Http\Controllers\DataLombaController;
-use App\Http\Controllers\DaftarkanLombaController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
