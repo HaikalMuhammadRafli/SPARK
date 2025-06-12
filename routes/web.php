@@ -16,6 +16,8 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
 use App\Http\Controllers\LombaController;
+use App\Http\Controllers\DataLombaController;
+use App\Http\Controllers\DaftarkanLombaController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
@@ -186,6 +188,19 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [MahasiswaPagesController::class, 'kelompokUpdate'])->name('update');
             Route::get('/{id}/delete', [MahasiswaPagesController::class, 'kelompokDelete'])->name('delete');
             Route::delete('/{id}', [MahasiswaPagesController::class, 'kelompokDestroy'])->name('destroy');
+        });
+
+        // Data Lomba Routes
+        Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
+            Route::get('/', [MahasiswaPagesController::class, 'dataLombaIndex'])->name('index');
+            Route::get('/data', [MahasiswaPagesController::class, 'dataLombaData'])->name('data');
+            Route::get('/create', [MahasiswaPagesController::class, 'dataLombaCreate'])->name('create');
+            Route::post('/', [MahasiswaPagesController::class, 'dataLombaStore'])->name('store');
+            Route::get('/{id}', [MahasiswaPagesController::class, 'dataLombaShow'])->name('show');
+            Route::get('/{id}/edit', [MahasiswaPagesController::class, 'dataLombaEdit'])->name('edit');
+            Route::put('/{id}', [MahasiswaPagesController::class, 'dataLombaUpdate'])->name('update');
+            Route::get('/{id}/delete', [MahasiswaPagesController::class, 'dataLombaDelete'])->name('delete');
+            Route::delete('/{id}', [MahasiswaPagesController::class, 'dataLombaDestroy'])->name('destroy');
         });
     });
 });
