@@ -7,16 +7,18 @@
 
     <div class="gap-4 mb-4 grid grid-cols-1 md:grid-cols-2">
         {{-- NIP --}}
-        <div>
-            <x-forms.input name="nip" label="NIP" placeholder="Masukkan NIP"
-                :value="{{ $mahasiswa->nip ?? '' }}" required />
-            <span id="error-nip" class="text-sm text-red-500 mt-1 block"></span>
-        </div>
+        @if ($method !== 'PUT')
+            <div>
+                <x-forms.default-input id="nip" name="nip" label="NIP" placeholder="Masukkan NIP"
+                    value="{{ $admin->nip ?? '' }}" isRequired />
+                <span id="error-nip" class="text-sm text-red-500 mt-1 block"></span>
+            </div>
+        @endif
 
         {{-- Nama (multiline) --}}
         <div class="md:col-span-2">
-            <x-forms.input name="nama" label="Nama" placeholder="Masukkan Nama Lengkap"
-                value="{{ $mahasiswa->nama ?? '' }}" rows="3" />
+            <x-forms.default-input id="nama" name="nama" label="Nama" placeholder="Masukkan Nama Lengkap"
+                value="{{ $admin->nama ?? '' }}" rows="3" />
             <span id="error-nama" class="text-sm text-red-500 mt-1 block"></span>
         </div>
 

@@ -77,6 +77,7 @@
 <td class="px-4 py-1 whitespace-nowrap">${index + 1}</td>
 <td class="px-4 py-1">${item.nip}</td>
 <td class="px-4 py-1">${item.nama}</td>
+<td class="px-4 py-1">${item.user_id}</td>
 <td class="px-4 py-1 text-left">
     <div class="inline-flex rounded-md shadow-xs" role="group">
         <button type="button"
