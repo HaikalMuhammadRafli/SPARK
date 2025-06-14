@@ -24,4 +24,9 @@ class DosenPembimbingModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
     }
+
+    public function dosenPembimbingPeran()
+    {
+        return $this->hasOne(DosenPembimbingPeranModel::class, 'nip', 'nip');
+    }
 }
