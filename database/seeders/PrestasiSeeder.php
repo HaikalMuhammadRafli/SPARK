@@ -45,7 +45,7 @@ class PrestasiSeeder extends Seeder
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_3.jpg',
                 'prestasi_proposal_url' => 'https://example.com/proposal_3.pdf',
                 'prestasi_sertifikat_url' => 'https://example.com/sertifikat_3.pdf',
-                'prestasi_status' => 'Pending',
+                'prestasi_status' => 'Pending', // revised
                 'prestasi_catatan' => 'Sedang dalam proses verifikasi',
                 'kelompok_id' => 3,
                 'validated_at' => null,
@@ -53,7 +53,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Harapan 1',
+                'prestasi_juara' => 'Juara 3',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_4.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_4.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_4.jpg',
@@ -67,13 +67,13 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Best Innovation',
+                'prestasi_juara' => 'Juara 3',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_5.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_5.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_5.jpg',
                 'prestasi_proposal_url' => 'https://example.com/proposal_5.pdf',
                 'prestasi_sertifikat_url' => 'https://example.com/sertifikat_5.pdf',
-                'prestasi_status' => 'Ditolak',
+                'prestasi_status' => 'Pending', // revised
                 'prestasi_catatan' => 'Dokumen tidak lengkap, perlu dilengkapi',
                 'kelompok_id' => 5,
                 'validated_at' => null,
@@ -81,7 +81,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Juara Harapan 2',
+                'prestasi_juara' => 'Juara 2',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_6.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_6.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_6.jpg',
@@ -95,7 +95,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Best UI/UX',
+                'prestasi_juara' => 'Juara 1',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_7.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_7.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_7.jpg',
@@ -109,13 +109,13 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Best Game Design',
+                'prestasi_juara' => 'Juara 3',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_8.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_8.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_8.jpg',
                 'prestasi_proposal_url' => 'https://example.com/proposal_8.pdf',
                 'prestasi_sertifikat_url' => 'https://example.com/sertifikat_8.pdf',
-                'prestasi_status' => 'Pending',
+                'prestasi_status' => 'Pending', // revised
                 'prestasi_catatan' => 'Menunggu validasi oleh juri utama',
                 'kelompok_id' => 8,
                 'validated_at' => null,
@@ -123,7 +123,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Most Impactful IoT',
+                'prestasi_juara' => 'Juara 2',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_9.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_9.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_9.jpg',
@@ -137,7 +137,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Top DevOps Team',
+                'prestasi_juara' => 'Juara 1',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_10.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_10.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_10.jpg',
@@ -151,13 +151,13 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Cloud Innovator Award',
+                'prestasi_juara' => 'Juara 1',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_11.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_11.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_11.jpg',
                 'prestasi_proposal_url' => 'https://example.com/proposal_11.pdf',
                 'prestasi_sertifikat_url' => 'https://example.com/sertifikat_11.pdf',
-                'prestasi_status' => 'Pending',
+                'prestasi_status' => 'Pending', // revised
                 'prestasi_catatan' => 'Review arsitektur masih berlangsung',
                 'kelompok_id' => 11,
                 'validated_at' => null,
@@ -165,7 +165,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Top Contributor OSS',
+                'prestasi_juara' => 'Juara 3',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_12.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_12.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_12.jpg',
@@ -179,7 +179,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Juara 1 Nasional Robotik',
+                'prestasi_juara' => 'Juara 1',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_13.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_13.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_13.jpg',
@@ -193,7 +193,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Best Blockchain Pitch',
+                'prestasi_juara' => 'Juara 3',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_14.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_14.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_14.jpg',
@@ -207,7 +207,7 @@ class PrestasiSeeder extends Seeder
                 'updated_at' => now()
             ],
             [
-                'prestasi_juara' => 'Analisis Bisnis Terbaik',
+                'prestasi_juara' => 'Juara 2',
                 'prestasi_surat_tugas_url' => 'https://example.com/surat_tugas_15.pdf',
                 'prestasi_poster_url' => 'https://example.com/poster_15.jpg',
                 'prestasi_foto_juara_url' => 'https://example.com/foto_juara_15.jpg',

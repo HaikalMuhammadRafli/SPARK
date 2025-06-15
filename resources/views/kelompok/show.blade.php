@@ -96,7 +96,7 @@
                         <div class="">
                             <div class="flex flex-row">
                                 <img class="w-10 h-10 rounded-full"
-                                    src="{{ $kelompok->dosen_pembimbing_peran->dosen_pembimbing->user->foto_profil_url ? Storage::url($kelompok->dosen_pembimbing_peran->dosen_pembimbing->user->foto_profil_url) : asset('images/default-profile.svg') }}"
+                                    src="{{ $mahasiswa_peran->mahasiswa->user->foto_profil_url ? Storage::url($mahasiswa_peran->mahasiswa->user->foto_profil_url) : asset('images/default-profile.svg') }}"
                                     alt="Rounded avatar">
                                 <div class="ms-2">
                                     <p class="text-sm font-bold text-gray-900">

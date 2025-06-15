@@ -4,6 +4,7 @@ use App\Http\Controllers\BidangKeahlianController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\MahasiswaPagesController;
+use App\Http\Controllers\PrestasiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SPKController;
 use Illuminate\Support\Facades\Route;
@@ -81,6 +82,22 @@ Route::middleware(['auth'])->group(function () {
                 Route::put('/{id}', [LombaController::class, 'update'])->name('update');
                 Route::get('/{id}/delete', [LombaController::class, 'delete'])->name('delete');
                 Route::delete('/{id}', [LombaController::class, 'destroy'])->name('destroy');
+            });
+
+            Route::prefix('prestasi')->name('prestasi.')->group(function () {
+                Route::get('/', [PrestasiController::class, 'index'])->name('index');
+                Route::get('/data', [PrestasiController::class, 'data'])->name('data');
+                Route::get('/verification', [PrestasiController::class, 'verification'])->name('verification');
+                Route::get('/verification/data', [PrestasiController::class, 'verificationData'])->name('verification.data');
+                Route::get('/verification/detail/{id}', [PrestasiController::class, 'verificationDetail'])->name('verification.detail');
+                Route::post('/verification/verify/{id}', [PrestasiController::class, 'verify'])->name('verification.verify');
+                Route::get('/create', [PrestasiController::class, 'create'])->name('create');
+                Route::post('/', [PrestasiController::class, 'store'])->name('store');
+                Route::get('/{id}', [PrestasiController::class, 'show'])->name('show');
+                Route::get('/{id}/edit', [PrestasiController::class, 'edit'])->name('edit');
+                Route::put('/{id}', [PrestasiController::class, 'update'])->name('update');
+                Route::get('/{id}/delete', [PrestasiController::class, 'delete'])->name('delete');
+                Route::delete('/{id}', [PrestasiController::class, 'destroy'])->name('destroy');
             });
         });
 

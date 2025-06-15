@@ -9,7 +9,7 @@
     'disabled' => false,
 ])
 
-<fieldset class="form-group {{ empty($info) ? 'space-y-4' : '' }}">
+<fieldset class="form-group w-full {{ empty($info) ? 'space-y-4' : '' }}">
     <label for="{{ $name }}" class="block mb-1 text-xs font-medium text-gray-600">
         {{ $label }}
         @if ($required)
@@ -23,7 +23,7 @@
 
     <div class="relative m-0">
         <textarea id="{{ $name }}" name="{{ $name }}"
-            placeholder="{{ $placeholder }}" 
+            placeholder="{{ $placeholder }}"
             rows="{{ $rows }}"
             @if ($disabled) disabled @endif
             @if ($required) required aria-required="true" @endif
