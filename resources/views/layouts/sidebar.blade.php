@@ -31,7 +31,7 @@
                     title="Kelola Kelompok" />
                 <x-sidebar.menu-item route="admin.manajemen.lomba.index" icon='fa-solid fa-trophy'
                     title="Kelola Lomba" />
-                <x-sidebar.menu-item route="" icon='fa-solid fa-medal' title="Kelola Prestasi" />
+                <x-sidebar.menu-item route="admin.laporan.index" icon='fa-solid fa-medal' title="Kelola Prestasi" />
             </ul>
 
             <ul class="space-y-2 font-medium bg-white rounded-xl p-2 mb-3">
@@ -74,7 +74,7 @@
 
             <ul class="space-y-2 font-medium bg-white rounded-xl px-2 py-3 mb-3">
                 <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">PRESTASI</h6>
-                <x-sidebar.menu-item route="" icon='fa-solid fa-medal' title="Prestasi Saya" />
+                <x-sidebar.menu-item route="mahasiswa.prestasi.index" icon='fa-solid fa-medal' title="Prestasi Saya" />
             </ul>
 
             <ul class="space-y-2 font-medium bg-white rounded-xl p-2 mb-3">
