@@ -22,9 +22,7 @@
     @endif
 
     <div class="relative m-0">
-        <textarea id="{{ $name }}" name="{{ $name }}"
-            placeholder="{{ $placeholder }}"
-            rows="{{ $rows }}"
+        <textarea id="{{ $name }}" name="{{ $name }}" placeholder="{{ $placeholder }}" rows="{{ $rows }}"
             @if ($disabled) disabled @endif
             @if ($required) required aria-required="true" @endif
             @if ($info) aria-describedby="{{ $name }}-info" @endif
@@ -39,4 +37,5 @@
         <span id="{{ $name }}-error" class="text-red-500 text-xs mt-1 block"
             role="alert">{{ $message }}</span>
     @enderror
+    <span id="error-{{ $name }}" class="error-text invalid-feedback"></span>
 </fieldset>

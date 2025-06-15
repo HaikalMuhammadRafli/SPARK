@@ -48,9 +48,12 @@
                 d="m1 1 4 4 4-4" />
         </svg>
     </button>
+
     @error($name)
         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
     @enderror
+
+    <span id="error-{{ $clean_name }}" class="error-text invalid-feedback"></span>
 </fieldset>
 
 <!-- Dropdown rendered at body level to avoid table overflow constraints -->
@@ -85,8 +88,8 @@
         </div>
 
         <ul class="max-h-48 overflow-y-auto text-xs">
-            @foreach ($options as $value => $label)
-                <li class="dropdown-item" data-search="{{ strtolower($label) }}">
+            @foreach ($options as $value => $optionLabel)
+                <li class="dropdown-item" data-search="{{ strtolower($optionLabel) }}">
                     <div class="flex items-center px-2 py-1.5 rounded hover:bg-gray-50">
                         <input type="checkbox" name="{{ $name }}" value="{{ $value }}"
                             id="checkbox-{{ $uniqueId }}-{{ $value }}"
@@ -95,7 +98,7 @@
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 {{ $required ? 'required' : '' }}">
                         <label for="checkbox-{{ $uniqueId }}-{{ $value }}"
                             class="flex-1 ml-2 text-xs text-gray-900 cursor-pointer">
-                            {{ $label }}
+                            {{ $optionLabel }}
                         </label>
                     </div>
                 </li>
