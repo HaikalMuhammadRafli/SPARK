@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -9,7 +9,7 @@
         <x-forms.input name="kelompok_nama" label="Nama Kelompok" placeholder="Masukkan Nama Kelompok"
             value="{{ $kelompok->kelompok_nama ?? '' }}" required />
         <x-forms.select name="lomba_id" label="Lomba" :options="$lombas->pluck('lomba_nama', 'lomba_id')->toArray()" placeholder="Pilih Lomba" required
-            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" />
+            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" searchable required />
     </div>
 
     <!-- Dosen Pembimbing Section -->
@@ -29,7 +29,7 @@
                             <x-forms.select name="dosen_pembimbing" placeholder="Pilih Dosen Pembimbing"
                                 :options="$dosen_pembimbings->pluck('nama', 'nip')->toArray()"
                                 selected="{{ isset($kelompok->dosen_pembimbing_peran) && $kelompok->dosen_pembimbing_peran ? $kelompok->dosen_pembimbing_peran->first()?->nip : '' }}"
-                                required />
+                                searchable required />
                         </td>
                         <td class="px-6 py-4">
                             <x-forms.select name="peran_dpm" placeholder="Pilih Peran" :options="$perans_dpm"

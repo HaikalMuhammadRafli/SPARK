@@ -11,25 +11,27 @@
 </div>
 
 <!-- Modal body with tabs -->
-<div class="p-4 md:p-5">
+<div class="p-4">
     <!-- Tab navigation -->
-    <div class="border-b border-gray-200 mb-4">
-        <nav class="-mb-px flex space-x-8">
+    <div class="w-full mb-4">
+        <nav class="grid grid-cols-2">
             <button type="button"
-                    class="tab-button active border-b-2 border-primary text-primary py-2 px-1 text-sm font-medium"
-                    data-tab="kelompok-form">
+                class="tab-button active bg-primary rounded-l-full text-white py-2 px-1 text-sm font-medium"
+                data-tab="kelompok-form">
+                <i class="fa-solid fa-file-invoice me-2 text-lg"></i>
                 Form Kelompok
             </button>
             <button type="button"
-                    class="tab-button border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 text-sm font-medium"
-                    data-tab="spk-form">
-                SPK Rekomendasi
+                class="tab-button border border-gray-200 rounded-r-full text-gray-500 hover:text-gray-700 hover:border-gray-300 py-2 px-1 text-sm font-medium"
+                data-tab="spk-form">
+                <i class="fa-solid fa-ranking-star me-2 text-lg"></i>
+                Rekomendasi Peserta
             </button>
         </nav>
     </div>
 
     <!-- Tab content -->
-    <div class="tab-content">
+    <div class="tab-content border border-gray-200 rounded-lg">
         <!-- Kelompok Form Tab -->
         <div id="kelompok-form" class="tab-pane block">
             @include('kelompok.partials.form', [
@@ -51,58 +53,60 @@
 </div>
 
 <script>
-// Function to initialize tabs
-function initializeTabs() {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabPanes = document.querySelectorAll('.tab-pane');
+    // Function to initialize tabs
+    function initializeTabs() {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanes = document.querySelectorAll('.tab-pane');
 
-    console.log('Tab buttons found:', tabButtons.length);
-    console.log('Tab panes found:', tabPanes.length);
+        console.log('Tab buttons found:', tabButtons.length);
+        console.log('Tab panes found:', tabPanes.length);
 
-    tabButtons.forEach((button, index) => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Tab clicked:', this.getAttribute('data-tab'));
+        tabButtons.forEach((button, index) => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Tab clicked:', this.getAttribute('data-tab'));
 
-            const targetTab = this.getAttribute('data-tab');
+                const targetTab = this.getAttribute('data-tab');
 
-            // Remove active classes from all buttons
-            tabButtons.forEach(btn => {
-                btn.classList.remove('border-primary', 'text-primary', 'active');
-                btn.classList.add('border-transparent', 'text-gray-500');
+                // Remove active classes from all buttons
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white', 'active');
+                    btn.classList.add('border', 'border-gray-200', 'text-gray-500',
+                        'hover:text-gray-700', 'hover:border-gray-300');
+                });
+
+                // Hide all tab panes
+                tabPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                    pane.classList.remove('block', 'active');
+                });
+
+                // Add active classes to current button
+                this.classList.add('bg-primary', 'text-white', 'active');
+                this.classList.remove('border', 'border-gray-200', 'text-gray-500',
+                    'hover:text-gray-700', 'hover:border-gray-300');
+
+                // Show target pane
+                const targetPane = document.getElementById(targetTab);
+                if (targetPane) {
+                    targetPane.classList.remove('hidden');
+                    targetPane.classList.add('block', 'active');
+                    console.log('Switched to tab:', targetTab);
+                } else {
+                    console.error('Target pane not found:', targetTab);
+                }
             });
-
-            // Hide all tab panes
-            tabPanes.forEach(pane => {
-                pane.classList.add('hidden');
-                pane.classList.remove('block', 'active');
-            });
-
-            // Add active classes to current button
-            this.classList.add('border-primary', 'text-primary', 'active');
-            this.classList.remove('border-transparent', 'text-gray-500');
-
-            // Show target pane
-            const targetPane = document.getElementById(targetTab);
-            if (targetPane) {
-                targetPane.classList.remove('hidden');
-                targetPane.classList.add('block', 'active');
-                console.log('Switched to tab:', targetTab);
-            } else {
-                console.error('Target pane not found:', targetTab);
-            }
         });
-    });
-}
+    }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTabs);
-} else {
-    initializeTabs();
-}
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeTabs);
+    } else {
+        initializeTabs();
+    }
 
-// Also initialize when modal is shown (if using a modal library)
-document.addEventListener('shown.bs.modal', initializeTabs); // Bootstrap
-// Or for other modal libraries, use their respective events
+    // Also initialize when modal is shown (if using a modal library)
+    document.addEventListener('shown.bs.modal', initializeTabs); // Bootstrap
+    // Or for other modal libraries, use their respective events
 </script>
