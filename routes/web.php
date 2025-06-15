@@ -18,7 +18,6 @@ use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
 use App\Http\Controllers\LombaController;
 use App\Http\Controllers\LaporanAnalisisPrestasiController;
-use App\Http\Controllers\PrestasiController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
