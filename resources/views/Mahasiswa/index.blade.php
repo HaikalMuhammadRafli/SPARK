@@ -81,7 +81,7 @@
 <td class="px-4 py-1">${item.nama}</td>
 <td class="px-4 py-1">${item.lokasi_preferensi}</td>
 <td class="px-4 py-1">${item.user_id}</td>
-<td class="px-4 py-1">${item.prodi_id}</td>
+<td class="px-4 py-1">${item.program_studi_id}</td>
 <td class="px-4 py-1 text-left">
     <div class="inline-flex rounded-md shadow-xs" role="group">
         <button type="button"

@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen min-w-screen bg-primary">
+    <div class="min-h-screen min-w-screen bg-gradient-to-bl from-secondary to-primary">
         <a href="{{ route('home') }}" class="absolute bg-white text-sm rounded-lg px-3 py-1.5 m-3"><i
                 class="fa-solid fa-arrow-left-long"></i> Kembali</a>
         <section class="h-screen w-full flex flex-col items-center justify-center">
             <div class="flex items-center justify-center w-full max-w-sm mb-8">
                 <ol class="flex items-center w-full">
                     <li
-                        class="flex w-full items-center text-blue-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block">
+                        class="flex w-full items-center text-primary after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block">
                         <span
-                            class="flex items-center justify-center w-8 h-8 bg-blue-600 text-white rounded-full shrink-0 text-sm font-semibold">
+                            class="flex items-center justify-center w-8 h-8 bg-secondary text-white rounded-full shrink-0 text-sm font-semibold">
                             1
                         </span>
                     </li>
@@ -37,8 +37,10 @@
                                 required />
                             <x-forms.input name="password" type="password" label="Password" placeholder="Masukkan Password"
                                 required />
-                            <x-forms.select name="program_studi" label="Program Studi" :options="$program_studis" required />
-                            <x-forms.select name="lokasi_preferensi" label="Lokasi Preferensi" :options="$lokasi_preferensis" required />
+                            <x-forms.select name="program_studi" label="Program Studi" :options="$program_studis->pluck('program_studi_nama', 'program_studi_id')->toArray()"
+                                placeholder="Pilih Program Studi" required />
+                            <x-forms.select name="lokasi_preferensi" label="Lokasi Preferensi" :options="$lokasi_preferensis"
+                                placeholder="Pilih Lokasi Preferensi" required />
                         </div>
                         <x-buttons.default id="next-step" type="button" title="Selanjutnya" color="primary"
                             icon="fa-solid fa-arrow-right" class="w-full" />

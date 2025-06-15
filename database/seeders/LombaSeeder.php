@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class LombaSeeder extends Seeder
 {
@@ -23,7 +24,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-07-15',
                 'lomba_selesai_pelaksanaan' => '2025-07-17',
                 'lomba_ukuran_kelompok' => 5,
+                'lomba_status' => (Carbon::parse('2025-06-01') <= now() && Carbon::parse('2025-06-30') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-07-15') <= now() && Carbon::parse('2025-07-17') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-07-17') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 2,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -40,7 +49,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-07-01',
                 'lomba_selesai_pelaksanaan' => '2025-07-03',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-05-15') <= now() && Carbon::parse('2025-06-15') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-07-01') <= now() && Carbon::parse('2025-07-03') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-07-03') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 2,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -57,7 +74,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-08-05',
                 'lomba_selesai_pelaksanaan' => '2025-08-07',
                 'lomba_ukuran_kelompok' => 2,
+                'lomba_status' => (Carbon::parse('2025-06-10') <= now() && Carbon::parse('2025-07-10') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-08-05') <= now() && Carbon::parse('2025-08-07') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-08-07') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 3,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -74,7 +99,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-08-20',
                 'lomba_selesai_pelaksanaan' => '2025-08-22',
                 'lomba_ukuran_kelompok' => 4,
+                'lomba_status' => (Carbon::parse('2025-07-01') <= now() && Carbon::parse('2025-07-31') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-08-20') <= now() && Carbon::parse('2025-08-22') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-08-22') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 3,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -91,7 +124,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-09-15',
                 'lomba_selesai_pelaksanaan' => '2025-09-17',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-08-01') <= now() && Carbon::parse('2025-08-31') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-09-15') <= now() && Carbon::parse('2025-09-17') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-09-17') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 4,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -108,7 +149,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-08-20',
                 'lomba_selesai_pelaksanaan' => '2025-09-05',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-07-10') <= now() && Carbon::parse('2025-08-15') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-08-20') <= now() && Carbon::parse('2025-09-05') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-09-05') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 4,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -125,7 +174,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-10-15',
                 'lomba_selesai_pelaksanaan' => '2025-10-16',
                 'lomba_ukuran_kelompok' => 2,
+                'lomba_status' => (Carbon::parse('2025-09-01') <= now() && Carbon::parse('2025-09-30') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-10-15') <= now() && Carbon::parse('2025-10-16') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-10-16') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -142,7 +199,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-10-01',
                 'lomba_selesai_pelaksanaan' => '2025-10-03',
                 'lomba_ukuran_kelompok' => 4,
+                'lomba_status' => (Carbon::parse('2025-09-01') <= now() && Carbon::parse('2025-09-20') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-10-01') <= now() && Carbon::parse('2025-10-03') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-10-03') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -159,7 +224,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-11-01',
                 'lomba_selesai_pelaksanaan' => '2025-11-03',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-10-01') <= now() && Carbon::parse('2025-10-20') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-11-01') <= now() && Carbon::parse('2025-11-03') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-11-03') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -176,7 +249,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-10-25',
                 'lomba_selesai_pelaksanaan' => '2025-10-27',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-09-15') <= now() && Carbon::parse('2025-10-15') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-10-25') <= now() && Carbon::parse('2025-10-27') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-10-27') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => null,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -193,7 +274,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-11-10',
                 'lomba_selesai_pelaksanaan' => '2025-11-12',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-10-10') <= now() && Carbon::parse('2025-11-05') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-11-10') <= now() && Carbon::parse('2025-11-12') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-11-12') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => null,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -210,7 +299,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-11-05',
                 'lomba_selesai_pelaksanaan' => '2025-11-15',
                 'lomba_ukuran_kelompok' => 2,
+                'lomba_status' => (Carbon::parse('2025-10-01') <= now() && Carbon::parse('2025-11-01') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-11-05') <= now() && Carbon::parse('2025-11-15') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-11-15') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => null,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -227,7 +324,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-12-01',
                 'lomba_selesai_pelaksanaan' => '2025-12-03',
                 'lomba_ukuran_kelompok' => 4,
+                'lomba_status' => (Carbon::parse('2025-10-20') <= now() && Carbon::parse('2025-11-20') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-12-01') <= now() && Carbon::parse('2025-12-03') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-12-03') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => null,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -244,7 +349,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-12-10',
                 'lomba_selesai_pelaksanaan' => '2025-12-12',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-11-01') <= now() && Carbon::parse('2025-11-30') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-12-10') <= now() && Carbon::parse('2025-12-12') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-12-12') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => now(),
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -261,7 +374,15 @@ class LombaSeeder extends Seeder
                 'lomba_mulai_pelaksanaan' => '2025-12-15',
                 'lomba_selesai_pelaksanaan' => '2025-12-17',
                 'lomba_ukuran_kelompok' => 3,
+                'lomba_status' => (Carbon::parse('2025-11-05') <= now() && Carbon::parse('2025-12-05') >= now())
+                    ? 'Akan datang'
+                    : ((Carbon::parse('2025-12-15') <= now() && Carbon::parse('2025-12-17') >= now())
+                        ? 'Sedang berlangsung'
+                        : (Carbon::parse('2025-12-17') < now()
+                            ? 'Berakhir'
+                            : 'Akan datang')),
                 'periode_id' => 5,
+                'validated_at' => null,
                 'created_at' => now(),
                 'updated_at' => now()
             ]

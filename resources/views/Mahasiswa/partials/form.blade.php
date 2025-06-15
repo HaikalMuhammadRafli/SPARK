@@ -7,35 +7,37 @@
 
     <div class="gap-4 mb-4 grid grid-cols-1 md:grid-cols-2">
         {{-- NIM --}}
-        <div>
-            <x-forms.input name="nim" label="NIM" placeholder="Masukkan NIM"
-                value="{{ $mahasiswa->nim ?? '' }}" required />
-            <span id="error-nim" class="text-sm text-red-500 mt-1 block"></span>
-        </div>
+        @if ($method !== 'PUT')
+            <div>
+                <x-forms.default-input id="nim" name="nim" label="NIM" placeholder="Masukkan NIM"
+                    value="{{ $mahasiswa->nim ?? '' }}" isRequired />
+                <span id="error-nim" class="text-sm text-red-500 mt-1 block"></span>
+            </div>
+        @endif
 
         {{-- Lokasi Preferensi --}}
         <div>
-            <x-forms.input name="lokasi_preferensi" label="Lokasi Preferensi"
-                placeholder="Masukkan Lokasi" value="{{ $mahasiswa->lokasi_preferensi ?? '' }}" required />
+            <x-forms.default-input id="lokasi_preferensi" name="lokasi_preferensi" label="Lokasi Preferensi"
+                placeholder="Masukkan Lokasi" value="{{ $mahasiswa->lokasi_preferensi ?? '' }}" isRequired />
             <span id="error-lokasi_preferensi" class="text-sm text-red-500 mt-1 block"></span>
         </div>
 
         {{-- Nama (multiline) --}}
         <div class="md:col-span-2">
-            <x-forms.input name="nama" label="Nama" placeholder="Masukkan Nama Lengkap"
+            <x-forms.default-input id="nama" name="nama" label="Nama" placeholder="Masukkan Nama Lengkap"
                 value="{{ $mahasiswa->nama ?? '' }}" rows="3" />
             <span id="error-nama" class="text-sm text-red-500 mt-1 block"></span>
         </div>
 
         {{-- Prodi ID Dropdown --}}
         <div>
-            <x-forms.select name="prodi_id" label="Program Studi" :data="[
+            <x-forms.default-select id="program_studi_id" label="Program Studi" :data="[
                 1 => 'D-IV TI',
                 2 => 'D-IV SIB',
                 3 => 'D-II PPLS',
-            ]" :value="$mahasiswa->prodi_id ?? null"
-                :required="true" />
-            <span id="error-prodi_id" class="text-sm text-red-500 mt-1 block"></span>
+            ]" :value="$mahasiswa->program_studi_id ?? null"
+                :isRequired="true" />
+            <span id="error-program_studi_id" class="text-sm text-red-500 mt-1 block"></span>
         </div>
 
     </div>
@@ -57,7 +59,7 @@
                 lokasi_preferensi: {
                     required: true
                 },
-                prodi_id: {
+                program_studi_id: {
                     required: true
                 }
             },
@@ -71,7 +73,7 @@
                 lokasi_preferensi: {
                     required: "Lokasi preferensi wajib diisi."
                 },
-                prodi_id: {
+                program_studi_id: {
                     required: "Program Studi wajib dipilih."
                 }
             },

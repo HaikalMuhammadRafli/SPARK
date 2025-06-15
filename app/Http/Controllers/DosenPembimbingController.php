@@ -48,7 +48,7 @@ class DosenPembimbingController extends Controller
             $user = UserModel::create([
                 'email' => $request->nip . '@polinema.ac.id',
                 'password' => Hash::make($request->nip),
-                'role' => 'dosen',
+                'role' => 'dosen_pembimbing',
                 'status_akun' => 'aktif',
                 'last_login_at' => now(),
                 'created_at' => now(),

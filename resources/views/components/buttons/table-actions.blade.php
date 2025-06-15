@@ -12,6 +12,9 @@
         'Export Excel' => 'fa-solid fa-file-excel',
         'Import Excel' => 'fa-solid fa-file-import',
         'Tambah Baru' => 'fa-solid fa-plus',
+        'Ajukan Lomba Baru' =>'fa-solid fa-paper-plane',
+        'Lihat Detail' => 'fa-solid fa-eye',
+        'Link Registrasi' => 'fa-solid fa-link',
     ];
 
     $icon = $iconMap[$title] ?? 'fa-solid fa-circle-question';
