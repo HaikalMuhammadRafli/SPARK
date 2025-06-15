@@ -49,4 +49,8 @@ class KelompokModel extends Model
         return $this->belongsToMany(DosenPembimbingModel::class, 't_dosen_pembimbing_peran', 'kelompok_id', 'nip')
             ->withPivot(['peran_id', 'peran_nama']);
     }
+     public function mahasiswaPeran()
+    {
+        return $this->hasMany(MahasiswaPeranModel::class, 'kelompok_id', 'kelompok_id');
+    }
 }

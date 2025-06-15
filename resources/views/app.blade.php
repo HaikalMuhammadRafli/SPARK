@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="max-w-7xl justify-center items-center mx-auto">
-        <nav class="flex justify-between px-12 mt-6 items-center p-6 bg-white">
+        <nav class="flex justify-between px-12 mt-6 items-center p-6">
             <a href="#" class="text-xl font-bold text-black italic">SiPresma</a>
             <div class="space-x-8">
                 <a href="#" class="text-gray-700 hover:text-black">About us</a>
@@ -10,10 +10,10 @@
                 <a href="#" class="text-gray-700 hover:text-black">Use Cases</a>
                 <a href="#" class="text-gray-700 hover:text-black">Team</a>
                 <a href="#" class="text-gray-700 hover:text-black">Blog</a>
-                <a href="#"
+                <a href="{{ route('login') }}"
                     class=" text-black border-1 border-gray-600 px-8 py-4 rounded-2xl hover:bg-gray-700">Request
                     a
-                    quote</a>
+                    Login</a>
             </div>
         </nav>
 
@@ -41,7 +41,7 @@
         </section>
 
         <!-- Services Section -->
-        <section class="bg-white py-16 px-6">
+        <section class=" py-16 px-6">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-bold text-green-600">Services</h2>
                 <p class="mt-4 text-xl font-serif text-gray-600">
@@ -168,7 +168,7 @@
         </section>
 
 
-        <section class="py-16 px-6 bg-gray-50">
+        <section class="py-16 px-6">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-semibold text-green-600">Our Working Process</h2>
                 <p class="text-xl text-gray-600 mt-4">Step-by-Step Guide to Achieving Your Prestasi</p>
@@ -272,7 +272,7 @@
             </div>
         </section>
 
-        <section class="py-16 px-6 bg-gray-50">
+        <section class="py-16 px-6">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-semibold text-green-600">Team</h2>
                 <p class="text-xl text-gray-600 mt-4">Meet the skilled and experienced team behind our successful

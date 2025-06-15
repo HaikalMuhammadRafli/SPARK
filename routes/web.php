@@ -17,6 +17,8 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
 use App\Http\Controllers\LombaController;
+use App\Http\Controllers\LaporanAnalisisPrestasiController;
+use App\Http\Controllers\PrestasiController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
@@ -185,6 +187,15 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/{id}/delete', [DosenPembimbingController::class, 'deleteView'])->name('delete');
             });
         });
+
+        Route::prefix('laporan')->name('laporan.')->group(function () {
+            Route::get('/', [LaporanAnalisisPrestasiController::class, 'indexView'])->name('index');
+            Route::get('/{id}/edit', [LaporanAnalisisPrestasiController::class, 'editView'])->name('edit');
+            Route::put('/{id}', [LaporanAnalisisPrestasiController::class, 'update'])->name('update');
+            Route::get('/{id}/delete', [LaporanAnalisisPrestasiController::class, 'deleteView'])->name('delete');
+            Route::get('/export/excel', [LaporanAnalisisPrestasiController::class, 'exportExcel'])->name('export.excel');
+            Route::get('/export/pdf', [LaporanAnalisisPrestasiController::class, 'exportPdf'])->name('export.pdf');
+        });
     });
 
     Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
@@ -203,19 +214,6 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [MahasiswaPagesController::class, 'kelompokUpdate'])->name('update');
             Route::get('/{id}/delete', [MahasiswaPagesController::class, 'kelompokDelete'])->name('delete');
             Route::delete('/{id}', [MahasiswaPagesController::class, 'kelompokDestroy'])->name('destroy');
-        });
-
-        // Data Lomba Routes
-        Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
-            Route::get('/', [MahasiswaPagesController::class, 'dataLombaIndex'])->name('index');
-            Route::get('/data', [MahasiswaPagesController::class, 'dataLombaData'])->name('data');
-            Route::get('/create', [MahasiswaPagesController::class, 'dataLombaCreate'])->name('create');
-            Route::post('/', [MahasiswaPagesController::class, 'dataLombaStore'])->name('store');
-            Route::get('/{id}', [MahasiswaPagesController::class, 'dataLombaShow'])->name('show');
-            Route::get('/{id}/edit', [MahasiswaPagesController::class, 'dataLombaEdit'])->name('edit');
-            Route::put('/{id}', [MahasiswaPagesController::class, 'dataLombaUpdate'])->name('update');
-            Route::get('/{id}/delete', [MahasiswaPagesController::class, 'dataLombaDelete'])->name('delete');
-            Route::delete('/{id}', [MahasiswaPagesController::class, 'dataLombaDestroy'])->name('destroy');
         });
     });
 });
