@@ -6,7 +6,6 @@ use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\MahasiswaPagesController;
 use App\Http\Controllers\PrestasiController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SPKController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -215,18 +214,18 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/{id}', [MahasiswaPagesController::class, 'kelompokDestroy'])->name('destroy');
         });
         Route::prefix('prestasi')->name('prestasi.')->group(function () {
-                Route::get('/', [PrestasiController::class, 'indexView'])->name('index');
-                Route::get('/json', [PrestasiController::class, 'indexMahasiswa'])->name('indexJson');
-                Route::get('/data', [PrestasiController::class, 'dataMahasiswa'])->name('data');
-                Route::get('/create', [PrestasiController::class, 'createMahasiswa'])->name('create');
-                Route::post('/', [PrestasiController::class, 'storeMahasiswa'])->name('store');
-                Route::get('/{id}', [PrestasiController::class, 'showMahasiswa'])->name('show');
-                Route::get('/{id}/edit', [PrestasiController::class, 'editMahasiswa'])->name('edit');
-                Route::put('/{id}', [PrestasiController::class, 'updateMahasiswa'])->name('update');
-                Route::get('/{id}/delete', [PrestasiController::class, 'deleteMahasiswa'])->name('delete');
-                Route::delete('/{id}', [PrestasiController::class, 'destroyMahasiswa'])->name('destroy');
-            });
-            Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
+            Route::get('/', [PrestasiController::class, 'indexView'])->name('index');
+            Route::get('/json', [PrestasiController::class, 'indexMahasiswa'])->name('indexJson');
+            Route::get('/data', [PrestasiController::class, 'dataMahasiswa'])->name('data');
+            Route::get('/create', [PrestasiController::class, 'createMahasiswa'])->name('create');
+            Route::post('/', [PrestasiController::class, 'storeMahasiswa'])->name('store');
+            Route::get('/{id}', [PrestasiController::class, 'showMahasiswa'])->name('show');
+            Route::get('/{id}/edit', [PrestasiController::class, 'editMahasiswa'])->name('edit');
+            Route::put('/{id}', [PrestasiController::class, 'updateMahasiswa'])->name('update');
+            Route::get('/{id}/delete', [PrestasiController::class, 'deleteMahasiswa'])->name('delete');
+            Route::delete('/{id}', [PrestasiController::class, 'destroyMahasiswa'])->name('destroy');
+        });
+        Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
             Route::get('/', [MahasiswaPagesController::class, 'dataLombaIndex'])->name('index');
             Route::get('/data', [MahasiswaPagesController::class, 'dataLombaData'])->name('data');
             Route::get('/create', [MahasiswaPagesController::class, 'dataLombaCreate'])->name('create');
