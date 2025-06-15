@@ -8,45 +8,70 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <!-- Nama Lomba -->
         <div class="md:col-span-2">
-            <x-forms.default-input id="lomba_nama" label="Nama Lomba"
-                placeholder="Masukkan Nama Lomba" value="{{ $lomba->lomba_nama ?? '' }}"
+            <x-forms.input id="lomba_nama" label="Nama Lomba"
+                placeholder="Masukkan Nama Lomba" value="{{ isset($lomba) ? $lomba->lomba_nama : '' }}"
                 isRequired />
         </div>
 
-        <!-- Kategori -->
+        <!-- Kategori - Changed to Select -->
         <div>
-            <x-forms.default-input id="lomba_kategori" label="Kategori Lomba"
-                placeholder="Masukkan Kategori Lomba" value="{{ $lomba->lomba_kategori ?? '' }}"
-                isRequired />
+            <label for="lomba_kategori" class="block text-sm font-medium text-gray-900 mb-2">
+                Kategori Lomba <span class="text-red-500">*</span>
+            </label>
+            <select id="lomba_kategori" name="lomba_kategori" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <option value="">Pilih Kategori</option>
+                @if(isset($kategoris))
+                    @foreach($kategoris as $key => $value)
+                        <option value="{{ $key }}" {{ (isset($lomba) && $lomba->lomba_kategori == $key) ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
+            <span id="error-lomba_kategori" class="error-text text-red-500 text-xs"></span>
         </div>
 
         <!-- Penyelenggara -->
         <div>
-            <x-forms.default-input id="lomba_penyelenggara" label="Penyelenggara"
-                placeholder="Masukkan Penyelenggara" value="{{ $lomba->lomba_penyelenggara ?? '' }}"
+            <x-forms.input id="lomba_penyelenggara" label="Penyelenggara"
+                placeholder="Masukkan Penyelenggara" value="{{ isset($lomba) ? $lomba->lomba_penyelenggara : '' }}"
                 isRequired />
         </div>
 
-        <!-- Tingkat -->
+        <!-- Tingkat - Updated with correct options -->
         <div>
             <label for="lomba_tingkat" class="block text-sm font-medium text-gray-900 mb-2">
                 Tingkat Lomba <span class="text-red-500">*</span>
             </label>
             <select id="lomba_tingkat" name="lomba_tingkat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
                 <option value="">Pilih Tingkat</option>
-                <option value="Lokal" {{ (isset($lomba) && $lomba->lomba_tingkat == 'Lokal') ? 'selected' : '' }}>Lokal</option>
-                <option value="Regional" {{ (isset($lomba) && $lomba->lomba_tingkat == 'Regional') ? 'selected' : '' }}>Regional</option>
-                <option value="Nasional" {{ (isset($lomba) && $lomba->lomba_tingkat == 'Nasional') ? 'selected' : '' }}>Nasional</option>
-                <option value="Internasional" {{ (isset($lomba) && $lomba->lomba_tingkat == 'Internasional') ? 'selected' : '' }}>Internasional</option>
+                @if(isset($tingkats))
+                    @foreach($tingkats as $key => $value)
+                        <option value="{{ $key }}" {{ (isset($lomba) && $lomba->lomba_tingkat == $key) ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                @endif
             </select>
             <span id="error-lomba_tingkat" class="error-text text-red-500 text-xs"></span>
         </div>
 
-        <!-- Lokasi -->
+        <!-- Lokasi Preferensi - Changed to Select -->
         <div>
-            <x-forms.default-input id="lomba_lokasi_preferensi" label="Lokasi Lomba"
-                placeholder="Masukkan Lokasi Lomba" value="{{ $lomba->lomba_lokasi_preferensi ?? '' }}"
-                isRequired />
+            <label for="lomba_lokasi_preferensi" class="block text-sm font-medium text-gray-900 mb-2">
+                Lokasi Preferensi <span class="text-red-500">*</span>
+            </label>
+            <select id="lomba_lokasi_preferensi" name="lomba_lokasi_preferensi" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+                <option value="">Pilih Lokasi Preferensi</option>
+                @if(isset($lokasi_preferensis))
+                    @foreach($lokasi_preferensis as $key => $value)
+                        <option value="{{ $key }}" {{ (isset($lomba) && $lomba->lomba_lokasi_preferensi == $key) ? 'selected' : '' }}>
+                            {{ $value }}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
+            <span id="error-lomba_lokasi_preferensi" class="error-text text-red-500 text-xs"></span>
         </div>
 
         <!-- Periode -->
@@ -56,14 +81,18 @@
             </label>
             <select id="periode_id" name="periode_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
                 <option value="">Pilih Periode</option>
-                @foreach($periodes as $periode)
-                    <option value="{{ $periode->periode_id }}" {{ (isset($lomba) && $lomba->periode_id == $periode->periode_id) ? 'selected' : '' }}>
-                        {{ $periode->periode_nama }}
-                    </option>
-                @endforeach
+                @if(isset($periodes))
+                    @foreach($periodes as $periode)
+                        <option value="{{ $periode->periode_id }}" {{ (isset($lomba) && $lomba->periode_id == $periode->periode_id) ? 'selected' : '' }}>
+                            {{ $periode->periode_nama }}
+                        </option>
+                    @endforeach
+                @endif
             </select>
             <span id="error-periode_id" class="error-text text-red-500 text-xs"></span>
         </div>
+
+        <!-- Status Field Removed - Auto Generated by Controller -->
 
         <!-- Tanggal Mulai Pendaftaran -->
         <div>
@@ -87,47 +116,74 @@
             <span id="error-lomba_akhir_pendaftaran" class="error-text text-red-500 text-xs"></span>
         </div>
 
-        <!-- Status -->
+        <!-- Tanggal Mulai Pelaksanaan -->
         <div>
-            <label for="lomba_status" class="block text-sm font-medium text-gray-900 mb-2">
-                Status <span class="text-red-500">*</span>
+            <label for="lomba_mulai_pelaksanaan" class="block text-sm font-medium text-gray-900 mb-2">
+                Mulai Pelaksanaan <span class="text-red-500">*</span>
             </label>
-            <select id="lomba_status" name="lomba_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                <option value="">Pilih Status</option>
-                <option value="buka" {{ (isset($lomba) && $lomba->lomba_status == 'buka') ? 'selected' : '' }}>Buka</option>
-                <option value="tutup" {{ (isset($lomba) && $lomba->lomba_status == 'tutup') ? 'selected' : '' }}>Tutup</option>
-                <option value="selesai" {{ (isset($lomba) && $lomba->lomba_status == 'selesai') ? 'selected' : '' }}>Selesai</option>
-            </select>
-            <span id="error-lomba_status" class="error-text text-red-500 text-xs"></span>
+            <input type="date" id="lomba_mulai_pelaksanaan" name="lomba_mulai_pelaksanaan" 
+                value="{{ isset($lomba) && $lomba->lomba_mulai_pelaksanaan ? $lomba->lomba_mulai_pelaksanaan->format('Y-m-d') : '' }}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+            <span id="error-lomba_mulai_pelaksanaan" class="error-text text-red-500 text-xs"></span>
+        </div>
+
+        <!-- Tanggal Selesai Pelaksanaan -->
+        <div>
+            <label for="lomba_selesai_pelaksanaan" class="block text-sm font-medium text-gray-900 mb-2">
+                Selesai Pelaksanaan <span class="text-red-500">*</span>
+            </label>
+            <input type="date" id="lomba_selesai_pelaksanaan" name="lomba_selesai_pelaksanaan" 
+                value="{{ isset($lomba) && $lomba->lomba_selesai_pelaksanaan ? $lomba->lomba_selesai_pelaksanaan->format('Y-m-d') : '' }}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+            <span id="error-lomba_selesai_pelaksanaan" class="error-text text-red-500 text-xs"></span>
+        </div>
+
+        <!-- Link Registrasi -->
+        <div>
+            <x-forms.input id="lomba_link_registrasi" label="Link Registrasi"
+                placeholder="Masukkan Link Registrasi" value="{{ isset($lomba) ? $lomba->lomba_link_registrasi : '' }}"
+                isRequired />
+        </div>
+
+        <!-- Ukuran Kelompok -->
+        <div>
+            <label for="lomba_ukuran_kelompok" class="block text-sm font-medium text-gray-900 mb-2">
+                Ukuran Kelompok <span class="text-red-500">*</span>
+            </label>
+            <input type="number" id="lomba_ukuran_kelompok" name="lomba_ukuran_kelompok" min="1" max="20"
+                value="{{ isset($lomba) ? $lomba->lomba_ukuran_kelompok : '1' }}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
+            <span id="error-lomba_ukuran_kelompok" class="error-text text-red-500 text-xs"></span>
         </div>
 
         <!-- Poster Upload -->
         <div class="md:col-span-2">
             <label for="lomba_poster" class="block text-sm font-medium text-gray-900 mb-2">
-                Poster Lomba
+                Poster Lomba {{ !isset($lomba) ? '*' : '' }}
             </label>
             <input type="file" id="lomba_poster" name="lomba_poster" accept="image/*"
-                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none">
+                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                {{ !isset($lomba) ? 'required' : '' }}>
             <p class="mt-1 text-sm text-gray-500">PNG, JPG, JPEG (MAX. 2MB)</p>
             <span id="error-lomba_poster" class="error-text text-red-500 text-xs"></span>
             
             @if(isset($lomba) && $lomba->lomba_poster_url)
-                <div class="mt-2">
+                <div class="mt-2 current-poster">
                     <p class="text-sm text-gray-600 mb-2">Poster saat ini:</p>
                     <img src="{{ asset('storage/' . $lomba->lomba_poster_url) }}" alt="Current Poster" class="w-32 h-32 object-cover rounded-lg border">
                 </div>
             @endif
         </div>
 
-        <!-- Deskripsi -->
+        <!-- Persyaratan -->
         <div class="md:col-span-2">
-            <label for="lomba_deskripsi" class="block text-sm font-medium text-gray-900 mb-2">
-                Deskripsi Lomba
+            <label for="lomba_persyaratan" class="block text-sm font-medium text-gray-900 mb-2">
+                Persyaratan Lomba <span class="text-red-500">*</span>
             </label>
-            <textarea id="lomba_deskripsi" name="lomba_deskripsi" rows="4" 
+            <textarea id="lomba_persyaratan" name="lomba_persyaratan" rows="4" 
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Masukkan deskripsi lomba...">{{ $lomba->lomba_deskripsi ?? '' }}</textarea>
-            <span id="error-lomba_deskripsi" class="error-text text-red-500 text-xs"></span>
+                placeholder="Masukkan persyaratan lomba..." required>{{ isset($lomba) ? $lomba->lomba_persyaratan : '' }}</textarea>
+            <span id="error-lomba_persyaratan" class="error-text text-red-500 text-xs"></span>
         </div>
     </div>
 
@@ -183,10 +239,31 @@
                     required: true,
                     date: true
                 },
-                lomba_status: {
-                    required: true
+                lomba_mulai_pelaksanaan: {
+                    required: true,
+                    date: true
+                },
+                lomba_selesai_pelaksanaan: {
+                    required: true,
+                    date: true
+                },
+                lomba_link_registrasi: {
+                    required: true,
+                    url: true
+                },
+                lomba_ukuran_kelompok: {
+                    required: true,
+                    min: 1,
+                    max: 20
+                },
+                lomba_persyaratan: {
+                    required: true,
+                    minlength: 10
                 },
                 lomba_poster: {
+                    @if(!isset($lomba))
+                    required: true,
+                    @endif
                     accept: "image/*"
                 }
             },
@@ -196,7 +273,7 @@
                     minlength: "Nama lomba minimal 3 karakter."
                 },
                 lomba_kategori: {
-                    required: "Kategori lomba wajib diisi."
+                    required: "Kategori lomba wajib dipilih."
                 },
                 lomba_penyelenggara: {
                     required: "Penyelenggara wajib diisi."
@@ -205,7 +282,7 @@
                     required: "Tingkat lomba wajib dipilih."
                 },
                 lomba_lokasi_preferensi: {
-                    required: "Lokasi lomba wajib diisi."
+                    required: "Lokasi preferensi wajib dipilih."
                 },
                 periode_id: {
                     required: "Periode wajib dipilih."
@@ -218,23 +295,61 @@
                     required: "Tanggal akhir pendaftaran wajib diisi.",
                     date: "Format tanggal tidak valid."
                 },
-                lomba_status: {
-                    required: "Status lomba wajib dipilih."
+                lomba_mulai_pelaksanaan: {
+                    required: "Tanggal mulai pelaksanaan wajib diisi.",
+                    date: "Format tanggal tidak valid."
+                },
+                lomba_selesai_pelaksanaan: {
+                    required: "Tanggal selesai pelaksanaan wajib diisi.",
+                    date: "Format tanggal tidak valid."
+                },
+                lomba_link_registrasi: {
+                    required: "Link registrasi wajib diisi.",
+                    url: "Format URL tidak valid."
+                },
+                lomba_ukuran_kelompok: {
+                    required: "Ukuran kelompok wajib diisi.",
+                    min: "Ukuran kelompok minimal 1 orang.",
+                    max: "Ukuran kelompok maksimal 20 orang."
+                },
+                lomba_persyaratan: {
+                    required: "Persyaratan lomba wajib diisi.",
+                    minlength: "Persyaratan minimal 10 karakter."
                 },
                 lomba_poster: {
+                    @if(!isset($lomba))
+                    required: "Poster lomba wajib diupload.",
+                    @endif
                     accept: "File harus berupa gambar (PNG, JPG, JPEG)."
                 }
             },
             submitHandler: function(form, event) {
                 event.preventDefault();
                 
-                // Validate end date is after start date
-                const startDate = new Date($('#lomba_mulai_pendaftaran').val());
-                const endDate = new Date($('#lomba_akhir_pendaftaran').val());
+                // Validate date sequence
+                const startReg = new Date($('#lomba_mulai_pendaftaran').val());
+                const endReg = new Date($('#lomba_akhir_pendaftaran').val());
+                const startEvent = new Date($('#lomba_mulai_pelaksanaan').val());
+                const endEvent = new Date($('#lomba_selesai_pelaksanaan').val());
                 
-                if (endDate <= startDate) {
-                    $('#error-lomba_akhir_pendaftaran').text('Tanggal akhir harus setelah tanggal mulai pendaftaran.');
+                // Registration end must be after registration start
+                if (endReg <= startReg) {
+                    $('#error-lomba_akhir_pendaftaran').text('Tanggal akhir pendaftaran harus setelah tanggal mulai pendaftaran.');
                     $('#lomba_akhir_pendaftaran').addClass('is-invalid');
+                    return false;
+                }
+                
+                // Event start should be after or equal to registration end
+                if (startEvent < endReg) {
+                    $('#error-lomba_mulai_pelaksanaan').text('Tanggal mulai pelaksanaan harus setelah atau sama dengan tanggal akhir pendaftaran.');
+                    $('#lomba_mulai_pelaksanaan').addClass('is-invalid');
+                    return false;
+                }
+                
+                // Event end must be after event start
+                if (endEvent <= startEvent) {
+                    $('#error-lomba_selesai_pelaksanaan').text('Tanggal selesai pelaksanaan harus setelah tanggal mulai pelaksanaan.');
+                    $('#lomba_selesai_pelaksanaan').addClass('is-invalid');
                     return false;
                 }
                 
@@ -276,6 +391,8 @@
                             }).then(() => {
                                 if (typeof reloadDataTable === 'function') {
                                     reloadDataTable();
+                                } else if (typeof loadLombaData === 'function') {
+                                    loadLombaData();
                                 } else {
                                     location.reload();
                                 }
@@ -308,11 +425,23 @@
                         submitButton.html(originalText).prop('disabled', false);
                         
                         console.log(xhr);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.'
-                        });
+                        if (xhr.status === 422) {
+                            // Validation errors
+                            const errors = xhr.responseJSON.errors;
+                            $('.error-text').text('');
+                            $('.is-invalid').removeClass('is-invalid');
+                            
+                            $.each(errors, function(field, messages) {
+                                $('#error-' + field).text(messages[0]);
+                                $('#' + field).addClass('is-invalid');
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi kesalahan server. Silakan coba lagi.'
+                            });
+                        }
                     }
                 });
                 return false;
@@ -332,7 +461,7 @@
 
         // Clear errors on input
         $('#form input, #form select, #form textarea').on('input change', function() {
-            const fieldId = $(this).attr('id');
+            const fieldId = $(this).attr('id') || $(this).attr('name');
             $('#error-' + fieldId).text('');
             $(this).removeClass('is-invalid');
         });
@@ -364,27 +493,51 @@
                     // Add new preview
                     const preview = `
                         <div class="poster-preview mt-2">
-                            <p class="text-sm text-gray-600 mb-2">Preview poster:</p>
+                            <p class="text-sm text-gray-600 mb-2">Preview poster baru:</p>
                             <img src="${e.target.result}" alt="Preview" class="w-32 h-32 object-cover rounded-lg border">
                         </div>
                     `;
                     $('#lomba_poster').parent().append(preview);
                 };
                 reader.readAsDataURL(file);
+            } else {
+                $('.poster-preview').remove();
             }
         });
 
-        // Add date validation
-        $('#lomba_mulai_pendaftaran, #lomba_akhir_pendaftaran').on('change', function() {
-            const startDate = new Date($('#lomba_mulai_pendaftaran').val());
-            const endDate = new Date($('#lomba_akhir_pendaftaran').val());
+        // Date validation with improved logic
+        $('#lomba_mulai_pendaftaran, #lomba_akhir_pendaftaran, #lomba_mulai_pelaksanaan, #lomba_selesai_pelaksanaan').on('change', function() {
+            const startReg = $('#lomba_mulai_pendaftaran').val();
+            const endReg = $('#lomba_akhir_pendaftaran').val();
+            const startEvent = $('#lomba_mulai_pelaksanaan').val();
+            const endEvent = $('#lomba_selesai_pelaksanaan').val();
             
-            if (startDate && endDate && endDate <= startDate) {
-                $('#error-lomba_akhir_pendaftaran').text('Tanggal akhir harus setelah tanggal mulai pendaftaran.');
-                $('#lomba_akhir_pendaftaran').addClass('is-invalid');
-            } else {
-                $('#error-lomba_akhir_pendaftaran').text('');
-                $('#lomba_akhir_pendaftaran').removeClass('is-invalid');
+            // Clear previous errors for date fields only
+            $('input[type="date"]').each(function() {
+                const fieldId = $(this).attr('id');
+                $('#error-' + fieldId).text('');
+                $(this).removeClass('is-invalid');
+            });
+            
+            if (startReg && endReg) {
+                if (new Date(endReg) <= new Date(startReg)) {
+                    $('#error-lomba_akhir_pendaftaran').text('Tanggal akhir pendaftaran harus setelah tanggal mulai pendaftaran.');
+                    $('#lomba_akhir_pendaftaran').addClass('is-invalid');
+                }
+            }
+            
+            if (endReg && startEvent) {
+                if (new Date(startEvent) < new Date(endReg)) {
+                    $('#error-lomba_mulai_pelaksanaan').text('Tanggal mulai pelaksanaan harus setelah atau sama dengan tanggal akhir pendaftaran.');
+                    $('#lomba_mulai_pelaksanaan').addClass('is-invalid');
+                }
+            }
+            
+            if (startEvent && endEvent) {
+                if (new Date(endEvent) <= new Date(startEvent)) {
+                    $('#error-lomba_selesai_pelaksanaan').text('Tanggal selesai pelaksanaan harus setelah tanggal mulai pelaksanaan.');
+                    $('#lomba_selesai_pelaksanaan').addClass('is-invalid');
+                }
             }
         });
     });

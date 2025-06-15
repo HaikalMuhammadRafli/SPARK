@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LombaStoreRequest;
-use App\Http\Requests\LombaUpdateRequest;
-use App\Models\LombaModel;
-use App\Models\PeriodeModel;
-use Exception;
+use App\Models\KelompokModel;
+// use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Models\LombaModel;
+use Exception;
+use App\Models\PeriodeModel;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class LombaController extends Controller
+class DospemPagesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $breadcrumbs = [
-            ['name' => 'Lomba', 'url' => route('admin.manajemen.lomba.index')],
-        ];
 
-        return view('lomba.index', [
-            'breadcrumbs' => $breadcrumbs,
-            'title' => 'Manajemen Lomba',
+     public function dataLombaIndex()
+    {
+        // Auto-update status based on dates
+        $this->updateLombaStatus();
+
+        return view('pages.mahasiswa.data-lomba.index', [
+            'breadcrumbs' => [
+                ['name' => 'Data Lomba', 'url' => route('mahasiswa.data-lomba.index')],
+            ],
+            'title' => 'Data Lomba',
             'kategoris' => [
                 'Programming' => 'Programming',
                 'Artificial Intelligence' => 'Artificial Intelligence',
@@ -53,7 +52,7 @@ class LombaController extends Controller
                 'Nasional' => 'Nasional',
                 'Internasional' => 'Internasional',
             ],
-            'status_options' => [
+            'statuses' => [
                 'Akan datang' => 'Akan datang',
                 'Sedang berlangsung' => 'Sedang berlangsung',
                 'Berakhir' => 'Berakhir',
@@ -62,12 +61,10 @@ class LombaController extends Controller
         ]);
     }
 
-    public function data(Request $request)
+    public function dataLombaData(Request $request)
     {
-        // Auto-update status based on dates
-        $this->updateLombaStatus();
-
-        $query = LombaModel::with('periode');
+        $user = Auth::user();
+        $query = LombaModel::with(['periode']);
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -111,8 +108,11 @@ class LombaController extends Controller
 
         $lombas = $query->orderBy('created_at', 'desc')->get();
 
+        // Auto-update status based on dates
+        $this->updateLombaStatus();
+
         // Return the partial view as HTML
-        $html = view('lomba.partials.lomba-table', compact('lombas'))->render();
+        $html = view('pages.mahasiswa.data-lomba.partials.lomba-grid', compact('lombas'))->render();
 
         return response()->json([
             'status' => true,
@@ -121,10 +121,21 @@ class LombaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function dataLombaShow(string $id)
+    {
+        $lomba = LombaModel::with(['periode'])->findOrFail($id);
+
+        return view('pages.mahasiswa.data-lomba.show', [
+            'breadcrumbs' => [
+                ['name' => 'Data Lomba', 'url' => route('mahasiswa.data-lomba.index')],
+                ['name' => 'Detail Lomba', 'url' => route('mahasiswa.data-lomba.show', $id)],
+            ],
+            'title' => 'Detail Lomba',
+            'lomba' => $lomba
+        ]);
+    }
+
+    public function dataLombaCreate()
     {
         // Ambil periode yang masih aktif berdasarkan tahun
         $currentYear = Carbon::now()->year;
@@ -135,8 +146,7 @@ class LombaController extends Controller
         ->orderBy('periode_nama', 'asc')
         ->get();
 
-        return view('lomba.modals.create', [
-            'periodes' => $periodes,
+        return view('pages.mahasiswa.data-lomba.modals.create', [
             'kategoris' => [
                 'Programming' => 'Programming',
                 'Artificial Intelligence' => 'Artificial Intelligence',
@@ -165,13 +175,11 @@ class LombaController extends Controller
                 'Nasional' => 'Nasional',
                 'Internasional' => 'Internasional',
             ],
+            'periodes' => $periodes,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function dataLombaStore(Request $request)
     {
         // Validasi input sesuai dengan migration
         $request->validate([
@@ -187,7 +195,7 @@ class LombaController extends Controller
             'lomba_mulai_pelaksanaan' => 'required|date|after:lomba_akhir_pendaftaran',
             'lomba_selesai_pelaksanaan' => 'required|date|after:lomba_mulai_pelaksanaan',
             'lomba_ukuran_kelompok' => 'required|integer|min:1|max:10',
-            'lomba_poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'lomba_poster_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'periode_id' => 'required|exists:m_periode,periode_id',
         ], [
             'lomba_nama.required' => 'Nama lomba wajib diisi.',
@@ -226,7 +234,8 @@ class LombaController extends Controller
                 $status = 'Berakhir';
             }
 
-            $data = [
+            // Buat lomba baru
+            $lomba = LombaModel::create([
                 'lomba_nama' => $request->lomba_nama,
                 'lomba_kategori' => $request->lomba_kategori,
                 'lomba_penyelenggara' => $request->lomba_penyelenggara,
@@ -241,50 +250,23 @@ class LombaController extends Controller
                 'lomba_ukuran_kelompok' => $request->lomba_ukuran_kelompok,
                 'lomba_status' => $status,
                 'periode_id' => $request->periode_id,
-            ];
-
-            // Handle poster upload
-            if ($request->hasFile('lomba_poster')) {
-                $data['lomba_poster_url'] = $this->handlePosterUpload($request->file('lomba_poster'));
-            }
-
-            LombaModel::create($data);
+            ]);
 
             return response()->json([
                 'status' => true,
-                'message' => 'Data lomba berhasil ditambahkan!',
+                'message' => 'Lomba berhasil ditambahkan.',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Terjadi kesalahan saat menyimpan lomba: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan saat menyimpan lomba.',
                 'msgField' => []
             ], 500);
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $lomba = LombaModel::with(['periode'])->findOrFail($id);
-
-        return view('lomba.detail', [
-            'title' => 'Detail Lomba',
-            'breadcrumbs' => [
-                ['name' => 'Lomba', 'url' => route('admin.manajemen.lomba.index')],
-                ['name' => 'Detail'],
-            ],
-            'lomba' => $lomba,
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function dataLombaEdit(string $id)
     {
         $lomba = LombaModel::with(['periode'])->findOrFail($id);
 
@@ -292,13 +274,16 @@ class LombaController extends Controller
         $currentYear = Carbon::now()->year;
         $periodes = PeriodeModel::where(function ($query) use ($currentYear) {
             $query->where('periode_tahun_awal', '<=', $currentYear)
-                  ->where('periode_tahun_akhir', '>=', $currentYear);
+                ->where('periode_tahun_akhir', '>=', $currentYear);
         })
         ->orderBy('periode_nama', 'asc')
         ->get();
 
-        return view('lomba.modals.edit', [
-            'title' => 'Edit Lomba',
+        return view('pages.mahasiswa.data-lomba.partials.form', [
+            'action' => route('mahasiswa.data-lomba.update', $lomba->lomba_id),
+            'method' => 'PUT',
+            'buttonText' => 'Update Lomba',
+            'buttonIcon' => 'fa-solid fa-save',
             'lomba' => $lomba,
             'periodes' => $periodes,
             'kategoris' => [
@@ -332,10 +317,7 @@ class LombaController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function dataLombaUpdate(Request $request, string $id)
     {
         $lomba = LombaModel::findOrFail($id);
 
@@ -353,7 +335,6 @@ class LombaController extends Controller
             'lomba_mulai_pelaksanaan' => 'required|date|after:lomba_akhir_pendaftaran',
             'lomba_selesai_pelaksanaan' => 'required|date|after:lomba_mulai_pelaksanaan',
             'lomba_ukuran_kelompok' => 'required|integer|min:1|max:10',
-            'lomba_poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'periode_id' => 'required|exists:m_periode,periode_id',
         ], [
             'lomba_nama.required' => 'Nama lomba wajib diisi.',
@@ -392,7 +373,7 @@ class LombaController extends Controller
                 $status = 'Berakhir';
             }
 
-            $data = [
+            $lomba->update([
                 'lomba_nama' => $request->lomba_nama,
                 'lomba_kategori' => $request->lomba_kategori,
                 'lomba_penyelenggara' => $request->lomba_penyelenggara,
@@ -407,50 +388,41 @@ class LombaController extends Controller
                 'lomba_ukuran_kelompok' => $request->lomba_ukuran_kelompok,
                 'lomba_status' => $status,
                 'periode_id' => $request->periode_id,
-            ];
-
-            // Handle poster upload
-            if ($request->hasFile('lomba_poster')) {
-                // Delete old poster if exists
-                if ($lomba->lomba_poster_url && Storage::disk('public')->exists($lomba->lomba_poster_url)) {
-                    Storage::disk('public')->delete($lomba->lomba_poster_url);
-                }
-                
-                // Upload new poster
-                $data['lomba_poster_url'] = $this->handlePosterUpload($request->file('lomba_poster'));
-            }
-
-            $lomba->update($data);
+            ]);
 
             return response()->json([
                 'status' => true,
-                'message' => 'Data lomba berhasil diperbarui!',
+                'message' => 'Lomba berhasil diupdate.',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Terjadi kesalahan saat mengupdate lomba: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan saat mengupdate lomba.',
                 'msgField' => []
             ], 500);
         }
     }
 
-    public function delete(string $id)
+    public function dataLombaDelete(string $id)
     {
-        return view('lomba.modals.delete', [
-            'lomba' => LombaModel::findOrFail($id),
+        $lomba = LombaModel::findOrFail($id);
+
+        return view('pages.mahasiswa.data-lomba.modals.delete', [
+            'lomba' => $lomba
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function dataLombaDestroy(string $id)
     {
+        $lomba = LombaModel::findOrFail($id);
+        
+        // Check if user can delete this lomba
+        if (!$this->canEditLomba($lomba)) {
+            abort(403, 'Anda tidak memiliki izin untuk menghapus lomba ini.');
+        }
+
         try {
-            $lomba = LombaModel::findOrFail($id);
-            
             // Check if lomba has any related kelompok
             if ($lomba->kelompoks()->count() > 0) {
                 return response()->json([
@@ -458,18 +430,13 @@ class LombaController extends Controller
                     'message' => 'Lomba tidak dapat dihapus karena sudah memiliki kelompok yang terdaftar.'
                 ], 400);
             }
-            
-            // Delete poster file if exists
-            if ($lomba->lomba_poster_url && Storage::disk('public')->exists($lomba->lomba_poster_url)) {
-                Storage::disk('public')->delete($lomba->lomba_poster_url);
-            }
-            
+
             $lomba->delete();
 
             return response()->json([
                 'status' => true,
-                'message' => 'Data lomba berhasil dihapus!',
-                'redirect' => route('admin.manajemen.lomba.index')
+                'message' => 'Lomba berhasil dihapus.',
+                'redirect' => route('mahasiswa.data-lomba.index')
             ]);
 
         } catch (\Exception $e) {
@@ -481,31 +448,19 @@ class LombaController extends Controller
     }
 
     /**
-     * Handle poster file upload with validation
+     * Check if user can edit/delete lomba
      */
-    private function handlePosterUpload($file)
+    private function canEditLomba($lomba)
     {
-        // Validate file
-        if (!$file->isValid()) {
-            throw new Exception('File poster tidak valid!');
+        $user = Auth::user();
+        
+        // Only creator can edit their own lomba
+        if ($lomba->created_by === $user->user_id) {
+            // Can only edit if status is still 'menunggu_verifikasi'
+            return $lomba->lomba_status === 'menunggu_verifikasi';
         }
-        
-        // Check file size (max 2MB)
-        if ($file->getSize() > 2 * 1024 * 1024) {
-            throw new Exception('Ukuran file poster maksimal 2MB!');
-        }
-        
-        // Check file type
-        $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
-        if (!in_array($file->getMimeType(), $allowedMimes)) {
-            throw new Exception('Format file harus JPG, JPEG, atau PNG!');
-        }
-        
-        // Generate unique filename
-        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-        
-        // Store file
-        return $file->storeAs('lomba/posters', $fileName, 'public');
+
+        return false;
     }
 
     /**
@@ -515,46 +470,34 @@ class LombaController extends Controller
     {
         $now = Carbon::now();
 
-        // Update to 'Sedang berlangsung' if within registration period
-        LombaModel::where('lomba_status', 'Akan datang')
-            ->where('lomba_mulai_pendaftaran', '<=', $now)
-            ->where('lomba_akhir_pendaftaran', '>=', $now)
-            ->update(['lomba_status' => 'Sedang berlangsung']);
+        // Update to 'tutup' if registration period has ended
+        LombaModel::where('lomba_status', 'buka')
+            ->where('lomba_akhir_pendaftaran', '<', $now)
+            ->update(['lomba_status' => 'tutup']);
 
-        // Update to 'Berakhir' if execution period has ended
-        LombaModel::whereIn('lomba_status', ['Akan datang', 'Sedang berlangsung'])
+        // Update to 'selesai' if execution period has ended
+        LombaModel::whereIn('lomba_status', ['buka', 'tutup'])
             ->where('lomba_selesai_pelaksanaan', '<', $now)
-            ->update(['lomba_status' => 'Berakhir']);
+            ->update(['lomba_status' => 'selesai']);
     }
 
-
     /**
-     * Determine lomba status based on dates
+     * Check if user can view lomba
      */
-    private function determineStatus($startRegistration, $endRegistration, $startEvent = null, $endEvent = null)
+    private function canViewLomba($lomba)
     {
-        $now = now()->format('Y-m-d');
+        $user = Auth::user();
         
-        // If event has ended
-        if ($endEvent && $now > $endEvent) {
-            return 'Berakhir';
+        // Mahasiswa can only view verified lombas
+        if ($lomba->lomba_status !== 'menunggu_verifikasi') {
+            return true;
         }
-        
-        // If event is ongoing
-        if ($startEvent && $now >= $startEvent) {
-            return 'Sedang berlangsung';
+
+        // Creator can view their own lomba even if not verified yet
+        if ($lomba->created_by === $user->user_id) {
+            return true;
         }
-        
-        // If registration period is active
-        if ($now >= $startRegistration && $now <= $endRegistration) {
-            return 'Akan datang';
-        }
-        
-        // If registration has ended but event hasn't started
-        if ($now > $endRegistration) {
-            return 'Berakhir';
-        }
-        
-        return 'Akan datang';
+
+        return false;
     }
 }

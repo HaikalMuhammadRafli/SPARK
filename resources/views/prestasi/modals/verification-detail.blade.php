@@ -188,9 +188,10 @@
             @endif
         </div>
     </div>
-    <form id="form" action="{{ route('admin.manajemen.prestasi.verification.verify', $prestasi->prestasi_id) }}" method="POST" class="flex flex-row gap-4 items-center">
+    <form id="form" action="{{ route('admin.manajemen.prestasi.verification.verify', $prestasi->prestasi_id) }}"
+        method="POST" class="flex flex-row gap-4 items-center">
         @csrf
-        <input type="hidden" name="action" id="action" value="">
+        <input type="hidden" name="verification_action" id="verification_action" value="">
 
         <x-forms.textarea name="prestasi_catatan" label="Catatan"
             placeholder="Masukkan catatan verifikasi di sini..." value="{{ $prestasi->prestasi_catatan }}"
@@ -204,7 +205,7 @@
             <div class="flex flex-row gap-2">
                 <x-buttons.default type="button" id="btn-tolak" title="Tolak" color="danger"
                     icon="fa-solid fa-square-xmark" />
-                <x-buttons.default type="button" id="btn-terima" title="Terima" color="success"
+                <x-buttons.default type="button" id="btn-setuju" title="Setuju" color="success"
                     icon="fa-solid fa-square-check" />
             </div>
         </div>
@@ -215,7 +216,6 @@
     $(document).ready(function() {
         let currentAction = '';
 
-        // Konfigurasi validasi
         $("#form").validate({
             rules: {
                 prestasi_catatan: {
@@ -233,7 +233,7 @@
                 event.preventDefault();
 
                 // Konfirmasi sebelum submit
-                const actionText = currentAction === 'terima' ? 'menerima' : 'menolak';
+                const actionText = currentAction === 'setuju' ? 'menerima' : 'menolak';
                 const confirmText = `Apakah Anda yakin ingin ${actionText} prestasi ini?`;
 
                 Swal.fire({
@@ -241,7 +241,7 @@
                     text: confirmText,
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: currentAction === 'terima' ? '#10B981' : '#EF4444',
+                    confirmButtonColor: currentAction === 'setuju' ? '#10B981' : '#EF4444',
                     cancelButtonColor: '#6B7280',
                     confirmButtonText: 'Ya, ' + actionText,
                     cancelButtonText: 'Batal'
@@ -269,7 +269,7 @@
         // Event handler untuk button Tolak
         $('#btn-tolak').on('click', function() {
             currentAction = 'tolak';
-            $('#action').val('tolak');
+            $('#verification_action').val('tolak');
 
             // Tambahkan visual indicator bahwa catatan wajib diisi
             const $catatanField = $('#prestasi_catatan');
@@ -279,30 +279,25 @@
                 $label.append('<span class="text-red-500" aria-label="required">*</span>');
             }
 
-            // Fokus ke textarea
             $catatanField.focus();
 
-            // Submit form (akan trigger validasi)
             $('#form').submit();
         });
 
-        // Event handler untuk button Terima
-        $('#btn-terima').on('click', function() {
-            currentAction = 'terima';
-            $('#action').val('terima');
+        $('#btn-setuju').on('click', function() {
+            currentAction = 'setuju';
+            $('#verification_action').val('setuju');
 
-            // Hapus required indicator jika ada
             $('label[for="prestasi_catatan"] .text-red-500').remove();
 
-            // Submit form
             $('#form').submit();
         });
 
-        // Fungsi untuk submit form
         function submitForm(form) {
+            const formAction = form.action;
+            const formMethod = form.method || 'POST';
             const formData = new FormData(form);
 
-            // Tampilkan loading
             Swal.fire({
                 title: 'Memproses...',
                 html: 'Mohon tunggu sebentar',
@@ -314,8 +309,8 @@
             });
 
             $.ajax({
-                url: form.action,
-                type: form.method,
+                url: formAction,
+                type: formMethod,
                 data: formData,
                 processData: false,
                 contentType: false,
@@ -323,7 +318,7 @@
                     Swal.close();
 
                     if (response.status) {
-                        const actionText = currentAction === 'terima' ? 'diterima' : 'ditolak';
+                        const actionText = currentAction === 'setuju' ? 'disetujui' : 'ditolak';
 
                         Swal.fire({
                             icon: 'success',
@@ -377,17 +372,15 @@
             });
         }
 
-        // Clear error saat user mengetik
         $('#form textarea').on('input', function() {
             const fieldId = $(this).attr('id');
             $('#error-' + fieldId).text('');
             $(this).removeClass('is-invalid');
         });
 
-        // Reset form state saat modal dibuka ulang
         $(document).on('shown.bs.modal', function() {
             currentAction = '';
-            $('#action').val('');
+            $('#verification_action').val('');
             $('label[for="prestasi_catatan"] .text-red-500').remove();
             $('.error-text, .invalid-feedback').text('');
             $('.is-invalid').removeClass('is-invalid');

@@ -18,6 +18,9 @@
                 <x-dashboard.filter id="filter-tingkat" name="filter-tingkat" label="Filter Tingkat"
                     placeholder="Pilih Tingkat" :options="$tingkats" :searchable="true" searchPlaceholder="Cari tingkat..."
                     class="w-42" />
+                <x-dashboard.filter id="filter-status" name="filter-status" label="Filter Status"
+                    placeholder="Pilih Status" :options="$statuses" :searchable="true" searchPlaceholder="Cari status..."
+                    class="w-42" />
             </div>
             <div class="w-fit">
                 <x-search-input id="datatable-search" placeholder="Cari Prestasi..." />
@@ -37,10 +40,11 @@
             ['title' => 'Tanggal Dibuat', 'key' => 'created_at', 'sortable' => true],
             ['title' => 'Tanggal Diubah', 'key' => 'updated_at', 'sortable' => true],
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
-        ]" :data-route="route('admin.manajemen.prestasi.verification.data')" :filters="['filter-juara', 'filter-kategori', 'filter-tingkat']" :filter-column-map="[
+        ]" :data-route="route('admin.manajemen.prestasi.verification.data')" :filters="['filter-juara', 'filter-kategori', 'filter-tingkat', 'filter-status']" :filter-column-map="[
             'filter-juara' => 2,
             'filter-kategori' => 5,
             'filter-tingkat' => 3,
+            'filter-status' => 9
         ]">
 
             @foreach ($prestasis as $prestasi)
@@ -60,7 +64,8 @@
                     <td class="px-4 py-1">{{ $prestasi->created_at }}</td>
                     <td class="px-4 py-1">{{ $prestasi->updated_at }}</td>
                     <td class="px-4 py-1 text-right">
-                        <x-buttons.default type="button" title="Verify" color="primary" icon="fa-solid fa-file-circle-check"
+                        <x-buttons.default type="button" title="Verify" color="primary"
+                            icon="fa-solid fa-file-circle-check"
                             onclick="modalAction('{{ route('admin.manajemen.prestasi.verification.detail', $prestasi->prestasi_id) }}')" />
                     </td>
                 </tr>

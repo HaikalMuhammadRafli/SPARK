@@ -14,6 +14,7 @@
 @include('lomba.partials.form', [
     'action' => route('admin.manajemen.lomba.store'),
     'method' => 'POST',
-    'buttonText' => 'Simpan',
-    'buttonIcon' => 'fa-solid fa-save',
+    'buttonText' => 'Tambah',
+    'buttonIcon' => 'fa-solid fa-plus',
+    'periodes' => $periodes ?? []
 ])
