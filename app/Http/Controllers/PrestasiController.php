@@ -176,6 +176,10 @@ class PrestasiController extends Controller
                 'Nasional' => 'Nasional',
                 'Internasional' => 'Internasional',
             ],
+            'statuses' => [
+                'Pending' => 'Pending',
+                'Ditolak' => 'Ditolak',
+            ]
         ]);
     }
 
@@ -197,6 +201,10 @@ class PrestasiController extends Controller
             $query->whereHas('lomba', function ($q) use ($request) {
                 $q->where('lomba_tingkat', $request->tingkat);
             });
+        }
+
+        if ($request->filled('status') && $request->status !== '') {
+            $query->where('prestasi_status', $request->status);
         }
 
         $prestasis = $query->get();
