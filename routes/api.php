@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DosenPembimbingController;
-use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\MahasiswaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LaporanAnalisisPrestasiController;
+use App\Http\Controllers\PrestasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,17 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+// Student-specific prestasi routes
+Route::middleware(['auth:sanctum', 'authorize:mahasiswa'])->group(function () {
+    Route::prefix('prestasi')->group(function () {
+        Route::get('/', [PrestasiController::class, 'indexMahasiswa']);
+        Route::post('/', [PrestasiController::class, 'storeMahasiswa']);
+        Route::get('/{id}', [PrestasiController::class, 'showMahasiswa']);
+        Route::put('/{id}', [PrestasiController::class, 'updateMahasiswa']);
+        Route::delete('/{id}', [PrestasiController::class, 'destroyMahasiswa']);
+    });
+});
 
 Route::middleware(['auth:sanctum', 'authorize:admin'])->group(function () {
     Route::prefix('mahasiswa')->group(function () {
@@ -40,11 +52,14 @@ Route::middleware(['auth:sanctum', 'authorize:admin'])->group(function () {
         Route::put('/{nip}', [DosenPembimbingController::class, 'update']);
         Route::delete('/{nip}', [DosenPembimbingController::class, 'destroy']);
     });
-    Route::prefix('kompetensi')->group(function () {
-        Route::post('/', [KompetensiController::class, 'store']);
-        Route::get('/', [KompetensiController::class, 'index']);
-        Route::get('/{id}', [KompetensiController::class, 'show']);
-        Route::put('/{id}', [KompetensiController::class, 'update']);
-        Route::delete('/{id}', [KompetensiController::class, 'destroy']);
+    Route::prefix('laporan')->group(function () {
+        Route::get('/', [LaporanAnalisisPrestasiController::class, 'index']);
+        Route::post('/', [LaporanAnalisisPrestasiController::class, 'store']);
+        Route::get('/{id}', [LaporanAnalisisPrestasiController::class, 'show']);
+        Route::put('/{id}', [LaporanAnalisisPrestasiController::class, 'update']);
+        Route::delete('/{id}', [LaporanAnalisisPrestasiController::class, 'destroy']);
+        Route::get('/export/pdf', [LaporanAnalisisPrestasiController::class, 'exportPDF']);
+        Route::get('/export/excel', [LaporanAnalisisPrestasiController::class, 'exportExcel']);
     });
+   
 });
