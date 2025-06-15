@@ -91,7 +91,7 @@
                                     {{ $index + 1 }}</td>
                                 <td class="px-6 py-4">
                                     <x-forms.select name="mahasiswa[{{ $index }}]" placeholder="Pilih Mahasiswa"
-                                        :options="$mahasiswas->pluck('nama', 'nim')->toArray()" selected="{{ $mahasiswa_peran->nim }}" required />
+                                        :options="$mahasiswas->pluck('nama', 'nim')->toArray()" selected="{{ $mahasiswa_peran->nim }}" searchable required />
                                 </td>
                                 <td class="px-6 py-4">
                                     <x-forms.select name="peran_mhs[{{ $index }}]" placeholder="Pilih Peran"
@@ -144,7 +144,7 @@
                     <td class="px-6 py-4 text-center font-medium text-gray-900 row-number">{{ $i + 1 }}</td>
                     <td class="px-6 py-4">
                         <x-forms.select name="mahasiswa[{{ $i }}]" placeholder="Pilih Mahasiswa"
-                            :options="$mahasiswas->pluck('nama', 'nim')->toArray()" />
+                            :options="$mahasiswas->pluck('nama', 'nim')->toArray()" searchable />
                     </td>
                     <td class="px-6 py-4">
                         <x-forms.select name="peran_mhs[{{ $i }}]" placeholder="Pilih Peran"
