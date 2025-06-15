@@ -5,6 +5,7 @@ use App\Http\Controllers\DosenPembimbingController;
 
 
 use App\Http\Controllers\DosenPembimbingPeranController;
+use App\Http\Controllers\DosenPembimbingPeranKompetensiController;
 use App\Http\Controllers\KompetensiController;
 
 use App\Http\Controllers\MahasiswaController;
@@ -34,7 +35,7 @@ Route::middleware(['auth:sanctum', 'authorize:mahasiswa'])->group(function () {
         Route::delete('/{id}', [PrestasiController::class, 'destroyMahasiswa']);
     });
 });
-    
+
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::middleware(['authorize:admin'])->group(function () {
         Route::prefix('mahasiswa')->group(function () {
@@ -73,15 +74,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::delete('/{id}', [LaporanAnalisisPrestasiController::class, 'destroy']);
             Route::get('/export/pdf', [LaporanAnalisisPrestasiController::class, 'exportPDF']);
             Route::get('/export/excel', [LaporanAnalisisPrestasiController::class, 'exportExcel']);
+        });
     });
 
-});
     Route::middleware(['authorize:dosen_pembimbing'])->group(function () {
-    Route::prefix('dosen-pembimbing-peran')->group(function () {
-        Route::post('/', [DosenPembimbingPeranController::class, 'store']);
-        Route::get('/', [DosenPembimbingPeranController::class, 'show']);
-        Route::put('/{peranId}', [DosenPembimbingPeranController::class, 'update']);
-        Route::delete('/{peranId}', [DosenPembimbingPeranController::class, 'destroy']);
+        Route::prefix('dosen-pembimbing-peran')->group(function () {
+            Route::post('/', [DosenPembimbingPeranController::class, 'store']);
+            Route::get('/', [DosenPembimbingPeranController::class, 'show']);
+            Route::put('/{peranId}', [DosenPembimbingPeranController::class, 'update']);
+            Route::delete('/{peranId}', [DosenPembimbingPeranController::class, 'destroy']);
+        });
+
+        Route::prefix('dosen-pembimbing-peran-kompetensi')->group(function () {
+            Route::get('/', [DosenPembimbingPeranKompetensiController::class, 'index']);
+            Route::post('/{peranId}', [DosenPembimbingPeranKompetensiController::class, 'store']);
+            Route::get('/{peranId}', [DosenPembimbingPeranKompetensiController::class, 'show']);
+            Route::delete('/{peranId}', [DosenPembimbingPeranKompetensiController::class, 'destroy']);
+        });
     });
-});
 });
