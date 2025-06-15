@@ -214,5 +214,28 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/delete', [MahasiswaPagesController::class, 'kelompokDelete'])->name('delete');
             Route::delete('/{id}', [MahasiswaPagesController::class, 'kelompokDestroy'])->name('destroy');
         });
+        Route::prefix('prestasi')->name('prestasi.')->group(function () {
+                Route::get('/', [PrestasiController::class, 'indexView'])->name('index');
+                Route::get('/json', [PrestasiController::class, 'indexMahasiswa'])->name('indexJson');
+                Route::get('/data', [PrestasiController::class, 'dataMahasiswa'])->name('data');
+                Route::get('/create', [PrestasiController::class, 'createMahasiswa'])->name('create');
+                Route::post('/', [PrestasiController::class, 'storeMahasiswa'])->name('store');
+                Route::get('/{id}', [PrestasiController::class, 'showMahasiswa'])->name('show');
+                Route::get('/{id}/edit', [PrestasiController::class, 'editMahasiswa'])->name('edit');
+                Route::put('/{id}', [PrestasiController::class, 'updateMahasiswa'])->name('update');
+                Route::get('/{id}/delete', [PrestasiController::class, 'deleteMahasiswa'])->name('delete');
+                Route::delete('/{id}', [PrestasiController::class, 'destroyMahasiswa'])->name('destroy');
+            });
+            Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
+            Route::get('/', [MahasiswaPagesController::class, 'dataLombaIndex'])->name('index');
+            Route::get('/data', [MahasiswaPagesController::class, 'dataLombaData'])->name('data');
+            Route::get('/create', [MahasiswaPagesController::class, 'dataLombaCreate'])->name('create');
+            Route::post('/', [MahasiswaPagesController::class, 'dataLombaStore'])->name('store');
+            Route::get('/{id}', [MahasiswaPagesController::class, 'dataLombaShow'])->name('show');
+            Route::get('/{id}/edit', [MahasiswaPagesController::class, 'dataLombaEdit'])->name('edit');
+            Route::put('/{id}', [MahasiswaPagesController::class, 'dataLombaUpdate'])->name('update');
+            Route::get('/{id}/delete', [MahasiswaPagesController::class, 'dataLombaDelete'])->name('delete');
+            Route::delete('/{id}', [MahasiswaPagesController::class, 'dataLombaDestroy'])->name('destroy');
+        });
     });
 });

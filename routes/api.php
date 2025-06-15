@@ -6,7 +6,7 @@ use App\Http\Controllers\DosenPembimbingController;
 
 use App\Http\Controllers\DosenPembimbingPeranController;
 use App\Http\Controllers\KompetensiController;
-
+use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\MahasiswaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +33,12 @@ Route::middleware(['auth:sanctum', 'authorize:mahasiswa'])->group(function () {
         Route::put('/{id}', [PrestasiController::class, 'updateMahasiswa']);
         Route::delete('/{id}', [PrestasiController::class, 'destroyMahasiswa']);
     });
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('kelompok', [KelompokController::class, 'index']);
+    Route::get('kelompok/{id}', [KelompokController::class, 'show']);
+    Route::get('/kelompok-mahasiswa', [KelompokController::class, 'getKelompokForMahasiswa']);
+
 });
     
 Route::middleware(['auth:sanctum'])->group(function () {
