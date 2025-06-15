@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DosenPembimbingController;
+use App\Http\Controllers\DosenPembimbingPeranController;
 use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
@@ -199,6 +200,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'dosenPembimbing'])->name('dashboard');
+
+        Route::prefix('/kelompok-bimbingan')->name('kelompok-bimbingan.')->group(function () {
+            Route::get('/', [DosenPembimbingPeranController::class, 'indexView'])->name('index');
+            Route::get('/create', [DosenPembimbingPeranController::class, 'createView'])->name('create');
+            Route::get('/{id}/edit', [DosenPembimbingPeranController::class, 'editView'])->name('edit');
+            Route::get('/{id}/delete', [DosenPembimbingPeranController::class, 'deleteView'])->name('delete');
+        });
     });
 
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
