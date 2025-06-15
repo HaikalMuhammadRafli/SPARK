@@ -1,5 +1,6 @@
 @props([
     'name' => 'selected_items',
+    'label' => null,
     'title' => 'Select Options',
     'options' => [],
     'selected' => [],
@@ -12,9 +13,19 @@
     $selectedValues = is_array($selected) ? $selected : [];
     $selectedCount = count(array_intersect($selectedValues, array_keys($options)));
     $uniqueId = 'dropdown_' . uniqid();
+    $clean_name = str_replace(['[', ']'], '', $name);
 @endphp
 
 <fieldset class="relative w-full">
+    @if ($label)
+        <label for="{{ $clean_name }}" class="block mb-1 text-xs font-medium text-gray-600">
+            {{ $label }}
+            @if ($required)
+                <span class="text-red-500">*</span>
+            @endif
+        </label>
+    @endif
+
     <button type="button" onclick="toggleDropdown('{{ $uniqueId }}')"
         class="w-full text-left bg-white border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg text-xs px-4 py-2 flex items-center justify-between {{ $required ? 'required' : '' }}"
         data-title="{{ $title }}">
