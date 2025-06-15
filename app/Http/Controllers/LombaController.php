@@ -9,6 +9,7 @@ use App\Models\PeriodeModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class LombaController extends Controller
 {
@@ -23,35 +24,100 @@ class LombaController extends Controller
 
         return view('lomba.index', [
             'breadcrumbs' => $breadcrumbs,
-            'title' => 'Data Lomba',
-            'lombas' => LombaModel::with('periode')->get(),
+            'title' => 'Manajemen Lomba',
+            'kategoris' => [
+                'Programming' => 'Programming',
+                'Artificial Intelligence' => 'Artificial Intelligence',
+                'Data Science' => 'Data Science',
+                'Web Design' => 'Web Design',
+                'Mobile Development' => 'Mobile Development',
+                'UI/UX Design' => 'UI/UX Design',
+                'Game Development' => 'Game Development',
+                'Cyber Security' => 'Cyber Security',
+                'Cloud Computing' => 'Cloud Computing',
+                'Internet of Things' => 'Internet of Things',
+                'DevOps' => 'DevOps',
+                'Robotics' => 'Robotics',
+                'Blockchain Technology' => 'Blockchain Technology',
+                'Business Intelligence' => 'Business Intelligence',
+            ],
+            'lokasi_preferensis' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'tingkats' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'status_options' => [
+                'Akan datang' => 'Akan datang',
+                'Sedang berlangsung' => 'Sedang berlangsung',
+                'Berakhir' => 'Berakhir',
+                'Ditolak' => 'Ditolak',
+            ],
         ]);
     }
 
-    public function data()
+    public function data(Request $request)
     {
-        $lombas = LombaModel::with('periode')->get();
+        // Auto-update status based on dates
+        $this->updateLombaStatus();
+
+        $query = LombaModel::with('periode');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('lomba_nama', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('lomba_penyelenggara', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        // Apply category filter
+        if ($request->filled('kategori') && $request->kategori !== '') {
+            $query->where('lomba_kategori', $request->kategori);
+        }
+
+        // Apply location filter
+        if ($request->filled('lokasi') && $request->lokasi !== '') {
+            $query->where('lomba_lokasi_preferensi', $request->lokasi);
+        }
+
+        // Apply level filter
+        if ($request->filled('tingkat') && $request->tingkat !== '') {
+            $query->where('lomba_tingkat', $request->tingkat);
+        }
+
+        // Apply status filter
+        if ($request->filled('status') && $request->status !== '') {
+            $query->where('lomba_status', $request->status);
+        }
+
+        // Apply periode aktif filter
+        if ($request->filled('periode_aktif') && $request->periode_aktif == 'true') {
+            $currentYear = Carbon::now()->year;
+            $query->whereHas('periode', function ($periodeQuery) use ($currentYear) {
+                $periodeQuery->where(function ($q) use ($currentYear) {
+                    $q->where('periode_tahun_awal', '<=', $currentYear)
+                      ->where('periode_tahun_akhir', '>=', $currentYear);
+                });
+            });
+        }
+
+        $lombas = $query->orderBy('created_at', 'desc')->get();
+
+        // Return the partial view as HTML
+        $html = view('lomba.partials.lomba-table', compact('lombas'))->render();
 
         return response()->json([
             'status' => true,
-            'data' => $lombas->map(function ($item, $index) {
-                return [
-                    'no' => $index + 1,
-                    'id' => $item->lomba_id,
-                    'nama' => $item->lomba_nama,
-                    'kategori' => $item->lomba_kategori,
-                    'penyelenggara' => $item->lomba_penyelenggara,
-                    'tingkat' => $item->lomba_tingkat,
-                    'lokasi' => $item->lomba_lokasi_preferensi,
-                    'mulai_pendaftaran' => $item->lomba_mulai_pendaftaran->format('d/m/Y'),
-                    'akhir_pendaftaran' => $item->lomba_akhir_pendaftaran->format('d/m/Y'),
-                    'status' => ucfirst($item->lomba_status),
-                    'actions' => view('components.buttons.action', [
-                        'route_prefix' => 'admin.manajemen.lomba',
-                        'id' => $item->lomba_id
-                    ])->render()
-                ];
-            })
+            'html' => $html,
+            'count' => $lombas->count(),
         ]);
     }
 
@@ -60,74 +126,141 @@ class LombaController extends Controller
      */
     public function create()
     {
+        // Ambil periode yang masih aktif berdasarkan tahun
+        $currentYear = Carbon::now()->year;
+        $periodes = PeriodeModel::where(function ($query) use ($currentYear) {
+            $query->where('periode_tahun_awal', '<=', $currentYear)
+                  ->where('periode_tahun_akhir', '>=', $currentYear);
+        })
+        ->orderBy('periode_nama', 'asc')
+        ->get();
+
         return view('lomba.modals.create', [
-            'periodes' => PeriodeModel::all(),
-            'action' => route('admin.manajemen.lomba.store'),
-            'method' => 'POST',
-            'buttonText' => 'Tambah Lomba',
-            'buttonIcon' => 'fa-solid fa-plus'
+            'periodes' => $periodes,
+            'kategoris' => [
+                'Programming' => 'Programming',
+                'Artificial Intelligence' => 'Artificial Intelligence',
+                'Data Science' => 'Data Science',
+                'Web Design' => 'Web Design',
+                'Mobile Development' => 'Mobile Development',
+                'UI/UX Design' => 'UI/UX Design',
+                'Game Development' => 'Game Development',
+                'Cyber Security' => 'Cyber Security',
+                'Cloud Computing' => 'Cloud Computing',
+                'Internet of Things' => 'Internet of Things',
+                'DevOps' => 'DevOps',
+                'Robotics' => 'Robotics',
+                'Blockchain Technology' => 'Blockchain Technology',
+                'Business Intelligence' => 'Business Intelligence',
+            ],
+            'tingkats' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'lokasi_preferensis' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(LombaStoreRequest $request)
+    public function store(Request $request)
     {
+        // Validasi input sesuai dengan migration
+        $request->validate([
+            'lomba_nama' => 'required|string|max:255',
+            'lomba_kategori' => 'required|string',
+            'lomba_penyelenggara' => 'required|string|max:255',
+            'lomba_lokasi_preferensi' => 'required|string',
+            'lomba_tingkat' => 'required|string',
+            'lomba_persyaratan' => 'required|string',
+            'lomba_mulai_pendaftaran' => 'required|date',
+            'lomba_akhir_pendaftaran' => 'required|date|after:lomba_mulai_pendaftaran',
+            'lomba_link_registrasi' => 'required|url',
+            'lomba_mulai_pelaksanaan' => 'required|date|after:lomba_akhir_pendaftaran',
+            'lomba_selesai_pelaksanaan' => 'required|date|after:lomba_mulai_pelaksanaan',
+            'lomba_ukuran_kelompok' => 'required|integer|min:1|max:10',
+            'lomba_poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'periode_id' => 'required|exists:m_periode,periode_id',
+        ], [
+            'lomba_nama.required' => 'Nama lomba wajib diisi.',
+            'lomba_kategori.required' => 'Kategori wajib dipilih.',
+            'lomba_penyelenggara.required' => 'Penyelenggara wajib diisi.',
+            'lomba_lokasi_preferensi.required' => 'Lokasi preferensi wajib dipilih.',
+            'lomba_tingkat.required' => 'Tingkat wajib dipilih.',
+            'lomba_persyaratan.required' => 'Persyaratan lomba wajib diisi.',
+            'lomba_mulai_pendaftaran.required' => 'Tanggal mulai pendaftaran wajib diisi.',
+            'lomba_akhir_pendaftaran.required' => 'Tanggal akhir pendaftaran wajib diisi.',
+            'lomba_akhir_pendaftaran.after' => 'Tanggal akhir pendaftaran harus setelah tanggal mulai pendaftaran.',
+            'lomba_link_registrasi.required' => 'Link registrasi wajib diisi.',
+            'lomba_link_registrasi.url' => 'Format URL tidak valid.',
+            'lomba_mulai_pelaksanaan.required' => 'Tanggal mulai pelaksanaan wajib diisi.',
+            'lomba_mulai_pelaksanaan.after' => 'Tanggal mulai pelaksanaan harus setelah tanggal akhir pendaftaran.',
+            'lomba_selesai_pelaksanaan.required' => 'Tanggal selesai pelaksanaan wajib diisi.',
+            'lomba_selesai_pelaksanaan.after' => 'Tanggal selesai pelaksanaan harus setelah tanggal mulai pelaksanaan.',
+            'lomba_ukuran_kelompok.required' => 'Ukuran kelompok wajib diisi.',
+            'lomba_ukuran_kelompok.min' => 'Ukuran kelompok minimal 1.',
+            'lomba_ukuran_kelompok.max' => 'Ukuran kelompok maksimal 10.',
+            'periode_id.required' => 'Periode wajib dipilih.',
+            'periode_id.exists' => 'Periode yang dipilih tidak valid.',
+        ]);
+
         try {
-            $validated = $request->validated();
-            
-            // Handle poster upload
-            if ($request->hasFile('lomba_poster')) {
-                $file = $request->file('lomba_poster');
-                
-                // Validate file
-                if (!$file->isValid()) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'File poster tidak valid!'
-                    ]);
-                }
-                
-                // Check file size (max 2MB)
-                if ($file->getSize() > 2 * 1024 * 1024) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Ukuran file poster maksimal 2MB!'
-                    ]);
-                }
-                
-                // Check file type
-                $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
-                if (!in_array($file->getMimeType(), $allowedMimes)) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Format file harus JPG, JPEG, atau PNG!'
-                    ]);
-                }
-                
-                // Generate unique filename
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                
-                // Store file
-                $posterPath = $file->storeAs('lomba/posters', $fileName, 'public');
-                $validated['lomba_poster_url'] = $posterPath;
+            // Determine status based on dates
+            $now = Carbon::now();
+            $mulaiPendaftaran = Carbon::parse($request->lomba_mulai_pendaftaran);
+            $akhirPendaftaran = Carbon::parse($request->lomba_akhir_pendaftaran);
+            $selesaiPelaksanaan = Carbon::parse($request->lomba_selesai_pelaksanaan);
+
+            $status = 'Akan datang';
+            if ($now->gte($mulaiPendaftaran) && $now->lte($akhirPendaftaran)) {
+                $status = 'Sedang berlangsung';
+            } elseif ($now->gt($selesaiPelaksanaan)) {
+                $status = 'Berakhir';
             }
 
-            // Remove lomba_poster from validated data since we're using lomba_poster_url
-            unset($validated['lomba_poster']);
+            $data = [
+                'lomba_nama' => $request->lomba_nama,
+                'lomba_kategori' => $request->lomba_kategori,
+                'lomba_penyelenggara' => $request->lomba_penyelenggara,
+                'lomba_lokasi_preferensi' => $request->lomba_lokasi_preferensi,
+                'lomba_tingkat' => $request->lomba_tingkat,
+                'lomba_persyaratan' => $request->lomba_persyaratan,
+                'lomba_mulai_pendaftaran' => $request->lomba_mulai_pendaftaran,
+                'lomba_akhir_pendaftaran' => $request->lomba_akhir_pendaftaran,
+                'lomba_link_registrasi' => $request->lomba_link_registrasi,
+                'lomba_mulai_pelaksanaan' => $request->lomba_mulai_pelaksanaan,
+                'lomba_selesai_pelaksanaan' => $request->lomba_selesai_pelaksanaan,
+                'lomba_ukuran_kelompok' => $request->lomba_ukuran_kelompok,
+                'lomba_status' => $status,
+                'periode_id' => $request->periode_id,
+            ];
 
-            LombaModel::create($validated);
+            // Handle poster upload
+            if ($request->hasFile('lomba_poster')) {
+                $data['lomba_poster_url'] = $this->handlePosterUpload($request->file('lomba_poster'));
+            }
+
+            LombaModel::create($data);
 
             return response()->json([
                 'status' => true,
                 'message' => 'Data lomba berhasil ditambahkan!',
             ]);
-        } catch (Exception $e) {
+
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Data lomba gagal ditambahkan! ' . $e->getMessage(),
-            ]);
+                'message' => 'Terjadi kesalahan saat menyimpan lomba: ' . $e->getMessage(),
+                'msgField' => []
+            ], 500);
         }
     }
 
@@ -136,8 +269,15 @@ class LombaController extends Controller
      */
     public function show(string $id)
     {
-        return view('lomba.modals.show', [
-            'lomba' => LombaModel::with('periode')->findOrFail($id),
+        $lomba = LombaModel::with(['periode'])->findOrFail($id);
+
+        return view('lomba.detail', [
+            'title' => 'Detail Lomba',
+            'breadcrumbs' => [
+                ['name' => 'Lomba', 'url' => route('admin.manajemen.lomba.index')],
+                ['name' => 'Detail'],
+            ],
+            'lomba' => $lomba,
         ]);
     }
 
@@ -146,83 +286,153 @@ class LombaController extends Controller
      */
     public function edit(string $id)
     {
+        $lomba = LombaModel::with(['periode'])->findOrFail($id);
+
+        // Ambil periode yang masih aktif berdasarkan tahun
+        $currentYear = Carbon::now()->year;
+        $periodes = PeriodeModel::where(function ($query) use ($currentYear) {
+            $query->where('periode_tahun_awal', '<=', $currentYear)
+                  ->where('periode_tahun_akhir', '>=', $currentYear);
+        })
+        ->orderBy('periode_nama', 'asc')
+        ->get();
+
         return view('lomba.modals.edit', [
-            'lomba' => LombaModel::findOrFail($id),
-            'periodes' => PeriodeModel::all(),
-            'action' => route('admin.manajemen.lomba.update', $id),
-            'method' => 'PUT',
-            'buttonText' => 'Update Lomba',
-            'buttonIcon' => 'fa-solid fa-save'
+            'title' => 'Edit Lomba',
+            'lomba' => $lomba,
+            'periodes' => $periodes,
+            'kategoris' => [
+                'Programming' => 'Programming',
+                'Artificial Intelligence' => 'Artificial Intelligence',
+                'Data Science' => 'Data Science',
+                'Web Design' => 'Web Design',
+                'Mobile Development' => 'Mobile Development',
+                'UI/UX Design' => 'UI/UX Design',
+                'Game Development' => 'Game Development',
+                'Cyber Security' => 'Cyber Security',
+                'Cloud Computing' => 'Cloud Computing',
+                'Internet of Things' => 'Internet of Things',
+                'DevOps' => 'DevOps',
+                'Robotics' => 'Robotics',
+                'Blockchain Technology' => 'Blockchain Technology',
+                'Business Intelligence' => 'Business Intelligence',
+            ],
+            'tingkats' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'lokasi_preferensis' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(LombaUpdateRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
-        try {
-            $validated = $request->validated();
+        $lomba = LombaModel::findOrFail($id);
 
-            $lomba = LombaModel::findOrFail($id);
-            
+        // Validasi input sesuai dengan migration
+        $request->validate([
+            'lomba_nama' => 'required|string|max:255',
+            'lomba_kategori' => 'required|string',
+            'lomba_penyelenggara' => 'required|string|max:255',
+            'lomba_lokasi_preferensi' => 'required|string',
+            'lomba_tingkat' => 'required|string',
+            'lomba_persyaratan' => 'required|string',
+            'lomba_mulai_pendaftaran' => 'required|date',
+            'lomba_akhir_pendaftaran' => 'required|date|after:lomba_mulai_pendaftaran',
+            'lomba_link_registrasi' => 'required|url',
+            'lomba_mulai_pelaksanaan' => 'required|date|after:lomba_akhir_pendaftaran',
+            'lomba_selesai_pelaksanaan' => 'required|date|after:lomba_mulai_pelaksanaan',
+            'lomba_ukuran_kelompok' => 'required|integer|min:1|max:10',
+            'lomba_poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'periode_id' => 'required|exists:m_periode,periode_id',
+        ], [
+            'lomba_nama.required' => 'Nama lomba wajib diisi.',
+            'lomba_kategori.required' => 'Kategori wajib dipilih.',
+            'lomba_penyelenggara.required' => 'Penyelenggara wajib diisi.',
+            'lomba_lokasi_preferensi.required' => 'Lokasi preferensi wajib dipilih.',
+            'lomba_tingkat.required' => 'Tingkat wajib dipilih.',
+            'lomba_persyaratan.required' => 'Persyaratan lomba wajib diisi.',
+            'lomba_mulai_pendaftaran.required' => 'Tanggal mulai pendaftaran wajib diisi.',
+            'lomba_akhir_pendaftaran.required' => 'Tanggal akhir pendaftaran wajib diisi.',
+            'lomba_akhir_pendaftaran.after' => 'Tanggal akhir pendaftaran harus setelah tanggal mulai pendaftaran.',
+            'lomba_link_registrasi.required' => 'Link registrasi wajib diisi.',
+            'lomba_link_registrasi.url' => 'Format URL tidak valid.',
+            'lomba_mulai_pelaksanaan.required' => 'Tanggal mulai pelaksanaan wajib diisi.',
+            'lomba_mulai_pelaksanaan.after' => 'Tanggal mulai pelaksanaan harus setelah tanggal akhir pendaftaran.',
+            'lomba_selesai_pelaksanaan.required' => 'Tanggal selesai pelaksanaan wajib diisi.',
+            'lomba_selesai_pelaksanaan.after' => 'Tanggal selesai pelaksanaan harus setelah tanggal mulai pelaksanaan.',
+            'lomba_ukuran_kelompok.required' => 'Ukuran kelompok wajib diisi.',
+            'lomba_ukuran_kelompok.min' => 'Ukuran kelompok minimal 1.',
+            'lomba_ukuran_kelompok.max' => 'Ukuran kelompok maksimal 10.',
+            'periode_id.required' => 'Periode wajib dipilih.',
+            'periode_id.exists' => 'Periode yang dipilih tidak valid.',
+        ]);
+
+        try {
+            // Determine status based on dates
+            $now = Carbon::now();
+            $mulaiPendaftaran = Carbon::parse($request->lomba_mulai_pendaftaran);
+            $akhirPendaftaran = Carbon::parse($request->lomba_akhir_pendaftaran);
+            $selesaiPelaksanaan = Carbon::parse($request->lomba_selesai_pelaksanaan);
+
+            $status = 'Akan datang';
+            if ($now->gte($mulaiPendaftaran) && $now->lte($akhirPendaftaran)) {
+                $status = 'Sedang berlangsung';
+            } elseif ($now->gt($selesaiPelaksanaan)) {
+                $status = 'Berakhir';
+            }
+
+            $data = [
+                'lomba_nama' => $request->lomba_nama,
+                'lomba_kategori' => $request->lomba_kategori,
+                'lomba_penyelenggara' => $request->lomba_penyelenggara,
+                'lomba_lokasi_preferensi' => $request->lomba_lokasi_preferensi,
+                'lomba_tingkat' => $request->lomba_tingkat,
+                'lomba_persyaratan' => $request->lomba_persyaratan,
+                'lomba_mulai_pendaftaran' => $request->lomba_mulai_pendaftaran,
+                'lomba_akhir_pendaftaran' => $request->lomba_akhir_pendaftaran,
+                'lomba_link_registrasi' => $request->lomba_link_registrasi,
+                'lomba_mulai_pelaksanaan' => $request->lomba_mulai_pelaksanaan,
+                'lomba_selesai_pelaksanaan' => $request->lomba_selesai_pelaksanaan,
+                'lomba_ukuran_kelompok' => $request->lomba_ukuran_kelompok,
+                'lomba_status' => $status,
+                'periode_id' => $request->periode_id,
+            ];
+
             // Handle poster upload
             if ($request->hasFile('lomba_poster')) {
-                $file = $request->file('lomba_poster');
-                
-                // Validate file
-                if (!$file->isValid()) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'File poster tidak valid!'
-                    ]);
-                }
-                
-                // Check file size (max 2MB)
-                if ($file->getSize() > 2 * 1024 * 1024) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Ukuran file poster maksimal 2MB!'
-                    ]);
-                }
-                
-                // Check file type
-                $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
-                if (!in_array($file->getMimeType(), $allowedMimes)) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Format file harus JPG, JPEG, atau PNG!'
-                    ]);
-                }
-                
                 // Delete old poster if exists
                 if ($lomba->lomba_poster_url && Storage::disk('public')->exists($lomba->lomba_poster_url)) {
                     Storage::disk('public')->delete($lomba->lomba_poster_url);
                 }
                 
-                // Generate unique filename
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                
-                // Store new file
-                $posterPath = $file->storeAs('lomba/posters', $fileName, 'public');
-                $validated['lomba_poster_url'] = $posterPath;
+                // Upload new poster
+                $data['lomba_poster_url'] = $this->handlePosterUpload($request->file('lomba_poster'));
             }
 
-            // Remove lomba_poster from validated data since we're using lomba_poster_url
-            unset($validated['lomba_poster']);
-            
-            $lomba->update($validated);
+            $lomba->update($data);
 
             return response()->json([
                 'status' => true,
                 'message' => 'Data lomba berhasil diperbarui!',
             ]);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Data lomba gagal diperbarui! ' . $e->getMessage(),
-            ]);
+                'message' => 'Terjadi kesalahan saat mengupdate lomba: ' . $e->getMessage(),
+                'msgField' => []
+            ], 500);
         }
     }
 
@@ -241,6 +451,14 @@ class LombaController extends Controller
         try {
             $lomba = LombaModel::findOrFail($id);
             
+            // Check if lomba has any related kelompok
+            if ($lomba->kelompoks()->count() > 0) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Lomba tidak dapat dihapus karena sudah memiliki kelompok yang terdaftar.'
+                ], 400);
+            }
+            
             // Delete poster file if exists
             if ($lomba->lomba_poster_url && Storage::disk('public')->exists($lomba->lomba_poster_url)) {
                 Storage::disk('public')->delete($lomba->lomba_poster_url);
@@ -251,12 +469,92 @@ class LombaController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data lomba berhasil dihapus!',
+                'redirect' => route('admin.manajemen.lomba.index')
             ]);
-        } catch (Exception $e) {
+
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Data lomba gagal dihapus! ' . $e->getMessage(),
-            ]);
+                'message' => 'Terjadi kesalahan saat menghapus lomba: ' . $e->getMessage()
+            ], 500);
         }
+    }
+
+    /**
+     * Handle poster file upload with validation
+     */
+    private function handlePosterUpload($file)
+    {
+        // Validate file
+        if (!$file->isValid()) {
+            throw new Exception('File poster tidak valid!');
+        }
+        
+        // Check file size (max 2MB)
+        if ($file->getSize() > 2 * 1024 * 1024) {
+            throw new Exception('Ukuran file poster maksimal 2MB!');
+        }
+        
+        // Check file type
+        $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!in_array($file->getMimeType(), $allowedMimes)) {
+            throw new Exception('Format file harus JPG, JPEG, atau PNG!');
+        }
+        
+        // Generate unique filename
+        $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        
+        // Store file
+        return $file->storeAs('lomba/posters', $fileName, 'public');
+    }
+
+    /**
+     * Auto-update lomba status based on dates
+     */
+    private function updateLombaStatus()
+    {
+        $now = Carbon::now();
+
+        // Update to 'Sedang berlangsung' if within registration period
+        LombaModel::where('lomba_status', 'Akan datang')
+            ->where('lomba_mulai_pendaftaran', '<=', $now)
+            ->where('lomba_akhir_pendaftaran', '>=', $now)
+            ->update(['lomba_status' => 'Sedang berlangsung']);
+
+        // Update to 'Berakhir' if execution period has ended
+        LombaModel::whereIn('lomba_status', ['Akan datang', 'Sedang berlangsung'])
+            ->where('lomba_selesai_pelaksanaan', '<', $now)
+            ->update(['lomba_status' => 'Berakhir']);
+    }
+
+
+    /**
+     * Determine lomba status based on dates
+     */
+    private function determineStatus($startRegistration, $endRegistration, $startEvent = null, $endEvent = null)
+    {
+        $now = now()->format('Y-m-d');
+        
+        // If event has ended
+        if ($endEvent && $now > $endEvent) {
+            return 'Berakhir';
+        }
+        
+        // If event is ongoing
+        if ($startEvent && $now >= $startEvent) {
+            return 'Sedang berlangsung';
+        }
+        
+        // If registration period is active
+        if ($now >= $startRegistration && $now <= $endRegistration) {
+            return 'Akan datang';
+        }
+        
+        // If registration has ended but event hasn't started
+        if ($now > $endRegistration) {
+            return 'Berakhir';
+        }
+        
+        return 'Akan datang';
     }
 }

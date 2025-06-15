@@ -13,71 +13,108 @@
             </div>
             <div class="flex flex-row gap-2 flex-wrap">
                 <x-buttons.table-actions type="button" title="Import Excel" color="primary" onclick="" />
-                <x-buttons.table-actions type="button" title="Tambah Lomba" color="primary"
+                <x-buttons.table-actions type="button" title="Tambah Baru" color="primary"
                     onclick="modalAction('{{ route('admin.manajemen.lomba.create') }}')" />
             </div>
         </div>
     </section>
 
     <section class="overflow-x-auto bg-white px-4 py-4 rounded-xl">
-        <div class="flex justify-end mb-2">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex gap-2">
+                <x-dashboard.filter id="filter-kategori" label="Filter Kategori" placeholder="Pilih Kategori" :options="$kategoris"
+                    :searchable="true" searchPlaceholder="Cari kategori..." class="w-36" />
+                <x-dashboard.filter id="filter-lokasi" name="filter-lokasi" label="Filter Lokasi" placeholder="Pilih Lokasi"
+                    :options="$lokasi_preferensis" :searchable="true" searchPlaceholder="Cari lokasi.." class="w-36" />
+                <x-dashboard.filter id="filter-tingkat" name="filter-tingkat" label="Filter Tingkat" placeholder="Pilih Tingkat"
+                    :options="$tingkats" :searchable="true" searchPlaceholder="Cari tingkat..." class="w-36" />
+                <x-dashboard.filter id="filter-status" name="filter-status" label="Filter Status" placeholder="Pilih Status"
+                    :options="$status_options" :searchable="true" searchPlaceholder="Cari status..." class="w-36" />
+            </div>
             <div class="w-fit">
-                <x-search-input id="datatable-search" placeholder="Cari Data Lomba..." />
+                <x-search-input id="datatable-search" placeholder="Cari Lomba..." />
             </div>
         </div>
-        <x-data-table :headers="[
-            ['title' => 'No', 'key' => 'no', 'sortable' => true],
-            ['title' => 'Nama Lomba', 'key' => 'nama', 'sortable' => true],
-            ['title' => 'Kategori', 'key' => 'kategori', 'sortable' => true],
-            ['title' => 'Penyelenggara', 'key' => 'penyelenggara', 'sortable' => true],
-            ['title' => 'Tingkat', 'key' => 'tingkat', 'sortable' => true],
-            ['title' => 'Lokasi', 'key' => 'lokasi', 'sortable' => true],
-            ['title' => 'Mulai Daftar', 'key' => 'mulai_pendaftaran', 'sortable' => true],
-            ['title' => 'Akhir Daftar', 'key' => 'akhir_pendaftaran', 'sortable' => true],
-            ['title' => 'Status', 'key' => 'status', 'sortable' => true],
-            ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
-        ]" :data-route="route('admin.manajemen.lomba.data')">
-            @foreach ($lombas as $lomba)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-1">{{ $lomba->lomba_nama }}</td>
-                    <td class="px-4 py-1">{{ $lomba->lomba_kategori }}</td>
-                    <td class="px-4 py-1">{{ $lomba->lomba_penyelenggara }}</td>
-                    <td class="px-4 py-1">
-                        <span class="px-2 py-1 text-xs rounded-full 
-                            @if($lomba->lomba_tingkat == 'Internasional') bg-red-100 text-red-800
-                            @elseif($lomba->lomba_tingkat == 'Nasional') bg-blue-100 text-blue-800
-                            @else bg-green-100 text-green-800 @endif">
-                            {{ $lomba->lomba_tingkat }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-1">{{ $lomba->lomba_lokasi_preferensi }}</td>
-                    <td class="px-4 py-1">{{ \Carbon\Carbon::parse($lomba->lomba_mulai_pendaftaran)->format('d/m/Y') }}</td>
-                    <td class="px-4 py-1">{{ \Carbon\Carbon::parse($lomba->lomba_akhir_pendaftaran)->format('d/m/Y') }}</td>
-                    <td class="px-4 py-1">
-                        <span class="px-2 py-1 text-xs rounded-full 
-                            @if($lomba->lomba_status == 'buka') bg-green-100 text-green-800
-                            @elseif($lomba->lomba_status == 'tutup') bg-gray-100 text-gray-800
-                            @else bg-red-100 text-red-800 @endif">
-                            {{ ucfirst($lomba->lomba_status) }}
-                        </span>
-                    </td>
-                    <td class="px-4 py-1 text-right">
-                        <x-buttons.action route_prefix="admin.manajemen.lomba" id="{{ $lomba->lomba_id }}" />
-                    </td>
-                </tr>
-            @endforeach
-        </x-data-table>
+        
+        <div id="lomba-table-container">
+            {{-- content will be loaded here --}}
+        </div>
     </section>
 
     <x-modal />
 @endsection
 
-@push('scripts')
-<script>
-    function reloadDataTable() {
-        // Add your DataTable reload logic here
-        location.reload();
-    }
-</script>
+@push('js')
+    <script>
+        $(document).ready(function() {
+            let searchTimeout;
+
+            function loadLombaData() {
+                const searchQuery = $('#datatable-search').val();
+                const filterKategori = $('#filter-kategori').val();
+                const filterLokasi = $('#filter-lokasi').val();
+                const filterTingkat = $('#filter-tingkat').val();
+                const filterStatus = $('#filter-status').val();
+
+                // Tampilkan loading state
+                $('#lomba-table-container').html(
+                    '<div class="text-center py-8"><p class="text-gray-500">Memuat data...</p></div>'
+                );
+
+                $.ajax({
+                    url: '{{ route('admin.manajemen.lomba.data') }}',
+                    method: 'GET',
+                    data: {
+                        search: searchQuery,
+                        kategori: filterKategori,
+                        lokasi: filterLokasi,
+                        tingkat: filterTingkat,
+                        status: filterStatus
+                    },
+                    success: function(response) {
+                        console.log('Response:', response); // Debug log
+                        if (response.status) {
+                            $('#lomba-table-container').html(response.html);
+                            console.log('Data count:', response.count); // Debug log
+                        } else {
+                            $('#lomba-table-container').html(
+                                '<div class="text-center py-8"><p class="text-gray-500">Terjadi kesalahan saat memuat data.</p></div>'
+                            );
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', xhr.responseText); // Debug log
+                        console.error('Status:', status);
+                        console.error('Error:', error);
+                        $('#lomba-table-container').html(
+                            '<div class="text-center py-8"><p class="text-red-500">Terjadi kesalahan saat memuat data. Silakan coba lagi.</p></div>'
+                        );
+                    }
+                });
+            }
+
+            // Initial load
+            loadLombaData();
+
+            // Search input with debounce
+            $('#datatable-search').on('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(loadLombaData, 300);
+            });
+
+            // Filter change events
+            $('#filter-kategori, #filter-lokasi, #filter-tingkat, #filter-status').on('change', function() {
+                loadLombaData();
+            });
+
+            // Expose function globally untuk reloadDataTable
+            window.loadLombaData = loadLombaData;
+        });
+
+        function reloadDataTable() {
+            if (typeof window.loadLombaData === 'function') {
+                window.loadLombaData();
+            }
+        }
+    </script>
 @endpush
