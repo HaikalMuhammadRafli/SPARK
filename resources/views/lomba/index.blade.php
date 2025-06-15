@@ -24,8 +24,8 @@
             <div class="flex gap-2">
                 <x-dashboard.filter id="filter-kategori" label="Filter Kategori" placeholder="Pilih Kategori" :options="$kategoris"
                     :searchable="true" searchPlaceholder="Cari kategori..." class="w-36" />
-                <x-dashboard.filter id="filter-lokasi" name="filter-lokasi" label="Filter Lokasi" placeholder="Pilih Lokasi"
-                    :options="$lokasi_preferensis" :searchable="true" searchPlaceholder="Cari lokasi.." class="w-36" />
+                {{-- <x-dashboard.filter id="filter-lokasi" name="filter-lokasi" label="Filter Lokasi" placeholder="Pilih Lokasi"
+                    :options="$lokasi_preferensis" :searchable="true" searchPlaceholder="Cari lokasi.." class="w-36" /> --}}
                 <x-dashboard.filter id="filter-tingkat" name="filter-tingkat" label="Filter Tingkat" placeholder="Pilih Tingkat"
                     :options="$tingkats" :searchable="true" searchPlaceholder="Cari tingkat..." class="w-36" />
                 <x-dashboard.filter id="filter-status" name="filter-status" label="Filter Status" placeholder="Pilih Status"
