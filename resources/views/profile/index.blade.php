@@ -6,9 +6,9 @@
             <!-- Profile Card -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <!-- Profile Header -->
-                <div class="relative h-32 bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 rounded-2xl">
+                <div class="relative h-32 bg-gradient-to-br from-primary via-secondary to-primary rounded-2xl">
                     <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
-                        <img src="{{ Storage::url(auth()->user()->foto_profil_url) ?? asset('images/default-profile.svg') }}"
+                        <img src="{{ auth()->user()->foto_profil_url ? Storage::url(auth()->user()->foto_profil_url) : asset('images/default-profile.svg') }}"
                             alt="Profile Picture" class="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover">
                     </div>
                 </div>
@@ -95,15 +95,23 @@
             <div class="flex flex-col md:w-1/2 gap-3">
                 <x-profile.criteria-card title="Bidang Keahlian"
                     description="Daftar bidang keahlian yang dimiliki oleh mahasiswa." icon="fa-solid fa-briefcase"
-                    route="profile.destroy.bidang-keahlian" data_name="bidang_keahlians"
+                    route="profile.destroy.bidang-keahlian" :data="auth()
+                        ->user()
+                        ->getCurrentData()
+                        ->bidang_keahlians->pluck('bidang_keahlian_nama', 'bidang_keahlian_id')
+                        ->toArray()"
                     onclick="modalAction('{{ route('profile.add.bidang-keahlian.form') }}', 'criteria_modal')" />
 
                 <x-profile.criteria-card title="Minat" description="Daftar minat yang dimiliki oleh mahasiswa."
-                    icon="fa-solid fa-heart" route="profile.destroy.minat" data_name="minats"
+                    icon="fa-solid fa-heart" route="profile.destroy.minat" :data="auth()->user()->getCurrentData()->minats->pluck('minat_nama', 'minat_id')->toArray()"
                     onclick="modalAction('{{ route('profile.add.minat.form') }}', 'criteria_modal')" />
 
                 <x-profile.criteria-card title="Kompetensi" description="Daftar kompetensi yang dimiliki oleh mahasiswa."
-                    icon="fa-solid fa-certificate" data_name="kompetensis" :isEditable="false" />
+                    icon="fa-solid fa-certificate" :data="auth()
+                        ->user()
+                        ->getCurrentData()
+                        ->kompetensis->pluck('kompetensi_nama', 'kompetensi_id')
+                        ->toArray()" :isEditable="false" />
             </div>
         @else
             <div class="md:w-1/2">

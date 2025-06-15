@@ -7,7 +7,7 @@
 
     <div class="mb-4 w-full">
         <x-forms.checkbox-dropdown title="{{ $title }}" name="{{ $nama }}[]" :options="$datas->pluck($nama . '_nama', $nama . '_id')->toArray()"
-            :selected="[]" searchable="true" />
+            searchable="true" />
     </div>
     <div class="flex justify-end">
         <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />
