@@ -105,7 +105,7 @@ class KelompokController extends Controller
 
 
         return view('kelompok.modals.create', [
-            'lombas' => LombaModel::all(),
+            'lombas' => LombaModel::whereNot('lomba_status', 'Berakhir')->get(),
             'mahasiswas' => MahasiswaModel::all(),
             'perans_mhs' => [
                 'Ketua' => 'Ketua',
