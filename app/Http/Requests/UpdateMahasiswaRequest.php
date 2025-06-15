@@ -51,11 +51,11 @@ class UpdateMahasiswaRequest extends FormRequest
                 'integer',
                 'exists:m_user,user_id'
             ],
-            'prodi_id' => [
+            'program_studi_id' => [
                 'sometimes',
                 'required',
                 'integer',
-                'exists:m_program_studi,prodi_id'
+                'exists:m_program_studi,program_studi_id'
             ]
         ];
     }
@@ -71,8 +71,8 @@ class UpdateMahasiswaRequest extends FormRequest
             'lokasi_preferensi.required' => 'Lokasi preferensi is required',
             'lokasi_preferensi.max' => 'Lokasi preferensi cannot exceed 255 characters',
             'user_id.exists' => 'Selected user does not exist',
-            'prodi_id.required' => 'Program studi is required',
-            'prodi_id.exists' => 'Selected program studi does not exist'
+            'program_studi_id.required' => 'Program studi is required',
+            'program_studi_id.exists' => 'Selected program studi does not exist'
         ];
     }
 
