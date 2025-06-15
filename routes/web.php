@@ -16,6 +16,7 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProgramStudiController;
 use App\Http\Controllers\MinatController;
 use App\Http\Controllers\LombaController;
+use App\Http\Controllers\DospemPagesController;
 use App\Http\Controllers\LaporanAnalisisPrestasiController;
 /*
 |----------------------------------------------------------------------
@@ -198,6 +199,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'dosenPembimbing'])->name('dashboard');
+        Route::prefix('data-lomba')->name('data-lomba.')->group(function () {
+            Route::get('/', [DospemPagesController::class, 'dataLombaIndex'])->name('index');
+            Route::get('/data', [DospemPagesController::class, 'dataLombaData'])->name('data');
+            Route::get('/create', [DospemPagesController::class, 'dataLombaCreate'])->name('create');
+            Route::post('/', [DospemPagesController::class, 'dataLombaStore'])->name('store');
+            Route::get('/{id}', [DospemPagesController::class, 'dataLombaShow'])->name('show');
+            Route::get('/{id}/edit', [DospemPagesController::class, 'dataLombaEdit'])->name('edit');
+            Route::put('/{id}', [DospemPagesController::class, 'dataLombaUpdate'])->name('update');
+            Route::get('/{id}/delete', [DospemPagesController::class, 'dataLombaDelete'])->name('delete');
+            Route::delete('/{id}', [DospemPagesController::class, 'dataLombaDestroy'])->name('destroy');
+        });
     });
 
     Route::prefix('mahasiswa')->name('mahasiswa.')->group(function () {
