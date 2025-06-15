@@ -78,3 +78,66 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 | Visualisasi laporan prestasi                        | 🔧 Ongoing | Fokus pada Chart dan Pengambilan data link |
 
 ---
+
+## Authentication
+
+-   **Authentication**: All routes require authentication using **Sanctum** tokens.
+-   **Authorization**: Some routes are restricted based on the user's role:
+    -   **Mahasiswa**: Requires the `authorize:mahasiswa` middleware.
+    -   **Admin**: Requires the `authorize:admin` middleware.
+
+### How to get your Authentication Token
+
+1. **Login**:
+   To access protected routes, you need to be logged in first. You can obtain a token by logging in via the **POST /login** endpoint.
+    ```bash
+    curl -X POST http://127.0.0.1:8000/api/login \
+    -H "Content-Type: application/json" \
+    -d '{"email": "your-email@example.com", "password": "your-password"}'
+    ```
+2. **Response**:
+   After successful login, you will receive an authentication token in the response:
+
+    ```json
+    {
+        "access_token": "your-access-token-here"
+    }
+    ```
+
+3. **Using the Token**:
+   Include the token in the `Authorization` header as `Bearer <your-access-token-here>` for all protected API requests.
+
+---
+
+## Example Usage with Postman
+
+Follow these steps to test the API with **Postman**:
+
+1. **Open Postman**.
+2. **Set the Request Type** to `GET`, `POST`, `PUT`, or `DELETE` as required for the route you're testing.
+3. **Set the URL** to the API endpoint (e.g., `http://127.0.0.1:8000/api/prestasi`).
+4. **Add Authorization**:
+    - Go to the "Authorization" tab in Postman.
+    - Select **Bearer Token**.
+    - Paste your token into the "Token" field.
+5. **Add Headers**:
+    - Set `Content-Type: application/json` for the body, if you're sending data.
+6. **Send the Request**.
+
+### Example POST Request to Add a New Prestasi
+
+-   **Method**: `POST`
+-   **URL**: `http://127.0.0.1:8000/api/prestasi`
+-   **Body**: Raw JSON
+
+```json
+{
+    "prestasi_juara": "Juara 1",
+    "prestasi_surat_tugas_url": "http://example.com/surat_tugas",
+    "prestasi_poster_url": "http://example.com/poster",
+    "prestasi_foto_juara_url": "http://example.com/foto_juara",
+    "prestasi_proposal_url": "http://example.com/proposal",
+    "prestasi_sertifikat_url": "http://example.com/sertifikat",
+    "kelompok_id": 1
+}
+```
