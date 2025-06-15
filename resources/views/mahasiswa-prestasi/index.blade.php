@@ -95,14 +95,14 @@
                         row.innerHTML = `
                             <td class="px-4 py-2">${index + 1}</td>
                             <td class="px-4 py-2">${prestasi.prestasi_juara}</td>
-                            <td class="px-4 py-2">${prestasi.kelompok.nama}</td>
+                            <td class="px-4 py-2">${prestasi.kelompok ? prestasi.kelompok.kelompok_nama : 'Tidak Ada Kelompok'}</td>
                         `;
                         tbody.appendChild(row);
                     });
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
-        }
+            }
 
         // Fungsi untuk mengisi dropdown kelompok dari API
         function loadKelompok() {
