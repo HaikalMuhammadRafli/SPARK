@@ -97,23 +97,47 @@ class LaporanAnalisisPrestasiController extends Controller
     // Mengupdate laporan
    public function update(Request $request, $id)
 {
-    // Validasi status
-    $request->validate([
-        'prestasi_status' => 'required|in:Disetujui,Pending,Tidak Valid', // Validasi untuk status yang valid
-    ]);
+    try {
+        // Validasi
+        $validated = $request->validate([
+            'prestasi_status' => 'required|in:Disetujui,Pending,Ditolak',
+            'prestasi_catatan' => 'nullable|string|required_if:prestasi_status,Ditolak'
+        ]);
 
-    // Mencari laporan berdasarkan ID
-    $laporan = LaporanAnalisisPrestasi::find($id);
+        // Cari laporan
+        $laporan = LaporanAnalisisPrestasi::find($id);
+        
+        if (!$laporan) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Laporan tidak ditemukan'
+            ], 404);
+        }
 
-    if (!$laporan) {
-        return response()->json(['status' => false, 'message' => 'Laporan tidak ditemukan'], 404);
+        // Update data
+        $laporan->prestasi_status = $validated['prestasi_status'];
+        $laporan->prestasi_catatan = $validated['prestasi_catatan'] ?? null;
+        $laporan->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => true,
+            'message' => 'Status prestasi berhasil diperbarui',
+            'data' => $laporan
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Data tidak valid',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+        ], 500);
     }
-
-    // Update status prestasi
-    $laporan->prestasi_status = $request->prestasi_status;
-    $laporan->save(); // Simpan perubahan ke database
-
-    return response()->json(['status' => true, 'data' => $laporan]);
 }
 
 
@@ -145,6 +169,12 @@ class LaporanAnalisisPrestasiController extends Controller
     public function exportExcel()
     {
         return Excel::download(new PrestasiExport, 'laporan-prestasi.xlsx');
+    }
+    public function editView(string $id)
+    {
+        return view('LaporanAnalisisPrestasi.modals.edit', [
+            'laporans' => LaporanAnalisisPrestasi::findOrFail($id),
+        ]);
     }
 
     
