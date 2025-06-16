@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
@@ -191,5 +192,21 @@ class AdminController extends Controller
         return view('admin.modals.delete', [
             'admin' => AdminModel::findOrFail($id),
         ]);
+    }
+
+    public function exportPdf()
+    {
+        $admin = AdminModel::select('nip', 'nama', 'user_id')
+            ->orderBy('nip')
+            ->with(['user'])
+            ->get();
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = Pdf::loadView('admin.export_pdf', ['admin' => $admin]);
+        $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption('isRemoteEnabled', true); // set true jika ada gambar dari url
+        $pdf->render();
+
+        return $pdf->stream('Data Admin ' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

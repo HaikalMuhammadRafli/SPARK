@@ -73,43 +73,53 @@
                     return;
                 }
 
-                $.ajax({
-                    url: `/api/dosen-pembimbing-peran/${peranId}`,
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Accept': 'application/json'
-                    },
-                    success: function(response) {
-                        if (response.success || response.status) {
-                            disposeModal();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            }).then(() => {
-                                reloadDataTable();
+                // Step 1: Hapus semua kompetensi terlebih dahulu
+                fetch(`/api/dosen-pembimbing-peran-kompetensi/${peranId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({}) // kosong untuk hapus semua
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.success) {
+                            // Step 2: Jika sukses hapus kompetensi, lanjut hapus peran
+                            return $.ajax({
+                                url: `/api/dosen-pembimbing-peran/${peranId}`,
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': 'Bearer ' + token,
+                                    'Accept': 'application/json'
+                                }
                             });
                         } else {
-                            disposeModal();
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: response.message ||
-                                    'Gagal menghapus data peran.'
-                            });
+                            throw new Error('Gagal menghapus kompetensi: ' + (res.message ||
+                                ''));
                         }
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
+                    })
+                    .then(res => {
+                        disposeModal();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Peran dan seluruh kompetensi berhasil dihapus.'
+                        }).then(() => {
+                            reloadDataTable();
+                        });
+                    })
+                    .catch(err => {
+                        console.error(err);
                         disposeModal();
                         Swal.fire({
                             icon: 'error',
-                            title: 'Server Error',
-                            text: 'Terjadi kesalahan saat menghapus data peran.'
+                            title: 'Gagal',
+                            text: err.message ||
+                                'Terjadi kesalahan saat menghapus data.'
                         });
-                    }
-                });
+                    });
 
                 return false;
             }

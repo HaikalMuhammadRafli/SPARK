@@ -39,16 +39,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('kelompok', [KelompokController::class, 'index']);
     Route::get('kelompok/{id}', [KelompokController::class, 'show']);
     Route::get('/kelompok-mahasiswa', [KelompokController::class, 'getKelompokForMahasiswa']);
-
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('kelompok', [KelompokController::class, 'index']);
     Route::get('kelompok/{id}', [KelompokController::class, 'show']);
     Route::get('/kelompok-mahasiswa', [KelompokController::class, 'getKelompokForMahasiswa']);
-
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::prefix('kompetensi')->group(function () {
+        Route::post('/', [KompetensiController::class, 'store']);
+        Route::get('/', [KompetensiController::class, 'index']);
+        Route::get('/{id}', [KompetensiController::class, 'show']);
+        Route::put('/{id}', [KompetensiController::class, 'update']);
+        Route::delete('/{id}', [KompetensiController::class, 'destroy']);
+    });
     Route::middleware(['authorize:admin'])->group(function () {
         Route::prefix('mahasiswa')->group(function () {
             Route::post('/', [MahasiswaController::class, 'store']);
@@ -70,13 +75,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/{nip}', [DosenPembimbingController::class, 'show']);
             Route::put('/{nip}', [DosenPembimbingController::class, 'update']);
             Route::delete('/{nip}', [DosenPembimbingController::class, 'destroy']);
-        });
-        Route::prefix('kompetensi')->group(function () {
-            Route::post('/', [KompetensiController::class, 'store']);
-            Route::get('/', [KompetensiController::class, 'index']);
-            Route::get('/{id}', [KompetensiController::class, 'show']);
-            Route::put('/{id}', [KompetensiController::class, 'update']);
-            Route::delete('/{id}', [KompetensiController::class, 'destroy']);
         });
         Route::prefix('laporan')->group(function () {
             Route::get('/', [LaporanAnalisisPrestasiController::class, 'index']);

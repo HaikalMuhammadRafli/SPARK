@@ -15,11 +15,7 @@ class DeleteDosenPembimbingPeranKompetensiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'kompetensi_id' => [
-                'required',
-                'integer',
-                Rule::exists('m_kompetensi', 'kompetensi_id')
-            ],
+            'kompetensi_id' => 'nullable|integer|exists:t_dosen_pembimbing_peran_kompetensi,kompetensi_id',
         ];
     }
 

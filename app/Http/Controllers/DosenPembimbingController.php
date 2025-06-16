@@ -6,6 +6,7 @@ use App\Http\Requests\StoreDosenPembimbingRequest;
 use App\Http\Requests\UpdateDosenPembimbingRequest;
 use App\Models\DosenPembimbingModel;
 use App\Models\UserModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -190,5 +191,21 @@ class DosenPembimbingController extends Controller
         return view('dosen-pembimbing.modals.delete', [
             'dosenPembimbing' => DosenPembimbingModel::findOrFail($id),
         ]);
+    }
+
+    public function exportPdf()
+    {
+        $dosenPembimbing = DosenPembimbingModel::select('nip', 'nama', 'user_id')
+            ->orderBy('nip')
+            ->with(['user'])
+            ->get();
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = Pdf::loadView('dosen-pembimbing.export_pdf', ['dosenPembimbing' => $dosenPembimbing]);
+        $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption('isRemoteEnabled', true); // set true jika ada gambar dari url
+        $pdf->render();
+
+        return $pdf->stream('Data Dosen Pembimbing ' . date('Y-m-d H:i:s') . '.pdf');
     }
 }

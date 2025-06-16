@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDosenPembimbingPeranRequest;
 use App\Http\Requests\UpdateDosenPembimbingPeranRequest;
 use App\Models\DosenPembimbingModel;
+use App\Models\DosenPembimbingPeranKompetensiModel;
 use App\Models\DosenPembimbingPeranModel;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -162,6 +163,7 @@ class DosenPembimbingPeranController extends Controller
     {
         return view('kelompok-bimbingan.modals.edit', [
             'dosenPembimbingPeran' => DosenPembimbingPeranModel::findOrFail($id),
+            'dosenPembimbingPeranKompetensi' => DosenPembimbingPeranKompetensiModel::where('peran_id', DosenPembimbingPeranModel::findOrFail($id)->peran_id)->get(),
         ]);
     }
 
