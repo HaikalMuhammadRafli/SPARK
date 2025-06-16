@@ -64,37 +64,40 @@
             <td class="px-4 py-1"><a href="{{ $laporan->prestasi_surat_tugas_url }}" target="_blank">Lihat Surat
                     Tugas</a></td>
             <td class="px-4 py-1">
-                @php
-                // Cek apakah prestasi_status ada dan valid
-                $status = $laporan->prestasi_status;
-                @endphp
+    @php
+    $status = $laporan->prestasi_status;
+    @endphp
 
-                @if ($status == 'Disetujui')
-                <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
-                        <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    Setujui
-                </span>
-                @elseif ($status == 'Pending')
-                <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                    <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
-                        <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    pending
-                </span>
-                @else
-                <span
-                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
-                        <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    Status Tidak Valid
-                </span>
-                @endif
-            </td>
+    @if ($status == 'Disetujui')
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
+            <circle cx="4" cy="4" r="3" />
+        </svg>
+        Disetujui
+    </span>
+    @elseif ($status == 'Pending')
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+        <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
+            <circle cx="4" cy="4" r="3" />
+        </svg>
+        Pending
+    </span>
+    @elseif ($status == 'Ditolak')
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
+            <circle cx="4" cy="4" r="3" />
+        </svg>
+        Ditolak
+    </span>
+    @else
+    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+        <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
+            <circle cx="4" cy="4" r="3" />
+        </svg>
+        Status Tidak Valid
+    </span>
+    @endif
+</td>
 
             <td class="px-4 py-1">{{ $laporan->prestasi_catatan }}</td>
             <td class="px-4 py-1 text-left">
@@ -117,118 +120,246 @@
 <x-modal />
 
 <!-- Script untuk grafik -->
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
 
 <script>
-    var minatData = @json($minatStats);
-    var lombaData = @json($lombaStats);
+    // Pastikan ApexCharts sudah loaded sebelum menjalankan script
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cek apakah data tersedia dan valid
+        var minatData = @json($minatStats ?? []);
+        var lombaData = @json($lombaStats ?? []);
 
-    // Grafik Kategori Minat
-    var minatChart = new ApexCharts(document.querySelector("#minat-chart"), {
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        series: [{
-            name: 'Jumlah Prestasi',
-            data: minatData.map(function (data) { return data.jumlah; })
-        }],
-        xaxis: {
-            categories: minatData.map(function (data) { return data.minat; })
-        },
-        title: {
-            text: 'Peningkatan/Penurunan Kategori Minat',
-            align: 'center',
-            style: {
-                fontSize: '18px',
-                fontWeight: 'bold',
-                color: '#333'
+        // Inisialisasi grafik hanya jika ApexCharts tersedia dan data ada
+        if (typeof ApexCharts !== 'undefined') {
+            // Grafik Kategori Minat
+            if (minatData && minatData.length > 0) {
+                var minatChart = new ApexCharts(document.querySelector("#minat-chart"), {
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    series: [{
+                        name: 'Jumlah Prestasi',
+                        data: minatData.map(function(data) { 
+                            return data.jumlah ? parseInt(data.jumlah) : 0; 
+                        })
+                    }],
+                    xaxis: {
+                        categories: minatData.map(function(data) { 
+                            return data.minat || 'Tidak Diketahui'; 
+                        })
+                    },
+                    title: {
+                        text: 'Peningkatan/Penurunan Kategori Minat',
+                        align: 'center',
+                        style: {
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            color: '#333'
+                        }
+                    },
+                    colors: ['#3B82F6'],
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: false,
+                        }
+                    }
+                });
+                minatChart.render();
+            } else {
+                document.querySelector("#minat-chart").innerHTML = '<p class="text-center text-gray-500">Tidak ada data kategori minat</p>';
             }
-        }
-    });
 
-    // Grafik Statistik Lomba
-    var lombaChart = new ApexCharts(document.querySelector("#lomba-chart"), {
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        series: [{
-            name: 'Jumlah Prestasi',
-            data: lombaData.map(function (data) { return data.jumlah; })
-        }],
-        xaxis: {
-            categories: lombaData.map(function (data) { return data.lomba; })
-        },
-        title: {
-            text: 'Statistik Kategori Lomba',
-            align: 'center',
-            style: {
-                fontSize: '18px',
-                fontWeight: 'bold',
-                color: '#333'
+            // Grafik Statistik Lomba
+            if (lombaData && lombaData.length > 0) {
+                var lombaChart = new ApexCharts(document.querySelector("#lomba-chart"), {
+                    chart: {
+                        type: 'bar',
+                        height: 350,
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    series: [{
+                        name: 'Jumlah Prestasi',
+                        data: lombaData.map(function(data) { 
+                            return data.jumlah ? parseInt(data.jumlah) : 0; 
+                        })
+                    }],
+                    xaxis: {
+                        categories: lombaData.map(function(data) { 
+                            return data.lomba || 'Tidak Diketahui'; 
+                        })
+                    },
+                    title: {
+                        text: 'Statistik Kategori Lomba',
+                        align: 'center',
+                        style: {
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            color: '#333'
+                        }
+                    },
+                    colors: ['#10B981'],
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: false,
+                        }
+                    }
+                });
+                lombaChart.render();
+            } else {
+                document.querySelector("#lomba-chart").innerHTML = '<p class="text-center text-gray-500">Tidak ada data kategori lomba</p>';
             }
-        }
-    });
-
-    function openEditModal(id) {
-    const token = localStorage.getItem('api_token');
-    if (!token) {
-        console.error("No API token found in localStorage.");
-        return;
-    }
-
-    const url = 'http://127.0.0.1:8000/api/laporan/' + id; // URL untuk mendapatkan data laporan
-
-    fetch(url, {
-        method: 'GET',
-        headers: {
-            'Authorization': 'Bearer ' + token,
-            'Content-Type': 'application/json',
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status) {
-            const laporan = data.data;
-
-            // Setel nilai status berdasarkan data yang diterima
-            document.getElementById('prestasi_status').value = laporan.prestasi_status;
-
-            // Atur aksi form modal untuk memperbarui status (PUT)
-            const form = document.getElementById('form');
-            form.action = '/api/laporan/' + id;
-            form.method = 'PUT';
-
-            // Tampilkan modal menggunakan Bootstrap 5
-            var myModal = new bootstrap.Modal(document.getElementById('modal'));
-            myModal.show();
         } else {
+            console.error('ApexCharts tidak tersedia');
+            document.querySelector("#minat-chart").innerHTML = '<p class="text-center text-red-500">Error: ApexCharts tidak dapat dimuat</p>';
+            document.querySelector("#lomba-chart").innerHTML = '<p class="text-center text-red-500">Error: ApexCharts tidak dapat dimuat</p>';
+        }
+    });
+
+    // Fungsi untuk membuka modal edit
+    function openEditModal(id) {
+        const token = localStorage.getItem('api_token');
+        if (!token) {
+            console.error("No API token found in localStorage.");
             Swal.fire({
                 icon: 'error',
-                title: 'Data Tidak Ditemukan',
-                text: data.message,
+                title: 'Token Hilang',
+                text: 'Token tidak ditemukan di localStorage.'
             });
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
+
+        // Cek apakah elemen modal dan form ada
+        const modalElement = document.getElementById('modal');
+        const formElement = document.getElementById('Form');
+        
+        if (!modalElement) {
+            console.error('Modal element tidak ditemukan');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Modal tidak ditemukan. Pastikan modal sudah dibuat dengan ID "modal".'
+            });
+            return;
+        }
+
+        if (!formElement) {
+            console.error('Form element tidak ditemukan');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Form tidak ditemukan. Pastikan form sudah dibuat dengan ID "form".'
+            });
+            return;
+        }
+
+        const url = 'http://127.0.0.1:8000/api/laporan/' + id;
+
+        // Tampilkan loading
         Swal.fire({
-            icon: 'error',
-            title: 'Terjadi Kesalahan',
-            text: 'Tidak dapat mengambil data laporan.',
+            title: 'Memuat data...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
         });
-    });
-}
 
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            Swal.close(); // Tutup loading
 
+            if (data.status || data.success) {
+                const laporan = data.data;
 
+                // Reset form terlebih dahulu
+                formElement.reset();
+                
+                // Clear error states
+                const errorElements = formElement.querySelectorAll('.is-invalid');
+                errorElements.forEach(el => el.classList.remove('is-invalid'));
+                
+                const errorTexts = formElement.querySelectorAll('.text-red-500');
+                errorTexts.forEach(el => el.textContent = '');
+
+                // Set nilai status
+                const statusSelect = document.getElementById('prestasi_status');
+                if (statusSelect && laporan.prestasi_status) {
+                    statusSelect.value = laporan.prestasi_status;
+                    
+                    // Trigger change event untuk show/hide catatan section
+                    statusSelect.dispatchEvent(new Event('change'));
+                }
+
+                // Set catatan jika ada
+                const catatanTextarea = document.getElementById('prestasi_catatan');
+                if (catatanTextarea && laporan.prestasi_catatan) {
+                    catatanTextarea.value = laporan.prestasi_catatan;
+                }
+
+                // Set form action dan method
+                formElement.setAttribute('action', 'http://127.0.0.1:8000/api/laporan/' + id);
+                
+                // Set method field untuk PUT
+                const methodField = document.getElementById('method_field');
+                if (methodField) {
+                    methodField.value = 'PUT';
+                }
+
+                // Tampilkan modal
+                if (typeof bootstrap !== 'undefined') {
+                    const modal = new bootstrap.Modal(modalElement);
+                    modal.show();
+                } else {
+                    console.error('Bootstrap tidak ditemukan');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Bootstrap tidak ditemukan. Pastikan Bootstrap sudah dimuat.'
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data Tidak Ditemukan',
+                    text: data.message || 'Data laporan tidak ditemukan',
+                });
+            }
+        })
+        .catch(error => {
+            Swal.close(); // Tutup loading
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                text: 'Tidak dapat mengambil data laporan. ' + error.message,
+            });
+        });
+    }
 
     // Fungsi untuk membuka modal hapus
     function openDeleteModal(id) {
-        const url = '/api/laporan/' + id;
+        const url = 'http://127.0.0.1:8000/api/laporan/' + id;
 
-        // Logika untuk menghapus data jika diperlukan (dengan confirmation)
         Swal.fire({
             title: 'Yakin ingin menghapus?',
             text: "Data ini akan dihapus permanen.",
@@ -237,31 +368,51 @@
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Mengirim permintaan DELETE untuk menghapus laporan
+                const token = localStorage.getItem('api_token');
+                if (!token) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Token Hilang',
+                        text: 'Token tidak ditemukan di localStorage.'
+                    });
+                    return;
+                }
+
+                // Tampilkan loading
+                Swal.fire({
+                    title: 'Menghapus data...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 fetch(url, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('api_token'),
+                        'Authorization': 'Bearer ' + token,
                         'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     },
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status) {
-                        Swal.fire(
-                            'Dihapus!',
-                            'Data laporan telah dihapus.',
-                            'success'
-                        );
-                        // Reload data tabel atau update tampilan lainnya
-                        location.reload();
+                    if (data.status || data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Data laporan telah dihapus.',
+                        }).then(() => {
+                            location.reload();
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal Dihapus',
-                            text: data.message,
+                            text: data.message || 'Terjadi kesalahan saat menghapus data',
                         });
                     }
                 })
@@ -276,10 +427,6 @@
             }
         });
     }
-
-    // Render charts
-    minatChart.render();
-    lombaChart.render();
 </script>
 
 @endsection
