@@ -128,7 +128,7 @@
         <!-- Content will be loaded here -->
     </section>
 
-    <x-modal />
+    <x-modal size="2xl"/>
 @endsection
 
 @push('js')

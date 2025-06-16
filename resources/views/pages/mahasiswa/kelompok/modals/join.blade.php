@@ -1,16 +1,25 @@
-<form id="form" method="POST" action="{{ $action }}" class="p-4 md:p-5">
+<!-- Modal header -->
+<div class="flex items-center justify-between px-4 py-3 border-b rounded-t-xl bg-primary border-gray-200">
+    <h3 class="text-sm font-semibold text-white">
+        <i class="fa-solid fa-file-circle-plus me-1"></i>
+        Pilih kompetensi anda untuk kelompok ini
+    </h3>
+    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer"
+        data-modal-hide="small-modal">
+        <i class="fa-solid fa-xmark"></i>
+        <span class="sr-only">Close modal</span>
+    </button>
+</div>
+<!-- Modal body -->
+<form id="form" method="POST" action="{{ route('mahasiswa.kelompok.join', $kelompok->kelompok_id) }}"
+    class="p-4">
     @csrf
 
-    @if (in_array(strtoupper($method), ['PUT']))
-        @method($method)
-    @endif
-
     <div class="mb-4 w-full">
-        <x-forms.checkbox-dropdown title="{{ $title }}" name="{{ $nama }}[]" :options="$datas->pluck($nama . '_nama', $nama . '_id')->toArray()"
-            searchable="true" />
+        <x-forms.checkbox-dropdown title="Pilih kompetensi" name="kompetensi[]" :options="$kompetensis->pluck('kompetensi_nama', 'kompetensi_id')->toArray()" searchable="true" />
     </div>
     <div class="flex justify-end">
-        <x-buttons.default type="submit" title="{{ $buttonText }}" color="primary" icon="{{ $buttonIcon }}" />
+        <x-buttons.default type="submit" title="Bergabung" color="primary" icon="fa-solid fa-arrow-right-to-bracket" />
     </div>
 </form>
 
@@ -18,25 +27,25 @@
     $(document).ready(function() {
         $("#form").validate({
             rules: {
-                "{{ $nama }}[]": {
+                "kompetensi[]": {
                     required: true,
                     minlength: 1
                 }
             },
             messages: {
-                "{{ $nama }}[]": {
-                    required: "{{ $title }} wajib dipilih minimal satu.",
-                    minlength: "{{ $title }} wajib dipilih minimal satu."
+                "kompetensi[]": {
+                    required: "Kompetensi wajib dipilih minimal satu.",
+                    minlength: "Kompetensi wajib dipilih minimal satu."
                 }
             },
             submitHandler: function(form, event) {
                 event.preventDefault();
 
                 var formData = new FormData(form);
-                var selectedItems = $('input[name="{{ $nama }}[]"]:checked').length;
+                var selectedItems = $('input[name="kompetensi[]"]:checked').length;
                 if (selectedItems === 0) {
-                    $('#error-{{ $nama }}').text(
-                        '{{ $title }} wajib dipilih minimal satu.');
+                    $('#error-kompetensi').text(
+                        'Kompetensi wajib dipilih minimal satu.');
                     return false;
                 }
 
@@ -48,15 +57,13 @@
                     contentType: false,
                     success: function(response) {
                         if (response.status) {
-                            disposeModal('edit_modal');
-                            disposeModal('criteria_modal');
+                            disposeModal();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             }).then(() => {
-                                disposeModal('edit_modal');
-                                disposeModal('criteria_modal');
+                                disposeModal();
                                 window.location.reload();
                             });
                         } else {
@@ -94,8 +101,8 @@
             }
         });
 
-        $('input[name="{{ $nama }}[]"]').on('change', function() {
-            $('#error-{{ $nama }}').text('');
+        $('input[name="kompetensi[]"]').on('change', function() {
+            $('#error-kompetensi').text('');
             $(this).removeClass('is-invalid');
         });
     });

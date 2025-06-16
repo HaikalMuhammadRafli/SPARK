@@ -4,7 +4,7 @@
         <i class="fa-solid fa-file-circle-plus me-1"></i>
         Create Kelompok
     </h3>
-    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer" data-modal-hide="modal">
+    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer" data-modal-hide="big-modal">
         <i class="fa-solid fa-xmark"></i>
         <span class="sr-only">Close modal</span>
     </button>
@@ -34,8 +34,8 @@
     <div class="tab-content border border-gray-200 rounded-lg">
         <!-- Kelompok Form Tab -->
         <div id="kelompok-form" class="tab-pane block">
-            @include('kelompok.partials.form', [
-                'action' => route('admin.manajemen.kelompok.store'),
+            @include('pages.mahasiswa.kelompok.partials.form', [
+                'action' => route('mahasiswa.kelompok.store'),
                 'method' => 'POST',
                 'buttonText' => 'Tambah',
                 'buttonIcon' => 'fa-solid fa-plus',
@@ -44,8 +44,8 @@
 
         <!-- SPK Form Tab -->
         <div id="spk-form" class="tab-pane hidden">
-            @include('kelompok.partials.spk', [
-                'action' => route('admin.manajemen.kelompok.spk'),
+            @include('pages.mahasiswa.kelompok.partials.spk', [
+                'action' => route('mahasiswa.kelompok.spk'),
                 'method' => 'POST',
             ])
         </div>

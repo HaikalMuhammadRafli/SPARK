@@ -11,6 +11,7 @@
     'searchPlaceholder' => 'Search options...',
     'allowClear' => true,
     'clearText' => 'Select an option',
+    'class' => '',
 ])
 
 @php
@@ -18,7 +19,7 @@
     $unique_id = $clean_name . '_' . uniqid();
 @endphp
 
-<fieldset class="form-group w-full">
+<fieldset class="form-group {{ $class }}">
     @if ($label)
         <label for="{{ $clean_name }}" class="block mb-1 text-xs font-medium text-gray-600">
             {{ $label }}
@@ -28,77 +29,33 @@
         </label>
     @endif
 
-    <div class="relative">
+    <div class="relative w-full">
         @if ($searchable)
-            <!-- Searchable Select -->
-            <div class="relative" data-searchable-select="{{ $unique_id }}">
+            <!-- Searchable Select Button -->
+            <button type="button"
+                class="w-full rounded-md bg-gray-50 border border-gray-300 text-xs text-gray-900 px-3 py-2 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white focus:outline-none {{ $disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'hover:border-gray-400 cursor-pointer' }} {{ $icon ? 'pl-10' : 'pl-3' }} text-left"
+                onclick="toggleSelectDropdown('{{ $unique_id }}')" {{ $disabled ? 'disabled' : '' }}>
+
                 @if ($icon)
-                    <span
-                        class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 pointer-events-none z-10">
-                        <i class="{{ $icon }}" aria-hidden="true"></i>
-                    </span>
+                    <i class="{{ $icon }} absolute left-3 text-gray-400" aria-hidden="true"></i>
                 @endif
 
-                <button type="button"
-                    class="w-full rounded-md bg-gray-50 border border-gray-300 text-xs text-gray-900 px-3 py-2 transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white focus:outline-none {{ $disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'hover:border-gray-400 cursor-pointer' }} {{ $icon ? 'pl-10' : 'pl-3' }} text-left"
-                    data-toggle-button="{{ $unique_id }}" {{ $disabled ? 'disabled' : '' }}>
-                    <span class="block truncate" data-selected-text="{{ $unique_id }}">
-                        @if ($selected && isset($options[$selected]))
-                            {{ $options[$selected] }}
-                        @elseif($placeholder)
-                            {{ $placeholder }}
-                        @else
-                            {{ $clearText }}
-                        @endif
-                    </span>
-                    <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-400 transition-transform duration-200 dropdown-arrow"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </span>
-                </button>
-
-                <!-- Dropdown -->
-                <div id="{{ $unique_id }}-dropdown"
-                    class="absolute hidden z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg"
-                    data-dropdown="{{ $unique_id }}">
-                    <!-- Search Input -->
-                    <div class="p-2 border-b border-gray-200">
-                        <div class="relative">
-                            <input type="text"
-                                class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500 pl-7"
-                                placeholder="{{ $searchPlaceholder }}" data-search-input="{{ $unique_id }}"
-                                autocomplete="off">
-                            <svg class="absolute left-2 top-1.5 w-3 h-3 text-gray-400" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Options -->
-                    <div class="overflow-auto max-h-48" data-options-container="{{ $unique_id }}">
-                        @if ($allowClear)
-                            <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer text-xs select-option"
-                                data-option-value="" data-option-text="{{ $placeholder ?: $clearText }}">
-                                {{ $placeholder ?: $clearText }}
-                            </div>
-                        @endif
-
-                        @forelse ($options as $value => $optionLabel)
-                            <div class="px-3 py-2 hover:bg-gray-100 cursor-pointer text-xs select-option {{ (string) old($clean_name, $selected) === (string) $value ? 'bg-blue-50 text-blue-700' : '' }}"
-                                data-option-value="{{ $value }}" data-option-text="{{ $optionLabel }}">
-                                {{ $optionLabel }}
-                            </div>
-                        @empty
-                            <div class="px-3 py-2 text-gray-500 text-xs">No options available</div>
-                        @endforelse
-                    </div>
-                </div>
-            </div>
+                <span class="block truncate text-xs" data-selected-text="{{ $unique_id }}">
+                    @if ($selected && isset($options[$selected]))
+                        {{ $options[$selected] }}
+                    @elseif($placeholder)
+                        {{ $placeholder }}
+                    @else
+                        {{ $clearText }}
+                    @endif
+                </span>
+                <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-400 transition-transform dropdown-arrow" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </span>
+            </button>
 
             <!-- Hidden select for form submission -->
             <select id="{{ $clean_name }}" name="{{ $name }}" class="hidden"
@@ -151,176 +108,235 @@
     @error($name)
         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
     @enderror
+    <span id="error-{{ $clean_name }}" class="error-text invalid-feedback"></span>
 </fieldset>
 
 @if ($searchable)
-    @push('js')
-        <script>
-            $(document).ready(function() {
-                // Initialize all searchable selects
-                $('[data-searchable-select]').each(function() {
-                    const uniqueId = $(this).data('searchable-select');
-                    initSearchableSelect(uniqueId);
-                });
+    <!-- Dropdown rendered at body level to avoid table overflow constraints -->
+    <div id="select-dropdown-{{ $unique_id }}"
+        class="fixed hidden bg-white border border-gray-200 rounded-lg shadow-lg w-80 mt-1 z-[9999]"
+        style="max-width: 320px;" data-select-name="{{ $name }}">
 
-                function initSearchableSelect(uniqueId) {
-                    const container = $(`[data-searchable-select="${uniqueId}"]`);
-                    const button = container.find(`[data-toggle-button="${uniqueId}"]`);
-                    const dropdown = $(`#${uniqueId}-dropdown`);
-                    const searchInput = $(`[data-search-input="${uniqueId}"]`);
-                    const optionsContainer = $(`[data-options-container="${uniqueId}"]`);
-                    const hiddenSelect = $(`[data-hidden-select="${uniqueId}"]`);
-                    const selectedText = $(`[data-selected-text="${uniqueId}"]`);
-                    const arrow = button.find('.dropdown-arrow');
+        <!-- Search Input -->
+        <div class="p-3 border-b border-gray-200">
+            <div class="relative">
+                <input type="text" id="search-{{ $unique_id }}"
+                    onkeyup="filterSelectOptions('{{ $unique_id }}')"
+                    class="block w-full pl-8 pr-4 py-2 text-xs text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="{{ $searchPlaceholder }}">
+                <svg class="absolute left-2.5 top-2.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </div>
 
-                    // Toggle dropdown on button click
-                    button.on('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
+        <!-- Options -->
+        <div class="p-2">
+            <ul class="max-h-48 overflow-y-auto text-xs">
+                @if ($allowClear)
+                    <li class="select-option-item" data-search="{{ strtolower($placeholder ?: $clearText) }}">
+                        <div class="flex items-center px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer"
+                            onclick="selectOption('{{ $unique_id }}', '', '{{ $placeholder ?: $clearText }}')">
+                            <span class="flex-1 text-xs text-gray-900">
+                                {{ $placeholder ?: $clearText }}
+                            </span>
+                        </div>
+                    </li>
+                @endif
 
-                        // Close other dropdowns
-                        $('[data-dropdown]').not(dropdown).addClass('hidden');
-                        $('[data-toggle-button] .dropdown-arrow').not(arrow).removeClass('rotate-180');
+                @forelse ($options as $value => $optionLabel)
+                    <li class="select-option-item" data-search="{{ strtolower($optionLabel) }}">
+                        <div class="flex items-center px-2 py-1.5 rounded hover:bg-gray-50 cursor-pointer {{ (string) old($clean_name, $selected) === (string) $value ? 'bg-blue-50 text-blue-700' : '' }}"
+                            onclick="selectOption('{{ $unique_id }}', '{{ $value }}', '{{ $optionLabel }}')"
+                            data-option-value="{{ $value }}">
+                            <span class="flex-1 text-xs">
+                                {{ $optionLabel }}
+                            </span>
+                            @if ((string) old($clean_name, $selected) === (string) $value)
+                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                            @endif
+                        </div>
+                    </li>
+                @empty
+                    <li class="px-2 py-1.5 text-gray-500 text-xs">No options available</li>
+                @endforelse
+            </ul>
+        </div>
+    </div>
 
-                        // Toggle current dropdown
-                        const isHidden = dropdown.hasClass('hidden');
+    <script>
+        function toggleSelectDropdown(uniqueId) {
+            const button = document.querySelector(`button[onclick="toggleSelectDropdown('${uniqueId}')"]`);
+            const dropdown = document.getElementById('select-dropdown-' + uniqueId);
+            const arrow = button.querySelector('.dropdown-arrow');
 
-                        if (isHidden) {
-                            // Position dropdown
-                            const buttonRect = button[0].getBoundingClientRect();
-                            const viewportHeight = window.innerHeight;
-                            const dropdownHeight = 300;
-
-                            if (buttonRect.bottom + dropdownHeight > viewportHeight && buttonRect.top >
-                                dropdownHeight) {
-                                dropdown.css({
-                                    'top': 'auto',
-                                    'bottom': '100%',
-                                    'margin-bottom': '4px',
-                                    'margin-top': '0'
-                                });
-                            } else {
-                                dropdown.css({
-                                    'top': '100%',
-                                    'bottom': 'auto',
-                                    'margin-top': '4px',
-                                    'margin-bottom': '0'
-                                });
-                            }
-
-                            dropdown.removeClass('hidden');
-                            arrow.addClass('rotate-180');
-
-                            // Focus search and reset
-                            setTimeout(() => {
-                                searchInput.focus();
-                                searchInput.val('');
-                                filterOptions();
-                            }, 100);
-                        } else {
-                            dropdown.addClass('hidden');
-                            arrow.removeClass('rotate-180');
-                        }
-                    });
-
-                    // Search functionality
-                    searchInput.on('input', filterOptions);
-
-                    function filterOptions() {
-                        const filter = searchInput.val().toLowerCase();
-                        optionsContainer.find('.select-option').each(function() {
-                            const text = $(this).data('option-text').toString().toLowerCase();
-                            $(this).toggle(text.includes(filter));
-                        });
+            // Close other select dropdowns first
+            document.querySelectorAll('[id^="select-dropdown-"]').forEach(function(otherDropdown) {
+                if (otherDropdown.id !== 'select-dropdown-' + uniqueId) {
+                    otherDropdown.classList.add('hidden');
+                    const otherId = otherDropdown.id.replace('select-dropdown-', '');
+                    const otherButton = document.querySelector(
+                        `button[onclick="toggleSelectDropdown('${otherId}')"]`);
+                    if (otherButton) {
+                        const otherArrow = otherButton.querySelector('.dropdown-arrow');
+                        if (otherArrow) otherArrow.classList.remove('rotate-180');
                     }
+                }
+            });
 
-                    // Option selection
-                    optionsContainer.on('click', '.select-option', function(e) {
-                        e.preventDefault();
-                        const value = $(this).data('option-value');
-                        const text = $(this).data('option-text');
+            // Toggle current dropdown
+            const isHidden = dropdown.classList.contains('hidden');
 
-                        // Update values
-                        hiddenSelect.val(value).trigger('change');
-                        selectedText.text(text);
+            if (isHidden) {
+                // Position the dropdown relative to the button
+                const buttonRect = button.getBoundingClientRect();
+                const viewportHeight = window.innerHeight;
+                const viewportWidth = window.innerWidth;
+                const dropdownHeight = 300;
+                const dropdownWidth = 320;
 
-                        // Update visual selection
-                        optionsContainer.find('.select-option').removeClass('bg-blue-50 text-blue-700');
-                        $(this).addClass('bg-blue-50 text-blue-700');
+                let top = buttonRect.bottom + window.scrollY;
+                let left = buttonRect.left + window.scrollX;
 
-                        // Close dropdown
-                        dropdown.addClass('hidden');
-                        arrow.removeClass('rotate-180');
-                    });
-
-                    // Keyboard navigation
-                    searchInput.on('keydown', function(e) {
-                        const visibleOptions = optionsContainer.find('.select-option:visible');
-                        const currentFocus = optionsContainer.find('.select-option.keyboard-focus');
-
-                        if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            if (currentFocus.length) {
-                                currentFocus.removeClass('keyboard-focus');
-                                const currentIndex = visibleOptions.index(currentFocus);
-                                const nextOption = visibleOptions.eq(currentIndex + 1);
-                                if (nextOption.length) {
-                                    nextOption.addClass('keyboard-focus');
-                                    nextOption[0].scrollIntoView({
-                                        block: 'nearest'
-                                    });
-                                }
-                            } else if (visibleOptions.length > 0) {
-                                visibleOptions.first().addClass('keyboard-focus');
-                            }
-                        } else if (e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            if (currentFocus.length) {
-                                currentFocus.removeClass('keyboard-focus');
-                                const currentIndex = visibleOptions.index(currentFocus);
-                                const prevOption = visibleOptions.eq(currentIndex - 1);
-                                if (prevOption.length) {
-                                    prevOption.addClass('keyboard-focus');
-                                    prevOption[0].scrollIntoView({
-                                        block: 'nearest'
-                                    });
-                                }
-                            }
-                        } else if (e.key === 'Enter') {
-                            e.preventDefault();
-                            if (currentFocus.length) {
-                                currentFocus.click();
-                            }
-                        } else if (e.key === 'Escape') {
-                            e.preventDefault();
-                            dropdown.addClass('hidden');
-                            arrow.removeClass('rotate-180');
-                            button.focus();
-                        }
-                    });
-
-                    // Clear keyboard focus on mouse hover
-                    optionsContainer.on('mouseenter', '.select-option', function() {
-                        optionsContainer.find('.select-option').removeClass('keyboard-focus');
-                    });
+                // Check if dropdown should appear above
+                if (buttonRect.bottom + dropdownHeight > viewportHeight) {
+                    if (buttonRect.top > dropdownHeight) {
+                        top = buttonRect.top + window.scrollY - dropdownHeight;
+                    }
                 }
 
-                // Click outside to close all dropdowns
-                $(document).on('click', function(e) {
-                    if (!$(e.target).closest('[data-searchable-select], [data-dropdown]').length) {
-                        $('[data-dropdown]').addClass('hidden');
-                        $('[data-toggle-button] .dropdown-arrow').removeClass('rotate-180');
+                // Check if dropdown should appear more to the left
+                if (left + dropdownWidth > viewportWidth) {
+                    left = Math.max(10, viewportWidth - dropdownWidth - 10);
+                }
+
+                dropdown.style.top = top + 'px';
+                dropdown.style.left = left + 'px';
+                dropdown.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+
+                // Focus search input
+                const searchInput = dropdown.querySelector('input[type="text"]');
+                if (searchInput) {
+                    setTimeout(() => {
+                        searchInput.focus();
+                        searchInput.value = '';
+                        filterSelectOptions(uniqueId);
+                    }, 100);
+                }
+            } else {
+                dropdown.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        }
+
+        function filterSelectOptions(uniqueId) {
+            const searchInput = document.getElementById('search-' + uniqueId);
+            const filter = searchInput.value.toLowerCase();
+            const dropdown = document.getElementById('select-dropdown-' + uniqueId);
+            const items = dropdown.querySelectorAll('.select-option-item');
+
+            items.forEach(function(item) {
+                const searchText = item.getAttribute('data-search');
+                item.style.display = searchText.includes(filter) ? '' : 'none';
+            });
+        }
+
+        function selectOption(uniqueId, value, text) {
+            const hiddenSelect = document.querySelector(`[data-hidden-select="${uniqueId}"]`);
+            const selectedText = document.querySelector(`[data-selected-text="${uniqueId}"]`);
+            const dropdown = document.getElementById('select-dropdown-' + uniqueId);
+            const button = document.querySelector(`button[onclick="toggleSelectDropdown('${uniqueId}')"]`);
+            const arrow = button.querySelector('.dropdown-arrow');
+
+            // Update hidden select and display
+            hiddenSelect.value = value;
+            selectedText.textContent = text;
+
+            // Update visual selection
+            dropdown.querySelectorAll('[data-option-value]').forEach(opt => {
+                opt.classList.remove('bg-blue-50', 'text-blue-700');
+                const checkIcon = opt.querySelector('svg');
+                if (checkIcon) checkIcon.remove();
+            });
+
+            const selectedOption = dropdown.querySelector(`[data-option-value="${value}"]`);
+            if (selectedOption && value !== '') {
+                selectedOption.classList.add('bg-blue-50', 'text-blue-700');
+                selectedOption.innerHTML += `
+                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+            `;
+            }
+
+            // Trigger change event for form handling
+            hiddenSelect.dispatchEvent(new Event('change'));
+
+            // Close dropdown
+            dropdown.classList.add('hidden');
+            arrow.classList.remove('rotate-180');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('[id^="select-dropdown-"]') &&
+                !event.target.closest('button[onclick*="toggleSelectDropdown"]')) {
+                document.querySelectorAll('[id^="select-dropdown-"]').forEach(function(dropdown) {
+                    dropdown.classList.add('hidden');
+                    const dropdownId = dropdown.id.replace('select-dropdown-', '');
+                    const button = document.querySelector(
+                        `button[onclick="toggleSelectDropdown('${dropdownId}')"]`);
+                    if (button) {
+                        const arrow = button.querySelector('.dropdown-arrow');
+                        if (arrow) arrow.classList.remove('rotate-180');
                     }
                 });
-            });
-        </script>
-    @endpush
-
-    @push('css')
-        <style>
-            .select-option.keyboard-focus {
-                @apply bg-gray-200;
             }
-        </style>
-    @endpush
+        });
+
+        // Close dropdown on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.querySelectorAll('[id^="select-dropdown-"]').forEach(function(dropdown) {
+                    dropdown.classList.add('hidden');
+                    const dropdownId = dropdown.id.replace('select-dropdown-', '');
+                    const button = document.querySelector(
+                        `button[onclick="toggleSelectDropdown('${dropdownId}')"]`);
+                    if (button) {
+                        const arrow = button.querySelector('.dropdown-arrow');
+                        if (arrow) arrow.classList.remove('rotate-180');
+                    }
+                });
+            }
+        });
+
+        // Reposition dropdown on window resize/scroll
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('[id^="select-dropdown-"]:not(.hidden)').forEach(function(dropdown) {
+                const dropdownId = dropdown.id.replace('select-dropdown-', '');
+                toggleSelectDropdown(dropdownId);
+                toggleSelectDropdown(dropdownId);
+            });
+        });
+
+        window.addEventListener('scroll', function() {
+            document.querySelectorAll('[id^="select-dropdown-"]:not(.hidden)').forEach(function(dropdown) {
+                const dropdownId = dropdown.id.replace('select-dropdown-', '');
+                const button = document.querySelector(
+                    `button[onclick="toggleSelectDropdown('${dropdownId}')"]`);
+                if (button) {
+                    const buttonRect = button.getBoundingClientRect();
+                    dropdown.style.top = (buttonRect.bottom + window.scrollY) + 'px';
+                    dropdown.style.left = (buttonRect.left + window.scrollX) + 'px';
+                }
+            });
+        });
+    </script>
 @endif

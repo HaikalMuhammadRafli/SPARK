@@ -29,7 +29,7 @@
                 <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">MANAJEMEN LOMBA</h6>
                 <x-sidebar.menu-item route="admin.manajemen.kelompok.index" icon='fa-solid fa-users'
                     title="Kelola Kelompok" />
-                <x-sidebar.menu-item route="" icon='fa-solid fa-clipboard-check' title="Verifikasi Lomba" />
+                <x-sidebar.menu-item route="admin.manajemen.lomba.verification" icon='fa-solid fa-clipboard-check' title="Verifikasi Lomba" />
                 <x-sidebar.menu-item route="admin.manajemen.lomba.index" icon='fa-solid fa-trophy'
                     title="Kelola Lomba" />
                 <x-sidebar.menu-item route="admin.manajemen.prestasi.verification" icon='fa-solid fa-award' title="Verifikasi Prestasi" />
@@ -70,7 +70,7 @@
             <ul class="space-y-2 font-medium bg-white rounded-xl px-2 py-3 mb-3">
                 <h6 class="text-xs text-gray-400 ms-5 mt-2 mb-4">KELOMPOK</h6>
                 <x-sidebar.menu-item route="mahasiswa.kelompok.index" icon='fa-solid fa-list' title="Daftar Kelompok" />
-                <x-sidebar.menu-item route="" icon='fa-solid fa-users' title="Kelompok Saya" />
+                <x-sidebar.menu-item route="mahasiswa.kelompok.saya" icon='fa-solid fa-users' title="Kelompok Saya" />
             </ul>
 
             <ul class="space-y-2 font-medium bg-white rounded-xl px-2 py-3 mb-3">

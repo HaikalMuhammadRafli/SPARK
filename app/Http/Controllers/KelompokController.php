@@ -105,7 +105,7 @@ class KelompokController extends Controller
 
 
         return view('kelompok.modals.create', [
-            'lombas' => LombaModel::all(),
+            'lombas' => LombaModel::whereNot('lomba_status', 'Berakhir')->get(),
             'mahasiswas' => MahasiswaModel::all(),
             'perans_mhs' => [
                 'Ketua' => 'Ketua',
@@ -133,14 +133,11 @@ class KelompokController extends Controller
             'minats' => MinatModel::all(),
             'bidang_keahlians' => BidangKeahlianModel::all(),
             'jumlah_rekomendasis' => [
-                '3' => '3',
-                '4' => '4',
-                '5' => '5',
-                '6' => '6',
-                '7' => '7',
-                '8' => '8',
-                '9' => '9',
                 '10' => '10',
+                '20' => '20',
+                '30' => '30',
+                '40' => '40',
+                '50' => '50',
             ],
             'weight_ranks' => [
                 '1' => '1',
@@ -254,6 +251,29 @@ class KelompokController extends Controller
                 'Pembimbing kompetisi tingkat internasional' => 'Pembimbing kompetisi tingkat internasional',
             ],
             'kompetensis' => KompetensiModel::all(),
+            'lokasi_preferensis' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'minats' => MinatModel::all(),
+            'bidang_keahlians' => BidangKeahlianModel::all(),
+            'jumlah_rekomendasis' => [
+                '10' => '10',
+                '20' => '20',
+                '30' => '30',
+                '40' => '40',
+                '50' => '50',
+            ],
+            'weight_ranks' => [
+                '1' => '1',
+                '2' => '2',
+                '3' => '3',
+                '4' => '4',
+                '5' => '5',
+                '6' => '6',
+            ],
         ]);
     }
 
@@ -378,6 +398,15 @@ class KelompokController extends Controller
             $validated = $request->validated();
             $entropy = $request->input('entropy');
 
+            // Validate jumlah rekomendasi - accept the new values
+            $jumlahRekomendasi = (int) $validated['jumlah_rekomendasi'];
+            if (!in_array($jumlahRekomendasi, [10, 20, 30, 40, 50])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Jumlah rekomendasi harus 10, 20, 30, 40, atau 50.',
+                ], 422);
+            }
+
             $kriteria_dm = [
                 'lokasi_preferensi' => $validated['lokasi_preferensi_spk'],
                 'minats' => $validated['minat_spk'],
@@ -402,8 +431,30 @@ class KelompokController extends Controller
             $data_dispersi = [];
             $data_normalisasi_dispersi = [];
 
-            // Matriks keputusan
-            foreach (MahasiswaModel::all() as $mahasiswa) {
+            // Matriks keputusan - Load mahasiswa with necessary relationships for performance
+            $mahasiswas = MahasiswaModel::with([
+                'minats:minat_id',
+                'bidang_keahlians:bidang_keahlian_id',
+                'kompetensis:kompetensi_id',
+                'perans.kelompok.lomba.prestasis'
+            ])->get();
+
+            if ($mahasiswas->isEmpty()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Tidak ada data mahasiswa yang ditemukan.',
+                ], 404);
+            }
+
+            // Check if available mahasiswa count is less than requested
+            $totalMahasiswa = $mahasiswas->count();
+            if ($totalMahasiswa < $jumlahRekomendasi) {
+
+                // Adjust to available count but continue processing
+                $jumlahRekomendasi = $totalMahasiswa;
+            }
+
+            foreach ($mahasiswas as $mahasiswa) {
                 $data_mahasiswa[] = [
                     'mahasiswa' => $mahasiswa,
                     'lokasi_preferensi' => $mahasiswa->lokasi_preferensi,
@@ -483,26 +534,24 @@ class KelompokController extends Controller
             if ($entropy) {
 
                 // Normalisasi untuk Entropy
-                $max_all_columns = [
-                    'PL' => max(array_column($data_normalisasi, 'PL')),
-                    'M' => max(array_column($data_normalisasi, 'M')),
-                    'BK' => max(array_column($data_normalisasi, 'BK')),
-                    'K' => max(array_column($data_normalisasi, 'K')),
-                    'JL' => max(array_column($data_normalisasi, 'JL')),
-                    'JP' => max(array_column($data_normalisasi, 'JP')),
+                $max_columns = [
+                    'PL' => max(array_column($data_skoring, 'PL')),
+                    'M' => max(array_column($data_skoring, 'M')),
+                    'BK' => max(array_column($data_skoring, 'BK')),
+                    'K' => max(array_column($data_skoring, 'K')),
+                    'JL' => max(array_column($data_skoring, 'JL')),
+                    'JP' => max(array_column($data_skoring, 'JP')),
                 ];
-
-                $max_all = max($max_all_columns);
 
                 foreach ($data_skoring as $data) {
                     $data_normalisasi_entropy[] = [
                         'mahasiswa' => $data['mahasiswa'],
-                        'PL' => $data['PL'] / $max_all,
-                        'M' => $data['M'] / $max_all,
-                        'BK' => $data['BK'] / $max_all,
-                        'K' => $data['K'] / $max_all,
-                        'JL' => $data['JL'] / $max_all,
-                        'JP' => $data['JP'] / $max_all,
+                        'PL' => $data['PL'] / $max_columns['PL'],
+                        'M' => $data['M'] / $max_columns['M'],
+                        'BK' => $data['BK'] / $max_columns['BK'],
+                        'K' => $data['K'] / $max_columns['K'],
+                        'JL' => $data['JL'] / $max_columns['JL'],
+                        'JP' => $data['JP'] / $max_columns['JP'],
                     ];
                 }
 
@@ -537,34 +586,31 @@ class KelompokController extends Controller
                 foreach ($data_matriks_kriteria as $data) {
                     $data_log_matriks_kriteria[] = [
                         'mahasiswa' => $data['mahasiswa'],
-                        'PL' => log($data['PL']),
-                        'M' => log($data['M']),
-                        'BK' => log($data['BK']),
-                        'K' => log($data['K']),
-                        'JL' => log($data['JL']),
-                        'JP' => log($data['JP']),
+                        'PL' => $data['PL'] > 0 ? log($data['PL']) : 0,
+                        'M' => $data['M'] > 0 ? log($data['M']) : 0,
+                        'BK' => $data['BK'] > 0 ? log($data['BK']) : 0,
+                        'K' => $data['K'] > 0 ? log($data['K']) : 0,
+                        'JL' => $data['JL'] > 0 ? log($data['JL']) : 0,
+                        'JP' => $data['JP'] > 0 ? log($data['JP']) : 0,
                     ];
                 }
 
                 $data_log_kali_matriks = [];
-                foreach ($data_matriks_kriteria as $data) {
-                    foreach ($data_log_matriks_kriteria as $log_data) {
-                        if ($data['mahasiswa']->mahasiswa_id == $log_data['mahasiswa']->mahasiswa_id) {
-                            $data_log_kali_matriks[] = [
-                                'mahasiswa' => $data['mahasiswa'],
-                                'PL' => $data['PL'] * $log_data['PL'],
-                                'M' => $data['M'] * $log_data['M'],
-                                'BK' => $data['BK'] * $log_data['BK'],
-                                'K' => $data['K'] * $log_data['K'],
-                                'JL' => $data['JL'] * $log_data['JL'],
-                                'JP' => $data['JP'] * $log_data['JP'],
-                            ];
-                        }
-                    }
+                foreach ($data_matriks_kriteria as $i => $data) {
+                    $log_data = $data_log_matriks_kriteria[$i];
+                    $data_log_kali_matriks[] = [
+                        'mahasiswa' => $data['mahasiswa'],
+                        'PL' => $data['PL'] * $log_data['PL'],
+                        'M' => $data['M'] * $log_data['M'],
+                        'BK' => $data['BK'] * $log_data['BK'],
+                        'K' => $data['K'] * $log_data['K'],
+                        'JL' => $data['JL'] * $log_data['JL'],
+                        'JP' => $data['JP'] * $log_data['JP'],
+                    ];
                 }
 
-                $data_sum_log_kali[] = [
-                    'mahasiswa' => $data_log_kali_matriks['mahasiswa'],
+                // Calculate sum for each column
+                $data_sum_log_kali = [
                     'PL' => array_sum(array_column($data_log_kali_matriks, 'PL')),
                     'M' => array_sum(array_column($data_log_kali_matriks, 'M')),
                     'BK' => array_sum(array_column($data_log_kali_matriks, 'BK')),
@@ -573,8 +619,8 @@ class KelompokController extends Controller
                     'JP' => array_sum(array_column($data_log_kali_matriks, 'JP')),
                 ];
 
-                $data_entropy[] = [
-                    'mahasiswa' => $data_sum_log_kali['mahasiswa'],
+                // Menghitung nilai entropy
+                $data_entropy = [
                     'PL' => $nilai_log_m * $data_sum_log_kali['PL'],
                     'M' => $nilai_log_m * $data_sum_log_kali['M'],
                     'BK' => $nilai_log_m * $data_sum_log_kali['BK'],
@@ -584,8 +630,7 @@ class KelompokController extends Controller
                 ];
 
                 // Menghitung nilai dispersi
-                $data_dispersi[] = [
-                    'mahasiswa' => $data_entropy['mahasiswa'],
+                $data_dispersi = [
                     'PL' => 1 - $data_entropy['PL'],
                     'M' => 1 - $data_entropy['M'],
                     'BK' => 1 - $data_entropy['BK'],
@@ -595,14 +640,14 @@ class KelompokController extends Controller
                 ];
 
                 // Normalisasi nilai dispersi
-                $data_normalisasi_dispersi[] = [
-                    'mahasiswa' => $data_dispersi['mahasiswa'],
-                    'PL' => $data_dispersi['PL'] / max(array_column($data_dispersi, 'PL')),
-                    'M' => $data_dispersi['M'] / max(array_column($data_dispersi, 'M')),
-                    'BK' => $data_dispersi['BK'] / max(array_column($data_dispersi, 'BK')),
-                    'K' => $data_dispersi['K'] / max(array_column($data_dispersi, 'K')),
-                    'JL' => $data_dispersi['JL'] / max(array_column($data_dispersi, 'JL')),
-                    'JP' => $data_dispersi['JP'] / max(array_column($data_dispersi, 'JP')),
+                $sum_dispersi = array_sum($data_dispersi);
+                $data_normalisasi_dispersi = [
+                    'PL' => $data_dispersi['PL'] / $sum_dispersi,
+                    'M' => $data_dispersi['M'] / $sum_dispersi,
+                    'BK' => $data_dispersi['BK'] / $sum_dispersi,
+                    'K' => $data_dispersi['K'] / $sum_dispersi,
+                    'JL' => $data_dispersi['JL'] / $sum_dispersi,
+                    'JP' => $data_dispersi['JP'] / $sum_dispersi,
                 ];
 
                 $bobot = [
@@ -674,33 +719,21 @@ class KelompokController extends Controller
                 return $b['nilai_preferensi'] <=> $a['nilai_preferensi'];
             });
 
-            $response_data = [
+            // Limit results to requested number of recommendations
+            $data_preferensi = array_slice($data_preferensi, 0, $jumlahRekomendasi);
+
+            // Return only essential data for the view modal
+            return response()->json([
                 'status' => true,
-                'message' => 'SPK berhasil dilakukan.',
+                'message' => 'SPK berhasil dilakukan. Menampilkan ' . count($data_preferensi) . ' rekomendasi mahasiswa.',
                 'data' => $data_preferensi,
-                'method' => $entropy ? 'Entropy MOORA' : 'Weighted MOORA',
                 'matrices' => [
-                    'data_mahasiswa' => $data_mahasiswa,
-                    'data_skoring' => $data_skoring,
-                    'data_normalisasi' => $data_normalisasi,
-                    'bobot' => $bobot,
-                    'data_optimasi' => $data_optimasi,
-                    'data_preferensi' => $data_preferensi,
+                    'bobot' => $bobot
                 ]
-            ];
-
-            // Add entropy matrices if entropy method is used
-            if ($entropy) {
-                $response_data['matrices']['data_normalisasi_entropy'] = $data_normalisasi_entropy ?? [];
-                $response_data['matrices']['data_matriks_kriteria'] = $data_matriks_kriteria ?? [];
-                $response_data['matrices']['data_entropy'] = $data_entropy ?? [];
-                $response_data['matrices']['data_dispersi'] = $data_dispersi ?? [];
-                $response_data['matrices']['data_normalisasi_dispersi'] = $data_normalisasi_dispersi ?? [];
-            }
-
-            return response()->json($response_data);
+            ]);
 
         } catch (Exception $e) {
+
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal melakukan SPK: ' . $e->getMessage(),

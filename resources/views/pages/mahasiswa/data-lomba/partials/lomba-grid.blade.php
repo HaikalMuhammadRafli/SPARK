@@ -3,9 +3,13 @@
         <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full">
             <!-- Image Section -->
             <div class="relative overflow-hidden rounded-t-xl">
-                <img class="w-full h-48 object-cover object-center transition-transform duration-300 hover:scale-105"
-                    src="{{ $lomba->lomba_poster_url ? Storage::url($lomba->lomba_poster_url) : asset('images/default-poster.png') }}"
-                    alt="{{ $lomba->lomba_nama }}" />
+                <img 
+                    src="{{ $lomba->lomba_poster_url && \Illuminate\Support\Facades\Storage::disk('public')->exists($lomba->lomba_poster_url) 
+                        ? Storage::url($lomba->lomba_poster_url) 
+                        : asset('images/default-poster.png') }}"
+                    alt="Poster {{ $lomba->lomba_nama }}"
+                    class="w-full h-auto rounded-lg border shadow-md object-cover object-center"
+                    style="max-height:400px;">
                 
                 <!-- Status Badge Overlay -->
                 @php

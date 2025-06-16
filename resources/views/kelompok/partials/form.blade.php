@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -9,7 +9,7 @@
         <x-forms.input name="kelompok_nama" label="Nama Kelompok" placeholder="Masukkan Nama Kelompok"
             value="{{ $kelompok->kelompok_nama ?? '' }}" required />
         <x-forms.select name="lomba_id" label="Lomba" :options="$lombas->pluck('lomba_nama', 'lomba_id')->toArray()" placeholder="Pilih Lomba" required
-            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" />
+            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" searchable required />
     </div>
 
     <!-- Dosen Pembimbing Section -->
@@ -29,7 +29,7 @@
                             <x-forms.select name="dosen_pembimbing" placeholder="Pilih Dosen Pembimbing"
                                 :options="$dosen_pembimbings->pluck('nama', 'nip')->toArray()"
                                 selected="{{ isset($kelompok->dosen_pembimbing_peran) && $kelompok->dosen_pembimbing_peran ? $kelompok->dosen_pembimbing_peran->first()?->nip : '' }}"
-                                required />
+                                searchable required />
                         </td>
                         <td class="px-6 py-4">
                             <x-forms.select name="peran_dpm" placeholder="Pilih Peran" :options="$perans_dpm"
@@ -91,7 +91,7 @@
                                     {{ $index + 1 }}</td>
                                 <td class="px-6 py-4">
                                     <x-forms.select name="mahasiswa[{{ $index }}]" placeholder="Pilih Mahasiswa"
-                                        :options="$mahasiswas->pluck('nama', 'nim')->toArray()" selected="{{ $mahasiswa_peran->nim }}" required />
+                                        :options="$mahasiswas->pluck('nama', 'nim')->toArray()" selected="{{ $mahasiswa_peran->nim }}" searchable required />
                                 </td>
                                 <td class="px-6 py-4">
                                     <x-forms.select name="peran_mhs[{{ $index }}]" placeholder="Pilih Peran"
@@ -144,7 +144,7 @@
                     <td class="px-6 py-4 text-center font-medium text-gray-900 row-number">{{ $i + 1 }}</td>
                     <td class="px-6 py-4">
                         <x-forms.select name="mahasiswa[{{ $i }}]" placeholder="Pilih Mahasiswa"
-                            :options="$mahasiswas->pluck('nama', 'nim')->toArray()" />
+                            :options="$mahasiswas->pluck('nama', 'nim')->toArray()" searchable />
                     </td>
                     <td class="px-6 py-4">
                         <x-forms.select name="peran_mhs[{{ $i }}]" placeholder="Pilih Peran"
@@ -489,6 +489,7 @@
                     contentType: false,
                     success: function(response) {
                         if (response.status) {
+                            resetForm();
                             disposeModal();
                             Swal.fire({
                                 icon: 'success',
@@ -542,6 +543,60 @@
                 $('#error-' + fieldName.replace(/[\[\]]/g, '')).text('');
                 $(this).removeClass('is-invalid');
             }
+        });
+    }
+
+    function resetForm() {
+        console.log('Resetting form...');
+
+        // Reset global variables
+        rowIndex = 0;
+        maxMembers = 0;
+        currentRowCount =
+            {{ isset($kelompok) && $kelompok->mahasiswa_perans ? $kelompok->mahasiswa_perans->count() : 0 }};
+        lombaSelected = {{ isset($kelompok) && $kelompok->lomba_id ? 'true' : 'false' }};
+        isEditMode = {{ isset($kelompok) && $kelompok->exists ? 'true' : 'false' }};
+
+        // Clear form fields
+        $('#form')[0].reset();
+
+        // Clear validation errors
+        $('.error-text, .invalid-feedback').text('').hide();
+        $('.is-invalid').removeClass('is-invalid');
+
+        // Reset dynamic rows
+        $('#memberTableBody').empty();
+
+        // Reset member count
+        updateMemberCount();
+
+        // Reset notices and sections
+        if (!isEditMode) {
+            $('#memberSection').hide();
+            $('#lombaNotice').show();
+            lombaSelected = false;
+        }
+
+        // Reset button states
+        updateSubmitButtonState();
+        updateAddButtonState();
+        updateRemoveButtonStates();
+
+        // Reset select dropdowns (for searchable selects)
+        $('[data-selected-text]').each(function() {
+            const placeholder = $(this).closest('fieldset').find('button').attr('data-title') ||
+                'Select an option';
+            $(this).text(placeholder);
+        });
+
+        // Reset hidden selects
+        $('[data-hidden-select]').val('');
+
+        // Reset checkbox dropdowns
+        $('input[type="checkbox"]').prop('checked', false);
+        $('.dropdown-title').each(function() {
+            const title = $(this).attr('data-title') || 'Select Options';
+            $(this).text(title);
         });
     }
 </script>

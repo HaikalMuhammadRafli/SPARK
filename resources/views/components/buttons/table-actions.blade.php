@@ -15,6 +15,8 @@
         'Ajukan Lomba Baru' =>'fa-solid fa-paper-plane',
         'Lihat Detail' => 'fa-solid fa-eye',
         'Link Registrasi' => 'fa-solid fa-link',
+        'Kembali' => "fa-solid fa-arrow-left",
+        'Edit' => "fa-solid fa-pen-to-square",
     ];
 
     $icon = $iconMap[$title] ?? 'fa-solid fa-circle-question';

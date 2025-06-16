@@ -178,7 +178,7 @@ class ProfileController extends Controller
         }
     }
 
-    public function deleteBidangKeahlian(int $id)
+    public function deleteBidangKeahlian(string $id)
     {
         KeahlianMahasiswaModel::where('bidang_keahlian_id', $id)
             ->where('nim', auth()->user()->mahasiswa->nim)
@@ -186,7 +186,7 @@ class ProfileController extends Controller
         return redirect()->route('profile.index');
     }
 
-    public function deleteMinat(int $id)
+    public function deleteMinat(string $id)
     {
         MinatMahasiswaModel::where('minat_id', $id)
             ->where('nim', auth()->user()->mahasiswa->nim)

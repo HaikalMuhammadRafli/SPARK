@@ -22,9 +22,7 @@
     @endif
 
     <div class="relative m-0">
-        <textarea id="{{ $name }}" name="{{ $name }}"
-            placeholder="{{ $placeholder }}"
-            rows="{{ $rows }}"
+        <textarea id="{{ $name }}" name="{{ $name }}" placeholder="{{ $placeholder }}" rows="{{ $rows }}"
             @if ($disabled) disabled @endif
             @if ($required) required aria-required="true" @endif
             @if ($info) aria-describedby="{{ $name }}-info" @endif

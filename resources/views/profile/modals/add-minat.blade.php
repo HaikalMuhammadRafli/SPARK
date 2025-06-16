@@ -11,7 +11,7 @@
 </div>
 <!-- Modal body -->
 @include('profile.partials.criteria-form', [
-    'action' => route('profile.add.bidang-keahlian'),
+    'action' => route('profile.add.minat'),
     'method' => 'POST',
     'title' => 'Pilih Minat',
     'nama' => 'minat',

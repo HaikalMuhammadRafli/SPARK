@@ -1,5 +1,6 @@
 @props([
     'name' => 'selected_items',
+    'label' => null,
     'title' => 'Select Options',
     'options' => [],
     'selected' => [],
@@ -12,9 +13,19 @@
     $selectedValues = is_array($selected) ? $selected : [];
     $selectedCount = count(array_intersect($selectedValues, array_keys($options)));
     $uniqueId = 'dropdown_' . uniqid();
+    $clean_name = str_replace(['[', ']'], '', $name);
 @endphp
 
 <fieldset class="relative w-full">
+    @if ($label)
+        <label for="{{ $clean_name }}" class="block mb-1 text-xs font-medium text-gray-600">
+            {{ $label }}
+            @if ($required)
+                <span class="text-red-500">*</span>
+            @endif
+        </label>
+    @endif
+
     <button type="button" onclick="toggleDropdown('{{ $uniqueId }}')"
         class="w-full text-left bg-white border border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg text-xs px-4 py-2 flex items-center justify-between {{ $required ? 'required' : '' }}"
         data-title="{{ $title }}">
@@ -37,9 +48,12 @@
                 d="m1 1 4 4 4-4" />
         </svg>
     </button>
+
     @error($name)
         <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span>
     @enderror
+
+    <span id="error-{{ $clean_name }}" class="error-text invalid-feedback"></span>
 </fieldset>
 
 <!-- Dropdown rendered at body level to avoid table overflow constraints -->
@@ -74,8 +88,8 @@
         </div>
 
         <ul class="max-h-48 overflow-y-auto text-xs">
-            @foreach ($options as $value => $label)
-                <li class="dropdown-item" data-search="{{ strtolower($label) }}">
+            @foreach ($options as $value => $optionLabel)
+                <li class="dropdown-item" data-search="{{ strtolower($optionLabel) }}">
                     <div class="flex items-center px-2 py-1.5 rounded hover:bg-gray-50">
                         <input type="checkbox" name="{{ $name }}" value="{{ $value }}"
                             id="checkbox-{{ $uniqueId }}-{{ $value }}"
@@ -84,7 +98,7 @@
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 {{ $required ? 'required' : '' }}">
                         <label for="checkbox-{{ $uniqueId }}-{{ $value }}"
                             class="flex-1 ml-2 text-xs text-gray-900 cursor-pointer">
-                            {{ $label }}
+                            {{ $optionLabel }}
                         </label>
                     </div>
                 </li>

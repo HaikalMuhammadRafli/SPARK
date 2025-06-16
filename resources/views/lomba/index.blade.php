@@ -13,7 +13,7 @@
             </div>
             <div class="flex flex-row gap-2 flex-wrap">
                 <x-buttons.table-actions type="button" title="Import Excel" color="primary" onclick="" />
-                <x-buttons.table-actions type="button" title="Tambah Baru" color="primary"
+                <x-buttons.table-actions type="submit" title="Tambah Baru" color="primary"
                     onclick="modalAction('{{ route('admin.manajemen.lomba.create') }}')" />
             </div>
         </div>
@@ -24,8 +24,8 @@
             <div class="flex gap-2">
                 <x-dashboard.filter id="filter-kategori" label="Filter Kategori" placeholder="Pilih Kategori" :options="$kategoris"
                     :searchable="true" searchPlaceholder="Cari kategori..." class="w-36" />
-                <x-dashboard.filter id="filter-lokasi" name="filter-lokasi" label="Filter Lokasi" placeholder="Pilih Lokasi"
-                    :options="$lokasi_preferensis" :searchable="true" searchPlaceholder="Cari lokasi.." class="w-36" />
+                {{-- <x-dashboard.filter id="filter-lokasi" name="filter-lokasi" label="Filter Lokasi" placeholder="Pilih Lokasi"
+                    :options="$lokasi_preferensis" :searchable="true" searchPlaceholder="Cari lokasi.." class="w-36" /> --}}
                 <x-dashboard.filter id="filter-tingkat" name="filter-tingkat" label="Filter Tingkat" placeholder="Pilih Tingkat"
                     :options="$tingkats" :searchable="true" searchPlaceholder="Cari tingkat..." class="w-36" />
                 <x-dashboard.filter id="filter-status" name="filter-status" label="Filter Status" placeholder="Pilih Status"
@@ -41,7 +41,7 @@
         </div>
     </section>
 
-    <x-modal />
+    <x-modal size="2xl"/>
 @endsection
 
 @push('js')
