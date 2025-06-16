@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="min-h-screen min-w-screen bg-gradient-to-bl from-secondary to-primary">
-        <a href="{{ route('home') }}" class="absolute bg-white text-sm rounded-lg px-3 py-1.5 m-3"><i
+    <div class="min-h-screen w-full bg-gradient-to-bl from-secondary to-primary">
+        <a href="{{ route('home') }}" class="absolute bg-white text-sm rounded-lg px-3 py-1.5 m-3 z-10"><i
                 class="fa-solid fa-arrow-left-long"></i> Kembali</a>
-        <section class="h-screen w-full flex flex-col items-center justify-center">
+        <section class="min-h-screen w-full flex flex-col items-center justify-center py-8 px-4">
             <div class="flex items-center justify-center w-full max-w-sm mb-8">
                 <ol class="flex items-center w-full">
                     <li
-                        class="flex w-full items-center text-primary after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block">
+                        class="flex w-full items-center text-primary after:content-[''] after:w-full after:h-1 after:border-b after:border-primary/30 after:border-4 after:inline-block">
                         <span
-                            class="flex items-center justify-center w-8 h-8 bg-secondary text-white rounded-full shrink-0 text-sm font-semibold">
+                            class="flex items-center justify-center w-8 h-8 bg-primary text-white rounded-full shrink-0 text-sm font-semibold">
                             1
                         </span>
                     </li>
@@ -49,15 +49,16 @@
                         <div class="form-group">
                             <h2 class="text-md text-gray-800 font-semibold">Pilih Minat Anda</h2>
                             <p class="text-gray-500 text-xs mb-2">Silahkan memilih skill yang ingin anda asah!</p>
-                            <div class="flex flex-wrap gap-2 border border-gray-300 rounded-lg p-3">
+                            <div
+                                class="flex flex-wrap gap-2 border border-gray-300 rounded-lg p-3 max-h-48 overflow-y-auto">
                                 @foreach ($minats as $minat)
                                     <label class="cursor-pointer">
                                         <input type="checkbox" class="sr-only peer" name="minat[]"
                                             value="{{ $minat->minat_id }}" />
                                         <span
                                             class="inline-block px-3 py-1 text-xs font-semibold border-2 border-gray-400 text-gray-600 rounded-full transition-all duration-200
-                    peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-500
-                    hover:bg-blue-50 peer-checked:hover:bg-blue-600">
+                    peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary
+                    hover:bg-primary/10 peer-checked:hover:bg-primary/80">
                                             {{ $minat->minat_nama }}
                                         </span>
                                     </label>
@@ -69,15 +70,16 @@
                         <div class="form-group">
                             <h2 class="text-md text-gray-800 font-semibold">Pilih Bidang Keahlian Anda</h2>
                             <p class="text-gray-500 text-xs mb-2">Silahkan memilih skill yang anda miliki saat ini!</p>
-                            <div class="flex flex-wrap gap-2 border border-gray-300 rounded-lg p-3">
+                            <div
+                                class="flex flex-wrap gap-2 border border-gray-300 rounded-lg p-3 max-h-48 overflow-y-auto">
                                 @foreach ($bidang_keahlians as $bidang_keahlian)
                                     <label class="cursor-pointer">
                                         <input type="checkbox" class="sr-only peer" name="bidang_keahlian[]"
                                             value="{{ $bidang_keahlian->bidang_keahlian_id }}" />
                                         <span
                                             class="inline-block px-3 py-1 text-xs font-semibold border-2 border-gray-400 text-gray-600 rounded-full transition-all duration-200
-                    peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-500
-                    hover:bg-blue-50 peer-checked:hover:bg-blue-600">
+                    peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary
+                    hover:bg-primary/10 peer-checked:hover:bg-primary/80">
                                             {{ $bidang_keahlian->bidang_keahlian_nama }}
                                         </span>
                                     </label>
@@ -89,7 +91,7 @@
                         <div class="flex items-center justify-between">
                             <x-buttons.default id="prev-step" type="button" title="Kembali" color="primary"
                                 icon="fa-solid fa-arrow-left" />
-                            <div class="space-x-2">
+                            <div class="flex items-center gap-2">
                                 <x-buttons.default id="reset-form" type="button" title="Reset" color="primary"
                                     icon="fa-solid fa-arrow-rotate-right" />
                                 <x-buttons.default type="submit" title="Register" color="primary"
@@ -126,16 +128,16 @@
 
                     if (stepNumber < currentStep) {
                         // Completed step
-                        $this.removeClass('text-gray-500').addClass('text-blue-600');
-                        $span.removeClass('bg-gray-100').addClass('bg-blue-600 text-white');
+                        $this.removeClass('text-gray-500').addClass('text-primary');
+                        $span.removeClass('bg-gray-100').addClass('bg-primary text-white');
                     } else if (stepNumber === currentStep) {
                         // Current step
-                        $this.removeClass('text-gray-500').addClass('text-blue-600');
-                        $span.removeClass('bg-gray-100').addClass('bg-blue-600 text-white');
+                        $this.removeClass('text-gray-500').addClass('text-primary');
+                        $span.removeClass('bg-gray-100').addClass('bg-primary text-white');
                     } else {
                         // Future step
-                        $this.removeClass('text-blue-600').addClass('text-gray-500');
-                        $span.removeClass('bg-blue-600 text-white').addClass('bg-gray-100');
+                        $this.removeClass('text-primary').addClass('text-gray-500');
+                        $span.removeClass('bg-primary text-white').addClass('bg-gray-100');
                     }
                 });
             }
