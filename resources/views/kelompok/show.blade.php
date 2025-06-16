@@ -1,21 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="bg-white flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-4 rounded-xl mb-2">
+    <section class="bg-white flex flex-col md:flex-row md:items-center gap-4 p-4 rounded-xl mb-2">
         <div class="flex flex-col gap-1">
             <h1 class="text-xl font-bold">{{ $title }}</h1>
             <x-breadcrumbs :items="$breadcrumbs" />
-        </div>
-        <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-            <div class="flex flex-row gap-2 flex-wrap">
-                <x-buttons.default type="button" title="Export PDF" color="primary" onclick="" />
-                <x-buttons.default type="button" title="Export Excel" color="primary" onclick="" />
-            </div>
-            <div class="flex flex-row gap-2 flex-wrap">
-                <x-buttons.default type="button" title="Import Excel" color="primary" onclick="" />
-                <x-buttons.default type="button" title="Tambah Baru" color="primary"
-                    onclick="modalAction('{{ route('admin.manajemen.kelompok.create') }}')" />
-            </div>
         </div>
     </section>
 
@@ -37,7 +26,7 @@
                         <span
                             class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm border border-blue-400">{{ $kelompok->lomba->periode->periode_nama }}</span>
                     </div>
-                    <x-buttons.default type="button" title="Lihat Lomba" color="primary"
+                    <x-buttons.default type="button" title="Lihat Lomba" color="primary" icon="fa-solid fa-eye"
                         onclick="window.location.href='{{ route('admin.manajemen.lomba.show', $kelompok->lomba->lomba_id) }}'" />
                 </div>
             </div>
