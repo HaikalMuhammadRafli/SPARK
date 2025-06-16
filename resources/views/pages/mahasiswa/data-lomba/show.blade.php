@@ -23,9 +23,13 @@
     <section class="overflow-x-auto flex flex-col gap-4">
         <div class="w-full">
             <div class="bg-white border border-gray-200 rounded-xl">
-                <img class="rounded-t-lg w-full h-64 object-cover object-center"
-                    src="{{ $lomba->lomba_poster_url ? Storage::url($lomba->lomba_poster_url) : asset('images/default-poster.png') }}"
-                    alt="{{ $lomba->lomba_nama }}" />
+                <img 
+                    src="{{ $lomba->lomba_poster_url && \Illuminate\Support\Facades\Storage::disk('public')->exists($lomba->lomba_poster_url) 
+                        ? Storage::url($lomba->lomba_poster_url) 
+                        : asset('images/default-poster.png') }}"
+                    alt="Poster {{ $lomba->lomba_nama }}"
+                    class="w-full h-auto rounded-lg border shadow-md object-cover object-center"
+                    style="max-height:400px;">
                 <div class="p-6">
                     <div class="flex justify-between items-start mb-4">
                         <div>
@@ -159,14 +163,27 @@
                     <div class="space-y-1">
                         <label class="block text-xs font-medium text-gray-600">Status Validasi</label>
                         <p class="text-sm font-semibold text-gray-900">
-                            @if($lomba->validated_at)
-                                <span class="text-green-600">Tervalidasi</span>
-                                <span class="text-xs text-gray-500 block">
-                                    {{ \Carbon\Carbon::parse($lomba->validated_at)->format('d M Y H:i') }}
-                                </span>
-                            @else
-                                <span class="text-yellow-600">Menunggu Validasi</span>
-                            @endif
+                            @switch($lomba->lomba_status)
+                                @case('Akan datang')
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-yellow-100 text-yellow-700 mt-2">
+                                        <i class="fa-solid fa-clock mr-1"></i> Menunggu Verifikasi
+                                    </span>
+                                    @break
+                                @case('Sedang berlangsung')
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-green-100 text-green-700 mt-2">
+                                        <i class="fa-solid fa-circle-check mr-1"></i> Terverifikasi
+                                    </span>
+                                    @break
+                                @case('Ditolak')
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-red-100 text-red-700 mt-2">
+                                        <i class="fa-solid fa-circle-xmark mr-1"></i> Ditolak
+                                    </span>
+                                    @break
+                                @default
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-gray-200 text-gray-700 mt-2">
+                                        {{ $lomba->lomba_status }}
+                                    </span>
+                            @endswitch
                         </p>
                     </div>
                     <div class="space-y-1">

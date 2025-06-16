@@ -7,9 +7,9 @@
             <x-breadcrumbs :items="$breadcrumbs" />
         </div>
         <div class="flex flex-row gap-2">
-            <x-buttons.table-actions type="button" title="Kembali" color="secondary" icon="arrow-left"
+            <x-buttons.table-actions type="button" title="Kembali" color="secondary" icon="fa-solid fa-arrow-left"
                 onclick="window.location.href='{{ route('admin.manajemen.lomba.index') }}'" />
-            <x-buttons.table-actions type="button" title="Edit" color="primary" icon="pencil"
+            <x-buttons.table-actions type="button" title="Edit" color="primary" icon="fa-solid fa-pen-to-square"
                 onclick="modalAction('{{ route('admin.manajemen.lomba.edit', $lomba->lomba_id) }}')" />
         </div>
     </section>
@@ -19,10 +19,13 @@
         <section class="bg-white p-4 rounded-xl">
             <h2 class="text-lg font-semibold mb-4">Poster Lomba</h2>
             <div class="w-full">
-                <img src="{{ $lomba->lomba_poster_url ? Storage::url($lomba->lomba_poster_url) : asset('images/default-poster.png') }}"
-                     alt="Poster {{ $lomba->lomba_nama }}"
-                     class="w-full h-auto rounded-lg border shadow-md object-cover object-center"
-                     style="max-height:400px;">
+                <img 
+                    src="{{ $lomba->lomba_poster_url && \Illuminate\Support\Facades\Storage::disk('public')->exists($lomba->lomba_poster_url) 
+                        ? Storage::url($lomba->lomba_poster_url) 
+                        : asset('images/default-poster.png') }}"
+                    alt="Poster {{ $lomba->lomba_nama }}"
+                    class="w-full h-auto rounded-lg border shadow-md object-cover object-center"
+                    style="max-height:400px;">
             </div>
         </section>
 

@@ -13,7 +13,7 @@
             </div>
             <div class="flex flex-row gap-2 flex-wrap">
                 <x-buttons.table-actions type="button" title="Import Excel" color="primary" onclick="" />
-                <x-buttons.table-actions type="button" title="Tambah Baru" color="primary"
+                <x-buttons.table-actions type="submit" title="Tambah Baru" color="primary"
                     onclick="modalAction('{{ route('admin.manajemen.lomba.create') }}')" />
             </div>
         </div>
@@ -41,7 +41,7 @@
         </div>
     </section>
 
-    <x-modal />
+    <x-modal size="2xl"/>
 @endsection
 
 @push('js')

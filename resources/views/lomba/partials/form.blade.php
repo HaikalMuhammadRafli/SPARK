@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5" enctype="multipart/form-data">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -392,29 +392,25 @@
                     success: function(response) {
                         // Reset button state
                         submitButton.html(originalText).prop('disabled', false);
-                        
+
                         if (response.status) {
-                            if (typeof window.disposeModal === 'function') {
-                                window.disposeModal();
-                            }
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             }).then(() => {
+                                if (typeof window.disposeModal === 'function') {
+                                    window.disposeModal();
+                                }
                                 if (typeof window.reloadDataTable === 'function') {
                                     window.reloadDataTable();
-                                } else if (typeof reloadDataTable === 'function') {
-                                    reloadDataTable();
-                                } else if (typeof loadLombaData === 'function') {
-                                    loadLombaData();
-                                } else {
-                                    window.location.reload();
                                 }
                             });
                         } else {
+                            // Clear previous errors
                             $('.error-text, .invalid-feedback').text('');
                             $('.is-invalid').removeClass('is-invalid');
+                            // Show field errors
                             if (response.msgField) {
                                 $.each(response.msgField, function(prefix, val) {
                                     $('#error-' + prefix).text(val[0]);
@@ -426,19 +422,22 @@
                                     }
                                 });
                             }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                text: response.message || 'Terjadi kesalahan saat menyimpan data.'
+                            });
                         }
                     },
                     error: function(xhr) {
                         // Reset button state
                         submitButton.html(originalText).prop('disabled', false);
-                        
-                        console.log(xhr);
+
                         let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
-                        
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMessage = xhr.responseJSON.message;
                         }
-                        
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

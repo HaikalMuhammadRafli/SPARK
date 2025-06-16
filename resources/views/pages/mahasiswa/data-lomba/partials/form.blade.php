@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5" enctype="multipart/form-data">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -86,6 +86,36 @@
             <x-forms.textarea name="lomba_persyaratan" label="Persyaratan Lomba" placeholder="Masukkan persyaratan lomba..."
                 value="{{ $lomba->lomba_persyaratan ?? '' }}" rows="4" required />
         </div>
+        <!-- Poster Upload -->
+        <div class="md:col-span-2">
+            <label for="lomba_poster_url" class="block text-sm font-medium text-gray-700 mb-2">
+                Poster Lomba {{ !isset($lomba) ? '*' : '' }}
+            </label>
+            <div class="flex items-center gap-4">
+                <input type="file" id="lomba_poster_url" name="lomba_poster_url" accept="image/*"
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
+                    style="padding: 0.5rem 0.75rem;"
+                    {{ !isset($lomba) ? 'required' : '' }}>
+                <span id="file-name" class="text-sm text-gray-600"></span>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">PNG, JPG, JPEG (MAX. 2MB)</p>
+            <span id="error-lomba_poster_url" class="error-text text-red-500 text-xs"></span>
+            
+            @if(isset($lomba) && $lomba->lomba_poster_url)
+                <div class="mt-2 current-poster">
+                    <p class="text-sm text-gray-600 mb-2">Poster saat ini:</p>
+                    <img id="poster-preview"
+                        src="{{ asset('storage/' . $lomba->lomba_poster_url) }}"
+                        alt="Current Poster"
+                        class="w-32 h-32 object-cover rounded-lg border">
+                </div>
+            @else
+                <div class="mt-2">
+                    <img id="poster-preview" src="{{ asset('images/default-poster.png') }}"
+                        alt="Poster Lomba" class="w-32 h-32 object-cover rounded-lg border">
+                </div>
+            @endif
+        </div>
         <div>
             <x-forms.input name="lomba_link_registrasi" label="Link Registrasi" type="url" placeholder="https://example.com/register"
                 value="{{ $lomba->lomba_link_registrasi ?? '' }}" required />
@@ -127,6 +157,19 @@
         initializeFormValidation();
         initializeDateValidation();
     });
+
+    document.getElementById('lomba_poster_url').addEventListener('change', function (event) {
+        const [file] = event.target.files;
+        if (file) {
+            document.getElementById('poster-preview').src = URL.createObjectURL(file);
+        }
+    });
+
+    // Tampilkan nama file yang dipilih
+    $('#lomba_poster_url').on('change', function() {
+        const file = this.files[0];
+        $('#file-name').text(file ? file.name : '');
+    })
 
     function initializeFormValidation() {
         $("#form").validate({

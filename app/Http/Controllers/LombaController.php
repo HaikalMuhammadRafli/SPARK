@@ -9,6 +9,7 @@ use App\Models\PeriodeModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 class LombaController extends Controller
@@ -216,17 +217,17 @@ class LombaController extends Controller
         ]);
 
         try {
-            $now = Carbon::now();
-            $mulaiPendaftaran = Carbon::parse($request->lomba_mulai_pendaftaran);
-            $akhirPendaftaran = Carbon::parse($request->lomba_akhir_pendaftaran);
-            $selesaiPelaksanaan = Carbon::parse($request->lomba_selesai_pelaksanaan);
+            // $now = Carbon::now();
+            // $mulaiPendaftaran = Carbon::parse($request->lomba_mulai_pendaftaran);
+            // $akhirPendaftaran = Carbon::parse($request->lomba_akhir_pendaftaran);
+            // $selesaiPelaksanaan = Carbon::parse($request->lomba_selesai_pelaksanaan);
 
-            $status = 'Akan datang';
-            if ($now->gte($mulaiPendaftaran) && $now->lte($akhirPendaftaran)) {
-                $status = 'Sedang berlangsung';
-            } elseif ($now->gt($selesaiPelaksanaan)) {
-                $status = 'Berakhir';
-            }
+            // $status = 'Akan datang';
+            // if ($now->gte($mulaiPendaftaran) && $now->lte($akhirPendaftaran)) {
+            //     $status = 'Sedang berlangsung';
+            // } elseif ($now->gt($selesaiPelaksanaan)) {
+            //     $status = 'Berakhir';
+            // }
 
             $data = [
                 'lomba_nama' => $request->lomba_nama,
@@ -241,7 +242,7 @@ class LombaController extends Controller
                 'lomba_mulai_pelaksanaan' => $request->lomba_mulai_pelaksanaan,
                 'lomba_selesai_pelaksanaan' => $request->lomba_selesai_pelaksanaan,
                 'lomba_ukuran_kelompok' => (int) $request->lomba_ukuran_kelompok,
-                'lomba_status' => $status,
+                'lomba_status' => 'Akan datang',
                 'periode_id' => $request->periode_id,
             ];
 
@@ -530,6 +531,124 @@ class LombaController extends Controller
             ->update(['lomba_status' => 'Berakhir']);
     }
 
+    /**
+     * Halaman daftar verifikasi lomba (admin)
+     */
+    public function verification()
+    {
+        $breadcrumbs = [
+            ['name' => 'Verifikasi Lomba', 'url' => route('admin.manajemen.lomba.verification')],
+        ];
+
+        return view('lomba.verification', [
+            'breadcrumbs' => $breadcrumbs,
+            'title' => 'Verifikasi Lomba',
+            'lombas' => \App\Models\LombaModel::where('lomba_status', 'Akan datang')->get(),
+            'kategoris' => [
+                'Programming' => 'Programming',
+                'AI' => 'Artificial Intelligence',
+                'Data Science' => 'Data Science',
+                'Web Design' => 'Web Design',
+                'Mobile Development' => 'Mobile Development',
+                'UI/UX Design' => 'UI/UX Design',
+                'Game Development' => 'Game Development',
+                'Cyber Security' => 'Cyber Security',
+                'Cloud Computing' => 'Cloud Computing',
+                'IoT' => 'Internet of Things',
+                'DevOps' => 'DevOps',
+                'Robotics' => 'Robotics',
+                'Blockchain' => 'Blockchain Technology',
+                'Business Intelligence' => 'Business Intelligence',
+            ],
+            'tingkats' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'status_options' => [
+                'Akan datang' => 'Akan datang',
+                'Sedang berlangsung' => 'Sedang berlangsung',
+                'Berakhir' => 'Berakhir',
+                'Ditolak' => 'Ditolak',
+            ]
+        ]);
+    }
+
+    public function verificationData(Request $request)
+    {
+        $query = LombaModel::where('lomba_status', 'Akan datang');
+
+        if ($request->filled('kategori')) {
+            $query->where('lomba_kategori', $request->kategori);
+        }
+        if ($request->filled('tingkat')) {
+            $query->where('lomba_tingkat', $request->tingkat);
+        }
+        if ($request->filled('status')) {
+            $query->where('lomba_status', $request->status);
+        }
+
+        $lombas = $query->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $lombas->map(function ($item, $index) {
+                return [
+                    'no' => $index + 1,
+                    'lomba_nama' => $item->lomba_nama,
+                    'lomba_kategori' => $item->lomba_kategori,
+                    'lomba_tingkat' => $item->lomba_tingkat,
+                    'lomba_penyelenggara' => $item->lomba_penyelenggara,
+                    'periode_nama' => $item->periode->periode_nama ?? '-',
+                    'lomba_status' => $item->lomba_status,
+                    'created_at' => $item->created_at,
+                    'actions' => view('components.buttons.default', [
+                        'type' => 'button',
+                        'title' => 'Verifikasi',
+                        'color' => 'primary',
+                        'onclick' => "modalAction('".route('admin.manajemen.lomba.verification.detail', $item->lomba_id)."')",
+                    ])->render(),
+                ];
+            }),
+            'count' => $lombas->count(),
+        ]);
+    }
+
+    public function verificationDetail($id)
+    {
+        $lomba = \App\Models\LombaModel::with('periode')->findOrFail($id);
+        return view('lomba.modals.verifications-detail', compact('lomba'));
+    }
+
+    
+    public function verify(Request $request, $id)
+    {
+        $request->validate([
+            'verification_action' => 'required|in:setuju,tolak',
+            'catatan_verifikasi' => 'required_if:verification_action,tolak|min:10'
+        ], [
+            'catatan_verifikasi.required_if' => 'Catatan wajib diisi saat menolak lomba.',
+            'catatan_verifikasi.min' => 'Catatan minimal 10 karakter.'
+        ]);
+
+        $lomba = \App\Models\LombaModel::findOrFail($id);
+
+        if ($request->verification_action === 'setuju') {
+            $lomba->lomba_status = 'Sedang berlangsung';
+            $lomba->validated_at = now();
+            $lomba->catatan_verifikasi = $request->catatan_verifikasi ?: 'Lomba disetujui';
+        } else {
+            $lomba->lomba_status = 'Ditolak';
+            $lomba->catatan_verifikasi = $request->catatan_verifikasi;
+        }
+        $lomba->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Status lomba berhasil diperbarui.'
+        ]);
+    }
 
     /**
      * Determine lomba status based on dates
