@@ -76,6 +76,11 @@ Route::middleware(['auth'])->group(function () {
             Route::prefix('lomba')->name('lomba.')->group(function () {
                 Route::get('/', [LombaController::class, 'index'])->name('index');
                 Route::get('/data', [LombaController::class, 'data'])->name('data');
+                //verification
+                Route::get('/verification', [LombaController::class, 'verification'])->name('verification');
+                Route::get('/verification/data', [LombaController::class, 'verificationData'])->name('verification.data');
+                Route::get('/verification/detail/{id}', [LombaController::class, 'verificationDetail'])->name('verification.detail');
+                Route::post('/verification/verify/{id}', [LombaController::class, 'verify'])->name('verification.verify');
                 Route::post('/list', [LombaController::class, 'list'])->name('list');
                 Route::get('/create', [LombaController::class, 'create'])->name('create');
                 Route::post('/', [LombaController::class, 'store'])->name('store');

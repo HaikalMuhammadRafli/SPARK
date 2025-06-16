@@ -378,6 +378,7 @@ class MahasiswaPagesController extends Controller
             'lomba_mulai_pelaksanaan' => 'required|date|after:lomba_akhir_pendaftaran',
             'lomba_selesai_pelaksanaan' => 'required|date|after:lomba_mulai_pelaksanaan',
             'lomba_ukuran_kelompok' => 'required|integer|min:1|max:10',
+            'lomba_poster_url' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'periode_id' => 'required|exists:m_periode,periode_id',
         ], [
             'lomba_nama.required' => 'Nama lomba wajib diisi.',
@@ -404,20 +405,20 @@ class MahasiswaPagesController extends Controller
 
         try {
             // Determine status based on dates
-            $now = Carbon::now();
-            $mulaiPendaftaran = Carbon::parse($request->lomba_mulai_pendaftaran);
-            $akhirPendaftaran = Carbon::parse($request->lomba_akhir_pendaftaran);
-            $selesaiPelaksanaan = Carbon::parse($request->lomba_selesai_pelaksanaan);
+            // $now = Carbon::now();
+            // $mulaiPendaftaran = Carbon::parse($request->lomba_mulai_pendaftaran);
+            // $akhirPendaftaran = Carbon::parse($request->lomba_akhir_pendaftaran);
+            // $selesaiPelaksanaan = Carbon::parse($request->lomba_selesai_pelaksanaan);
 
-            $status = 'Akan datang';
-            if ($now->gte($mulaiPendaftaran) && $now->lte($akhirPendaftaran)) {
-                $status = 'Sedang berlangsung';
-            } elseif ($now->gt($selesaiPelaksanaan)) {
-                $status = 'Berakhir';
-            }
+            // $status = 'Akan datang';
+            // if ($now->gte($mulaiPendaftaran) && $now->lte($akhirPendaftaran)) {
+            //     $status = 'Sedang berlangsung';
+            // } elseif ($now->gt($selesaiPelaksanaan)) {
+            //     $status = 'Berakhir';
+            // }
 
             // Buat lomba baru
-            $lomba = LombaModel::create([
+            $data = [
                 'lomba_nama' => $request->lomba_nama,
                 'lomba_kategori' => $request->lomba_kategori,
                 'lomba_penyelenggara' => $request->lomba_penyelenggara,
@@ -430,9 +431,17 @@ class MahasiswaPagesController extends Controller
                 'lomba_mulai_pelaksanaan' => $request->lomba_mulai_pelaksanaan,
                 'lomba_selesai_pelaksanaan' => $request->lomba_selesai_pelaksanaan,
                 'lomba_ukuran_kelompok' => $request->lomba_ukuran_kelompok,
-                'lomba_status' => $status,
+                'lomba_status' => 'Akan datang',
                 'periode_id' => $request->periode_id,
-            ]);
+                'created_by' => auth()->id(),
+            ];
+
+            if ($request->hasFile('lomba_poster_url')) {
+                $data['lomba_poster_url'] = $request->file('lomba_poster_url')
+                    ->store('prestasi_posters', 'public');
+            }
+
+            LombaModel::create($data);
 
             return response()->json([
                 'status' => true,
@@ -639,7 +648,7 @@ class MahasiswaPagesController extends Controller
         // Only creator can edit their own lomba
         if ($lomba->created_by === $user->user_id) {
             // Can only edit if status is still 'menunggu_verifikasi'
-            return $lomba->lomba_status === 'menunggu_verifikasi';
+            return $lomba->lomba_status === 'Akan datang';
         }
 
         return false;
@@ -652,15 +661,16 @@ class MahasiswaPagesController extends Controller
     {
         $now = Carbon::now();
 
-        // Update to 'tutup' if registration period has ended
-        LombaModel::where('lomba_status', 'buka')
-            ->where('lomba_akhir_pendaftaran', '<', $now)
-            ->update(['lomba_status' => 'tutup']);
+        // Update to 'Sedang berlangsung' if registration period has started
+        LombaModel::where('lomba_status', 'Akan datang')
+            ->where('lomba_mulai_pendaftaran', '<=', $now)
+            ->where('lomba_akhir_pendaftaran', '>=', $now)
+            ->update(['lomba_status' => 'Sedang berlangsung']);
 
-        // Update to 'selesai' if execution period has ended
-        LombaModel::whereIn('lomba_status', ['buka', 'tutup'])
+        // Update to 'Berakhir' if execution period has ended
+        LombaModel::whereIn('lomba_status', ['Akan datang', 'Sedang berlangsung'])
             ->where('lomba_selesai_pelaksanaan', '<', $now)
-            ->update(['lomba_status' => 'selesai']);
+            ->update(['lomba_status' => 'Berakhir']);
     }
 
     /**
