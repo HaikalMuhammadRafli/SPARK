@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -9,7 +9,7 @@
         <x-forms.input name="kelompok_nama" label="Nama Kelompok" placeholder="Masukkan Nama Kelompok"
             value="{{ $kelompok->kelompok_nama ?? '' }}" required />
         <x-forms.select name="lomba_id" label="Lomba" :options="$lombas->pluck('lomba_nama', 'lomba_id')->toArray()" placeholder="Pilih Lomba" required
-            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" disabled />
+            onchange="handleLombaChange(this.value)" selected="{{ $kelompok->lomba_id ?? '' }}" searchable required />
     </div>
 
     <!-- Dosen Pembimbing Section -->
@@ -29,7 +29,7 @@
                             <x-forms.select name="dosen_pembimbing" placeholder="Pilih Dosen Pembimbing"
                                 :options="$dosen_pembimbings->pluck('nama', 'nip')->toArray()"
                                 selected="{{ isset($kelompok->dosen_pembimbing_peran) && $kelompok->dosen_pembimbing_peran ? $kelompok->dosen_pembimbing_peran->first()?->nip : '' }}"
-                                required />
+                                searchable required />
                         </td>
                         <td class="px-6 py-4">
                             <x-forms.select name="peran_dpm" placeholder="Pilih Peran" :options="$perans_dpm"
@@ -91,7 +91,7 @@
                                     {{ $index + 1 }}</td>
                                 <td class="px-6 py-4">
                                     <x-forms.select name="mahasiswa[{{ $index }}]" placeholder="Pilih Mahasiswa"
-                                        :options="$mahasiswas->pluck('nama', 'nim')->toArray()" selected="{{ $mahasiswa_peran->nim }}" required />
+                                        :options="$mahasiswas->pluck('nama', 'nim')->toArray()" selected="{{ $mahasiswa_peran->nim }}" searchable required />
                                 </td>
                                 <td class="px-6 py-4">
                                     <x-forms.select name="peran_mhs[{{ $index }}]" placeholder="Pilih Peran"
@@ -103,16 +103,13 @@
                                         :selected="$mahasiswa_peran->kompetensis->pluck('kompetensi_id')->toArray()" searchable="true" required />
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <button type="button"
-                                        class="text-red-600 hover:text-red-900 remove-row-btn {{ $mahasiswa_peran->nim == auth()->user()->mahasiswa->nim ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                        onclick="removeRow(this)" data-original-nim="{{ $mahasiswa_peran->nim }}"
-                                        data-is-current-user="{{ $mahasiswa_peran->nim == auth()->user()->mahasiswa->nim ? 'true' : 'false' }}"
-                                        {{ $mahasiswa_peran->nim == auth()->user()->mahasiswa->nim ? 'disabled' : '' }}>
+                                    <button type="button" class="text-red-600 hover:text-red-900 remove-row-btn"
+                                        onclick="removeRow(this)">
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                             fill="none" viewBox="0 0 18 20">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                                 stroke-width="2"
-                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1-1H4a1 1 0 0 1-1-1V5Z" />
+                                                d="M1 5h16M7 8v8m4-8v8M7 1h4a1 1 0 0 1 1 1v3H6V2a1 1 0 0 1 1-1ZM3 5h12v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5Z" />
                                         </svg>
                                     </button>
                                 </td>
@@ -147,7 +144,7 @@
                     <td class="px-6 py-4 text-center font-medium text-gray-900 row-number">{{ $i + 1 }}</td>
                     <td class="px-6 py-4">
                         <x-forms.select name="mahasiswa[{{ $i }}]" placeholder="Pilih Mahasiswa"
-                            :options="$mahasiswas->pluck('nama', 'nim')->toArray()" />
+                            :options="$mahasiswas->pluck('nama', 'nim')->toArray()" searchable />
                     </td>
                     <td class="px-6 py-4">
                         <x-forms.select name="peran_mhs[{{ $i }}]" placeholder="Pilih Peran"
@@ -194,9 +191,36 @@
     ) !!};
 
     $(document).ready(function() {
-        $('#addRowBtn').on('click', function() {
+        console.log('DOM ready, initializing...');
+
+        // Make sure the button exists before binding
+        if ($('#addRowBtn').length === 0) {
+            console.error('Add button not found!');
+            return;
+        }
+
+        $('#addRowBtn').off('click').on('click', function(e) {
+            e.preventDefault();
+            console.log('Add button clicked, currentRowCount:', currentRowCount, 'maxMembers:',
+                maxMembers);
+
+            if (!lombaSelected) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: 'Pilih lomba terlebih dahulu!'
+                });
+                return;
+            }
+
             if (currentRowCount < maxMembers) {
                 addNewRow();
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Batas Maksimal',
+                    text: 'Maksimal ' + maxMembers + ' anggota dapat ditambahkan.'
+                });
             }
         });
 
@@ -210,6 +234,7 @@
 
         updateRemoveButtonStates();
         updateSubmitButtonState();
+        updateAddButtonState(); // Add this line
         updateRowNumbers();
     });
 
@@ -219,6 +244,7 @@
             $('#lombaNotice').show();
             lombaSelected = false;
             updateSubmitButtonState();
+            updateAddButtonState(); // Add this line
             return;
         }
 
@@ -343,26 +369,27 @@
     function updateAddButtonState() {
         const addBtn = $('#addRowBtn');
 
-        if (currentRowCount >= maxMembers) {
-            addBtn.prop('disabled', true).addClass('opacity-50 cursor-not-allowed');
+        if (!lombaSelected) {
+            addBtn.prop('disabled', true)
+                .addClass('opacity-50 cursor-not-allowed')
+                .attr('title', 'Pilih lomba terlebih dahulu');
+        } else if (currentRowCount >= maxMembers) {
+            addBtn.prop('disabled', true)
+                .addClass('opacity-50 cursor-not-allowed')
+                .attr('title', 'Maksimal ' + maxMembers + ' anggota');
         } else {
-            addBtn.prop('disabled', false).removeClass('opacity-50 cursor-not-allowed');
+            addBtn.prop('disabled', false)
+                .removeClass('opacity-50 cursor-not-allowed')
+                .attr('title', 'Tambah Anggota');
         }
     }
 
     function updateRemoveButtonStates() {
         $('.member-row .remove-row-btn').each(function() {
-            const button = $(this);
-            const isCurrentUser = button.data('is-current-user') === true || button.data('is-current-user') ===
-                'true';
-
-            if (currentRowCount <= 1 || isCurrentUser) {
-                button.addClass('opacity-50 cursor-not-allowed').prop('disabled', true);
+            if (currentRowCount <= 1) {
+                $(this).addClass('opacity-50 cursor-not-allowed').prop('disabled', true);
             } else {
-                // Only enable if it's not the current user's row
-                if (!isCurrentUser) {
-                    button.removeClass('opacity-50 cursor-not-allowed').prop('disabled', false);
-                }
+                $(this).removeClass('opacity-50 cursor-not-allowed').prop('disabled', false);
             }
         });
     }
@@ -462,14 +489,21 @@
                     contentType: false,
                     success: function(response) {
                         if (response.status) {
-                            disposeModal();
+                            resetForm();
+                            disposeModal('big-modal');
+                            disposeModal('small-modal');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             }).then(() => {
-                                disposeModal();
-                                reloadDataTable();
+                                disposeModal('big-modal');
+                                disposeModal('small-modal');
+                                if (response.reloadKelompokGrid) {
+                                    loadKelompokData();
+                                } else {
+                                    window.location.reload();
+                                }
                             });
                         } else {
                             $('.error-text, .invalid-feedback').text('');
@@ -515,6 +549,60 @@
                 $('#error-' + fieldName.replace(/[\[\]]/g, '')).text('');
                 $(this).removeClass('is-invalid');
             }
+        });
+    }
+
+    function resetForm() {
+        console.log('Resetting form...');
+
+        // Reset global variables
+        rowIndex = 0;
+        maxMembers = 0;
+        currentRowCount =
+            {{ isset($kelompok) && $kelompok->mahasiswa_perans ? $kelompok->mahasiswa_perans->count() : 0 }};
+        lombaSelected = {{ isset($kelompok) && $kelompok->lomba_id ? 'true' : 'false' }};
+        isEditMode = {{ isset($kelompok) && $kelompok->exists ? 'true' : 'false' }};
+
+        // Clear form fields
+        $('#form')[0].reset();
+
+        // Clear validation errors
+        $('.error-text, .invalid-feedback').text('').hide();
+        $('.is-invalid').removeClass('is-invalid');
+
+        // Reset dynamic rows
+        $('#memberTableBody').empty();
+
+        // Reset member count
+        updateMemberCount();
+
+        // Reset notices and sections
+        if (!isEditMode) {
+            $('#memberSection').hide();
+            $('#lombaNotice').show();
+            lombaSelected = false;
+        }
+
+        // Reset button states
+        updateSubmitButtonState();
+        updateAddButtonState();
+        updateRemoveButtonStates();
+
+        // Reset select dropdowns (for searchable selects)
+        $('[data-selected-text]').each(function() {
+            const placeholder = $(this).closest('fieldset').find('button').attr('data-title') ||
+                'Select an option';
+            $(this).text(placeholder);
+        });
+
+        // Reset hidden selects
+        $('[data-hidden-select]').val('');
+
+        // Reset checkbox dropdowns
+        $('input[type="checkbox"]').prop('checked', false);
+        $('.dropdown-title').each(function() {
+            const title = $(this).attr('data-title') || 'Select Options';
+            $(this).text(title);
         });
     }
 </script>

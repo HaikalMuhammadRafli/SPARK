@@ -8,20 +8,27 @@
         </div>
         <div class="flex flex-col md:flex-row gap-2 w-full md:w-auto">
             <div class="flex flex-row gap-2 flex-wrap">
-                @if (!empty(auth()->user()->mahasiswa->kelompoks->find($kelompok->kelompok_id)))
-                    @if (auth()->user()->mahasiswa->perans->find($kelompok->kelompok_id)->peran_nama == 'Ketua')
+                @switch($mahasiswa_role)
+                    @case('ketua')
                         <x-buttons.default type="button" title="Edit Kelompok" color="primary"
-                            onclick="modalAction('{{ route('mahasiswa.kelompok.edit', $kelompok->kelompok_id) }}')" />
+                            onclick="modalAction('{{ route('mahasiswa.kelompok.edit', $kelompok->kelompok_id) }}', 'big-modal')" />
                         <x-buttons.default type="button" title="Hapus Kelompok" color="primary"
-                            onclick="modalAction('{{ route('mahasiswa.kelompok.delete', $kelompok->kelompok_id) }}')" />
-                    @else
-                        <x-buttons.default type="button" title="Keluar" color="primary"
-                            onclick="modalAction('{{ route('admin.manajemen.kelompok.create') }}')" />
-                    @endif
-                @else
-                    <x-buttons.default type="button" title="Bergabung" color="primary"
-                        onclick="modalAction('{{ route('admin.manajemen.kelompok.create') }}')" />
-                @endif
+                            onclick="modalAction('{{ route('mahasiswa.kelompok.delete', $kelompok->kelompok_id) }}', 'small-modal')" />
+                    @break
+
+                    @case('member')
+                        <form action="{{ route('mahasiswa.kelompok.leave', $kelompok->kelompok_id) }}" method="post"
+                            id="form-keluar">
+                            @csrf
+                            <x-buttons.default type="submit" title="Keluar" color="primary" />
+                        </form>
+                    @break
+
+                    @case('non_member')
+                        <x-buttons.default type="button" title="Bergabung" color="primary"
+                            onclick="modalAction('{{ route('mahasiswa.kelompok.join.form', $kelompok->kelompok_id) }}')" />
+                    @break
+                @endswitch
             </div>
         </div>
     </section>
@@ -126,5 +133,56 @@
         </div>
     </section>
 
-    <x-modal size="4xl" />
+    <x-modal id="big-modal" size="4xl" />
+    <x-modal id="small-modal" />
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('#form-keluar').on('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah Anda yakin ingin keluar dari kelompok ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, keluar',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: $(this).attr('action'),
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function(response) {
+                                if (response.status) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil',
+                                        text: response.message
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal',
+                                        text: response.message
+                                    });
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Terjadi kesalahan saat memproses permintaan.'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

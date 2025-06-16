@@ -4,7 +4,7 @@
         <i class="fa-solid fa-triangle-exclamation me-1"></i>
         Hapus Kelompok
     </h3>
-    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer" data-modal-hide="modal">
+    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer" data-modal-hide="small-modal">
         <i class="fa-solid fa-xmark"></i>
         <span class="sr-only">Close modal</span>
     </button>
@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="mt-4">
-        <form id="form" action="{{ route('admin.manajemen.kelompok.destroy', $kelompok->kelompok_id) }}"
+        <form id="form" action="{{ route('mahasiswa.kelompok.destroy', $kelompok->kelompok_id) }}"
             method="POST">
             @csrf
             @method('DELETE')
