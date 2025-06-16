@@ -10,9 +10,9 @@
             <div class="flex flex-row gap-2 flex-wrap">
                 @switch($mahasiswa_role)
                     @case('ketua')
-                        <x-buttons.default type="button" title="Edit Kelompok" color="primary"
+                        <x-buttons.default type="button" title="Edit Kelompok" color="primary" icon="fa-solid fa-edit"
                             onclick="modalAction('{{ route('mahasiswa.kelompok.edit', $kelompok->kelompok_id) }}', 'big-modal')" />
-                        <x-buttons.default type="button" title="Hapus Kelompok" color="primary"
+                        <x-buttons.default type="button" title="Hapus Kelompok" color="primary" icon="fa-solid fa-trash-bin"
                             onclick="modalAction('{{ route('mahasiswa.kelompok.delete', $kelompok->kelompok_id) }}', 'small-modal')" />
                     @break
 
@@ -20,12 +20,15 @@
                         <form action="{{ route('mahasiswa.kelompok.leave', $kelompok->kelompok_id) }}" method="post"
                             id="form-keluar">
                             @csrf
-                            <x-buttons.default type="submit" title="Keluar" color="primary" />
+                            <x-buttons.default type="submit" title="Keluar" color="primary"
+                                icon="fa-solid fa-arrow-right-from-bracket" />
                         </form>
                     @break
 
                     @case('non_member')
                         <x-buttons.default type="button" title="Bergabung" color="primary"
+                            icon="fa-solid fa-arrow-right-to-bracket"
+                            {{ $kelompok->lomba->lomba_ukuran_kelompok == $kelompok->mahasiswas->count() ? 'disabled' : '' }}
                             onclick="modalAction('{{ route('mahasiswa.kelompok.join.form', $kelompok->kelompok_id) }}')" />
                     @break
                 @endswitch
@@ -51,7 +54,7 @@
                         <span
                             class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm border border-blue-400">{{ $kelompok->lomba->periode->periode_nama }}</span>
                     </div>
-                    <x-buttons.default type="button" title="Lihat Lomba" color="primary"
+                    <x-buttons.default type="button" title="Lihat Lomba" color="primary" icon="fa-solid fa-eye"
                         onclick="window.location.href='{{ route('admin.manajemen.lomba.show', $kelompok->lomba->lomba_id) }}'" />
                 </div>
             </div>
