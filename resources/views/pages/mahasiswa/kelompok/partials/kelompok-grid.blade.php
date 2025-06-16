@@ -53,7 +53,7 @@
                                 src="{{ $mahasiswa_peran->mahasiswa->user->foto_profil_url ? Storage::url($mahasiswa_peran->mahasiswa->user->foto_profil_url) : asset('images/default-profile.svg') }}">
                         @endforeach
                     </div>
-                    <x-buttons.default type="button" title="Lihat Kelompok" color="primary"
+                    <x-buttons.default type="button" title="Lihat Kelompok" color="primary" icon="fa-solid fa-eye"
                         onclick="window.location.href='{{ route('mahasiswa.kelompok.show', $kelompok->kelompok_id) }}'" />
                 </div>
             </div>
