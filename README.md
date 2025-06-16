@@ -70,9 +70,9 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 | Task                                                | Status     | Note                                       |
 | --------------------------------------------------- | ---------- | ------------------------------------------ |
 | Tampilan tabel prestasi dan aksi Edit/Hapus (admin) | ✅ Selesai | Ditampilkan di halaman `Kelola Prestasi`   |
-| Ekspor data prestasi ke PDF dan Excel (admin)       | 🔄 Proses  | Implementasi laporan masih berjalan        |
-| Mahasiswa: Tambah data prestasi (Create)            | 🔄 Proses  | Mahasiswa bisa input sendiri               |
-| Mahasiswa: Lihat dan analisis prestasi (Read)       | 🔄 Proses  | Tampilan laporan belum sepenuhnya jadi     |
+| Ekspor data prestasi ke PDF dan Excel (admin)       | ✅ selesai | Implementasi laporan masih berjalan        |
+| Mahasiswa: Tambah data prestasi (Create)            | ✅ selesai | Mahasiswa bisa input sendiri               |
+| Mahasiswa: Lihat dan analisis prestasi (Read)       | ✅ selesai | Tampilan laporan belum sepenuhnya jadi     |
 | Mahasiswa: Edit dan Hapus prestasi milik sendiri    | ✅ Selesai | Fitur CRUD dasar sudah tersedia            |
 | Bug fixing dan validasi form input prestasi         | 🔧 Ongoing | Fokus pada UX dan validasi data            |
 | Visualisasi laporan prestasi                        | 🔧 Ongoing | Fokus pada Chart dan Pengambilan data link |
