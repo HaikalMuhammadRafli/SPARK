@@ -4,7 +4,8 @@
         <i class="fa-solid fa-triangle-exclamation me-1"></i>
         Hapus Kelompok
     </h3>
-    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer" data-modal-hide="small-modal">
+    <button type="button" class="text-white bg-transparent text-sm text-center cursor-pointer"
+        data-modal-hide="small-modal">
         <i class="fa-solid fa-xmark"></i>
         <span class="sr-only">Close modal</span>
     </button>
@@ -43,8 +44,7 @@
         </div>
     </div>
     <div class="mt-4">
-        <form id="form" action="{{ route('mahasiswa.kelompok.destroy', $kelompok->kelompok_id) }}"
-            method="POST">
+        <form id="form" action="{{ route('mahasiswa.kelompok.destroy', $kelompok->kelompok_id) }}" method="POST">
             @csrf
             @method('DELETE')
             <div class="flex justify-end">
@@ -68,14 +68,14 @@
                     contentType: false,
                     success: function(response) {
                         if (response.status) {
-                            disposeModal();
+                            disposeModal('small-modal');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             }).then(() => {
-                                disposeModal();
-                                reloadDataTable();
+                                disposeModal('small-modal');
+                                window.location.reload();
                             });
                         } else {
                             disposeModal();
@@ -85,7 +85,7 @@
                                 text: response.message
                             }).then(() => {
                                 disposeModal();
-                                reloadDataTable();
+                                window.location.reload();
                             });
                         }
                     },

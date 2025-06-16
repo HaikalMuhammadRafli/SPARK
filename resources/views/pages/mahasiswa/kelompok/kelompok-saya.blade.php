@@ -7,7 +7,7 @@
             <x-breadcrumbs :items="$breadcrumbs" />
         </div>
         <x-buttons.default type="button" title="Tambah Baru" color="primary"
-            onclick="modalAction('{{ route('mahasiswa.kelompok.create') }}')" />
+            onclick="modalAction('{{ route('mahasiswa.kelompok.create') }}', 'big-modal')" />
     </section>
 
     <section class="flex justify-between items-center bg-white px-4 py-4 rounded-xl mb-2">
@@ -28,7 +28,7 @@
         {{-- content will be loaded here --}}
     </section>
 
-    <x-modal size="4xl" />
+    <x-modal id="big-modal" size="4xl" />
 @endsection
 
 @push('js')
