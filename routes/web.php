@@ -176,6 +176,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', [MahasiswaController::class, 'createView'])->name('create');
                 Route::get('/{id}/edit', [MahasiswaController::class, 'editView'])->name('edit');
                 Route::get('/{id}/delete', [MahasiswaController::class, 'deleteView'])->name('delete');
+                Route::get('export-pdf', [MahasiswaController::class, 'exportPdf'])->name('export-pdf');
             });
 
             Route::prefix('admin')->name('admin.')->group(function () {
@@ -183,6 +184,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', [AdminController::class, 'createView'])->name('create');
                 Route::get('/{id}/edit', [AdminController::class, 'editView'])->name('edit');
                 Route::get('/{id}/delete', [AdminController::class, 'deleteView'])->name('delete');
+                Route::get('export-pdf', [AdminController::class, 'exportPdf'])->name('export-pdf');
             });
 
             Route::prefix('dosen-pembimbing')->name('dosen-pembimbing.')->group(function () {
@@ -190,6 +192,7 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', [DosenPembimbingController::class, 'createView'])->name('create');
                 Route::get('/{id}/edit', [DosenPembimbingController::class, 'editView'])->name('edit');
                 Route::get('/{id}/delete', [DosenPembimbingController::class, 'deleteView'])->name('delete');
+                Route::get('export-pdf', [DosenPembimbingController::class, 'exportPdf'])->name('export-pdf');
             });
         });
 

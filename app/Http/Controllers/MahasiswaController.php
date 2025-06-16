@@ -6,6 +6,7 @@ use App\Http\Requests\StoreMahasiswaRequest;
 use App\Http\Requests\UpdateMahasiswaRequest;
 use App\Models\MahasiswaModel;
 use App\Models\UserModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -192,5 +193,22 @@ class MahasiswaController extends Controller
         return view('mahasiswa.modals.delete', [
             'mahasiswa' => MahasiswaModel::findOrFail($id),
         ]);
+    }
+
+    public function exportPdf()
+    {
+        $mahasiswa = MahasiswaModel::select('nim', 'nama', 'lokasi_preferensi','user_id', 'program_studi_id')
+            ->orderBy('nim')
+            ->with(['user'])
+            ->with(['program_studi'])
+            ->get();
+
+        // use Barryvdh\DomPDF\Facade\Pdf;
+        $pdf = Pdf::loadView('mahasiswa.export_pdf', ['mahasiswa' => $mahasiswa]);
+        $pdf->setPaper('a4', 'portrait'); // set ukuran kertas dan orientasi
+        $pdf->setOption('isRemoteEnabled', true); // set true jika ada gambar dari url
+        $pdf->render();
+
+        return $pdf->stream('Data Mahasiswa ' . date('Y-m-d H:i:s') . '.pdf');
     }
 }
