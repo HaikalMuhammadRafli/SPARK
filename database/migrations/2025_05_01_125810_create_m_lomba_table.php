@@ -29,6 +29,7 @@ class CreateMLombaTable extends Migration
             $table->enum('lomba_status', ['Akan datang', 'Sedang berlangsung', 'Berakhir', 'Ditolak'])->default('Akan datang');
             $table->unsignedBigInteger('periode_id');
             $table->timestamp('validated_at')->nullable()->default(null);
+            $table->boolean('is_verified')->default(false);
             $table->timestamps();
 
             $table->foreign('periode_id')->references('periode_id')->on('m_periode');

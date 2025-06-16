@@ -1162,6 +1162,7 @@ class MahasiswaPagesController extends Controller
                 'lomba_status' => 'Akan datang',
                 'periode_id' => $request->periode_id,
                 'created_by' => auth()->id(),
+                'is_verified' => false,
             ];
 
             if ($request->hasFile('lomba_poster_url')) {
@@ -1389,14 +1390,15 @@ class MahasiswaPagesController extends Controller
     {
         $now = Carbon::now();
 
-        // Update to 'Sedang berlangsung' if registration period has started
+        // Hanya update lomba yang sudah diverifikasi
         LombaModel::where('lomba_status', 'Akan datang')
+            ->where('is_verified', true) // Tambahkan kondisi ini
             ->where('lomba_mulai_pendaftaran', '<=', $now)
             ->where('lomba_akhir_pendaftaran', '>=', $now)
             ->update(['lomba_status' => 'Sedang berlangsung']);
 
-        // Update to 'Berakhir' if execution period has ended
         LombaModel::whereIn('lomba_status', ['Akan datang', 'Sedang berlangsung'])
+            ->where('is_verified', true) // Tambahkan kondisi ini
             ->where('lomba_selesai_pelaksanaan', '<', $now)
             ->update(['lomba_status' => 'Berakhir']);
     }

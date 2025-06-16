@@ -1,4 +1,4 @@
-<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5">
+<form id="form" method="POST" action="{{ $action }}" data-reload-table class="p-4 md:p-5" enctype="multipart/form-data">
     @csrf
 
     @if (in_array(strtoupper($method), ['PUT']))
@@ -391,58 +391,16 @@
                     contentType: false,
                     success: function(response) {
                         // Reset button state
-                        submitButton.html(originalText).prop('disabled', false);
-
                         if (response.status) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil',
-                                text: response.message
-                            }).then(() => {
-                                if (typeof window.disposeModal === 'function') {
-                                    window.disposeModal();
-                                }
-                                if (typeof window.reloadDataTable === 'function') {
-                                    window.reloadDataTable();
-                                }
-                            });
+                            Swal.fire({ icon: 'success', title: 'Berhasil', text: response.message });
+                            if (typeof window.disposeModal === 'function') window.disposeModal();
+                            if (typeof window.reloadDataTable === 'function') window.reloadDataTable();
                         } else {
-                            // Clear previous errors
-                            $('.error-text, .invalid-feedback').text('');
-                            $('.is-invalid').removeClass('is-invalid');
-                            // Show field errors
-                            if (response.msgField) {
-                                $.each(response.msgField, function(prefix, val) {
-                                    $('#error-' + prefix).text(val[0]);
-                                    const $field = $('#' + prefix);
-                                    if ($field.length) {
-                                        $field.addClass('is-invalid');
-                                    } else {
-                                        $('[name="' + prefix + '"]').addClass('is-invalid');
-                                    }
-                                });
-                            }
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal',
-                                text: response.message || 'Terjadi kesalahan saat menyimpan data.'
-                            });
+                            Swal.fire({ icon: 'error', title: 'Gagal', text: response.message });
                         }
                     },
                     error: function(xhr) {
-                        // Reset button state
-                        submitButton.html(originalText).prop('disabled', false);
-
-                        let errorMessage = 'Terjadi kesalahan saat menyimpan data.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: errorMessage
-                        });
+                        Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan saat menyimpan data.' });
                     }
                 });
                 return false;

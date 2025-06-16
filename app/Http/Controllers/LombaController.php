@@ -131,7 +131,7 @@ class LombaController extends Controller
         $currentYear = Carbon::now()->year;
         $periodes = PeriodeModel::where(function ($query) use ($currentYear) {
             $query->where('periode_tahun_awal', '<=', $currentYear)
-                  ->where('periode_tahun_akhir', '>=', $currentYear);
+                ->where('periode_tahun_akhir', '>=', $currentYear);
         })
         ->orderBy('periode_nama', 'asc')
         ->get();
@@ -244,6 +244,7 @@ class LombaController extends Controller
                 'lomba_ukuran_kelompok' => (int) $request->lomba_ukuran_kelompok,
                 'lomba_status' => 'Akan datang',
                 'periode_id' => $request->periode_id,
+                'is_verified' => false,
             ];
 
             // Upload poster ke folder prestasi_posters dengan Storage::disk('public')
@@ -543,7 +544,7 @@ class LombaController extends Controller
         return view('lomba.verification', [
             'breadcrumbs' => $breadcrumbs,
             'title' => 'Verifikasi Lomba',
-            'lombas' => \App\Models\LombaModel::where('lomba_status', 'Akan datang')->get(),
+            'lombas' => \App\Models\LombaModel::whereIn('lomba_status', ['Akan datang', 'Sedang berlangsung'])->get(),
             'kategoris' => [
                 'Programming' => 'Programming',
                 'AI' => 'Artificial Intelligence',
@@ -577,7 +578,8 @@ class LombaController extends Controller
 
     public function verificationData(Request $request)
     {
-        $query = LombaModel::where('lomba_status', 'Akan datang');
+        $query = LombaModel::where('is_verified', false)
+        ->whereNotIn('lomba_status', ['Ditolak']);
 
         if ($request->filled('kategori')) {
             $query->where('lomba_kategori', $request->kategori);
@@ -638,9 +640,11 @@ class LombaController extends Controller
             $lomba->lomba_status = 'Sedang berlangsung';
             $lomba->validated_at = now();
             $lomba->catatan_verifikasi = $request->catatan_verifikasi ?: 'Lomba disetujui';
+            $lomba->is_verified = true; // <-- tambahkan ini!
         } else {
             $lomba->lomba_status = 'Ditolak';
             $lomba->catatan_verifikasi = $request->catatan_verifikasi;
+            $lomba->is_verified = false;
         }
         $lomba->save();
 
