@@ -54,7 +54,7 @@
                         @endforeach
                     </div>
                     <x-buttons.default type="button" title="Lihat Kelompok" color="primary"
-                        onclick="window.location.href='{{ route('mahasiswa.kelompok.show', $kelompok->lomba->lomba_id) }}'" />
+                        onclick="window.location.href='{{ route('mahasiswa.kelompok.show', $kelompok->kelompok_id) }}'" />
                 </div>
             </div>
         </div>

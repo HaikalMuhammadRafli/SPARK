@@ -44,7 +44,7 @@
                 const filterStatus = $('#filter-status').val();
 
                 $.ajax({
-                    url: '{{ route('mahasiswa.kelompok.data') }}',
+                    url: '{{ route('mahasiswa.kelompok.saya.data') }}',
                     method: 'GET',
                     data: {
                         search: searchQuery,

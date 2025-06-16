@@ -105,7 +105,7 @@ class KelompokController extends Controller
 
 
         return view('kelompok.modals.create', [
-            'lombas' => LombaModel::all(),
+            'lombas' => LombaModel::whereNot('lomba_status', 'Berakhir')->get(),
             'mahasiswas' => MahasiswaModel::all(),
             'perans_mhs' => [
                 'Ketua' => 'Ketua',
@@ -251,6 +251,29 @@ class KelompokController extends Controller
                 'Pembimbing kompetisi tingkat internasional' => 'Pembimbing kompetisi tingkat internasional',
             ],
             'kompetensis' => KompetensiModel::all(),
+            'lokasi_preferensis' => [
+                'Kota' => 'Kota',
+                'Provinsi' => 'Provinsi',
+                'Nasional' => 'Nasional',
+                'Internasional' => 'Internasional',
+            ],
+            'minats' => MinatModel::all(),
+            'bidang_keahlians' => BidangKeahlianModel::all(),
+            'jumlah_rekomendasis' => [
+                '10' => '10',
+                '20' => '20',
+                '30' => '30',
+                '40' => '40',
+                '50' => '50',
+            ],
+            'weight_ranks' => [
+                '1' => '1',
+                '2' => '2',
+                '3' => '3',
+                '4' => '4',
+                '5' => '5',
+                '6' => '6',
+            ],
         ]);
     }
 

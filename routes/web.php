@@ -230,8 +230,15 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('kelompok')->name('kelompok.')->group(function () {
             Route::get('/', [MahasiswaPagesController::class, 'kelompokIndex'])->name('index');
             Route::get('/data', [MahasiswaPagesController::class, 'kelompokData'])->name('data');
+            Route::get('/saya', [MahasiswaPagesController::class, 'kelompokSaya'])->name('saya');
+            Route::get('/saya/data', [MahasiswaPagesController::class, 'kelompokSayaData'])->name('saya.data');
             Route::get('/create', [MahasiswaPagesController::class, 'kelompokCreate'])->name('create');
+            Route::get('/spk/data', [MahasiswaPagesController::class, 'kelompokSpkData'])->name('spk.data');
+            Route::post('/spk', [MahasiswaPagesController::class, 'kelompokSpk'])->name('spk');
             Route::post('/', [MahasiswaPagesController::class, 'kelompokStore'])->name('store');
+            Route::get('/join/{id}', [MahasiswaPagesController::class, 'kelompokJoinForm'])->name('join.form');
+            Route::post('/join/{id}', [MahasiswaPagesController::class, 'kelompokJoin'])->name('join');
+            Route::post('/leave/{id}', [MahasiswaPagesController::class, 'kelompokLeave'])->name('leave');
             Route::get('/{id}', [MahasiswaPagesController::class, 'kelompokShow'])->name('show');
             Route::get('/{id}/edit', [MahasiswaPagesController::class, 'kelompokEdit'])->name('edit');
             Route::put('/{id}', [MahasiswaPagesController::class, 'kelompokUpdate'])->name('update');
