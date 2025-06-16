@@ -33,7 +33,7 @@
                 <x-sidebar.menu-item route="admin.manajemen.lomba.index" icon='fa-solid fa-trophy'
                     title="Kelola Lomba" />
                 <x-sidebar.menu-item route="admin.manajemen.prestasi.verification" icon='fa-solid fa-award' title="Verifikasi Prestasi" />
-                <x-sidebar.menu-item route="" icon='fa-solid fa-medal' title="Kelola Prestasi" />
+                <x-sidebar.menu-item route="admin.laporan.index" icon='fa-solid fa-medal' title="Kelola Prestasi" />
             </ul>
 
             <ul class="space-y-2 font-medium bg-white rounded-xl p-2 mb-3">
