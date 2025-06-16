@@ -31,6 +31,7 @@
             ['title' => 'No', 'key' => 'no', 'sortable' => true],
             ['title' => 'Kelompok ID', 'key' => 'nip', 'sortable' => false],
             ['title' => 'Nama Peran', 'key' => 'nama', 'sortable' => false],
+            ['title' => 'Kompetensi', 'key' => 'kompetensi', 'sortable' => false],
             ['title' => 'Aksi', 'key' => 'actions', 'sortable' => false],
         ]">
 
@@ -42,64 +43,115 @@
 
 @push('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const token = localStorage.getItem('api_token');
             if (!token) {
                 console.error("No API token found in localStorage.");
                 return;
             }
 
-            const route = 'http://127.0.0.1:8000/api/dosen-pembimbing-peran';
+            const peranUrl = 'http://127.0.0.1:8000/api/dosen-pembimbing-peran';
+            const relasiUrl = 'http://127.0.0.1:8000/api/dosen-pembimbing-peran-kompetensi';
+            const kompetensiBaseUrl = 'http://127.0.0.1:8000/api/kompetensi/';
 
-            fetch(route, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.querySelector('#table tbody'); // Selects the component's tbody
+            try {
+                // Fetch data peran dan relasi peran-kompetensi
+                const [peranRes, relasiRes] = await Promise.all([
+                    fetch(peranUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Accept': 'application/json',
+                        }
+                    }),
+                    fetch(relasiUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                            'Accept': 'application/json',
+                        }
+                    })
+                ]);
 
-                    if (!tbody) {
-                        console.error('tbody not found inside #table');
-                        return;
-                    }
+                const peranData = await peranRes.json();
+                const relasiData = await relasiRes.json();
 
-                    tbody.innerHTML = ''; // Clear any existing content (optional)
+                const tbody = document.querySelector('#table tbody');
+                if (!tbody) {
+                    console.error('tbody not found inside #table');
+                    return;
+                }
 
-                    data.data.forEach((item, index) => {
-                        const row = document.createElement('tr');
-                        row.className = 'border-b hover:bg-gray-50';
-                        row.innerHTML = `
-<td class="px-4 py-1 whitespace-nowrap">${index + 1}</td>
-<td class="px-4 py-1">${item.kelompok_id}</td>
-<td class="px-4 py-1">${item.peran_nama}</td>
-<td class="px-4 py-1 text-left">
-    <div class="inline-flex rounded-md shadow-xs" role="group">
-        <button type="button"
-            onclick="openEditModal('${item.peran_id}')"
-            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-yellow-500 rounded-s-lg cursor-pointer">
-            <i class="fa-solid fa-pencil me-2"></i>
-            Edit
-        </button>
-        <button type="button"
-            onclick="openDeleteModal('${item.peran_id}')"
-            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-500 rounded-e-lg cursor-pointer">
-            <i class="fa-solid fa-trash-can me-2"></i>
-            Hapus
-        </button>
-    </div>
-</td>
-`;
-                        tbody.appendChild(row);
-                    });
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                });
+                tbody.innerHTML = '';
+
+                // Cache untuk menghindari fetch nama kompetensi yang sama berulang kali
+                const kompetensiCache = new Map();
+
+                for (let [index, item] of peranData.data.entries()) {
+                    // Dapatkan semua kompetensi_id terkait peran_id ini
+                    const relatedRelasi = relasiData.data.filter(r => r.peran_id === item.peran_id);
+                    const kompetensiIds = relatedRelasi.map(r => r.kompetensi_id);
+
+                    // Fetch nama kompetensi satu per satu (atau dari cache)
+                    const kompetensiNames = await Promise.all(
+                        kompetensiIds.map(async (id) => {
+                            if (kompetensiCache.has(id)) {
+                                return kompetensiCache.get(id);
+                            }
+                            try {
+                                const res = await fetch(kompetensiBaseUrl + id, {
+                                    method: 'GET',
+                                    headers: {
+                                        'Authorization': 'Bearer ' + token,
+                                        'Accept': 'application/json',
+                                    }
+                                });
+                                const result = await res.json();
+                                const nama = result.data?.kompetensi_nama || `ID: ${id}`;
+                                kompetensiCache.set(id, nama);
+                                return nama;
+                            } catch (err) {
+                                console.error(`Error fetching kompetensi ID ${id}`, err);
+                                return `ID: ${id}`;
+                            }
+                        })
+                    );
+
+                    // Gabungkan nama kompetensi menjadi satu string
+                    const kompetensiList = kompetensiNames.join(', ');
+
+                    const row = document.createElement('tr');
+                    row.className = 'border-b hover:bg-gray-50';
+                    row.innerHTML = `
+                <td class="px-4 py-1 whitespace-nowrap">${index + 1}</td>
+                <td class="px-4 py-1">${item.kelompok_id}</td>
+                <td class="px-4 py-1">${item.peran_nama}</td>
+                <td class="px-4 py-1">${kompetensiList}</td>
+                <td class="px-4 py-1 text-left">
+                    <div class="inline-flex rounded-md shadow-xs" role="group">
+                        <button type="button"
+                            onclick="openEditModal('${item.peran_id}')"
+                            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-yellow-500 rounded-s-lg cursor-pointer">
+                            <i class="fa-solid fa-pencil me-2"></i>
+                            Edit
+                        </button>
+                        <button type="button"
+                            onclick="openDeleteModal('${item.peran_id}')"
+                            class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-white bg-red-500 rounded-e-lg cursor-pointer">
+                            <i class="fa-solid fa-trash-can me-2"></i>
+                            Hapus
+                        </button>
+                    </div>
+                </td>
+            `;
+                    tbody.appendChild(row);
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+            }
         });
+
 
         function openEditModal(id) {
             const url = `{{ url('dosen-pembimbing/kelompok-bimbingan') }}/${id}/edit`;

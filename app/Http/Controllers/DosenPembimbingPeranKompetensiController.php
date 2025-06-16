@@ -87,31 +87,41 @@ class DosenPembimbingPeranKompetensiController extends Controller
         try {
             $userId = $request->user()->user_id;
             $nip = DosenPembimbingModel::where('user_id', $userId)->first()?->nip;
-            $peranId = DosenPembimbingPeranModel::where('nip', $nip)
+
+            $peran = DosenPembimbingPeranModel::where('nip', $nip)
                 ->where('peran_id', $peranId)
-                ->first()
-                ->peran_id;
+                ->firstOrFail();
 
-            $data = $request->validated();
+            $kompetensiId = $request->input('kompetensi_id');
 
-            DosenPembimbingPeranKompetensiModel::where('peran_id', $peranId)
-                ->where('kompetensi_id', $data['kompetensi_id'])
-                ->delete();
+            if ($kompetensiId) {
+                // Hapus satu kompetensi spesifik
+                DosenPembimbingPeranKompetensiModel::where('peran_id', $peran->peran_id)
+                    ->where('kompetensi_id', $kompetensiId)
+                    ->delete();
+
+                $message = 'Kompetensi berhasil dihapus';
+            } else {
+                // Hapus semua kompetensi yang terkait dengan peran ini
+                DosenPembimbingPeranKompetensiModel::where('peran_id', $peran->peran_id)->delete();
+
+                $message = 'Semua kompetensi berhasil dihapus';
+            }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Kompetensi deleted successfully'
+                'message' => $message
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kompetensi not found',
-                'error' => 'The requested kompetensi does not exist'
+                'message' => 'Peran atau kompetensi tidak ditemukan',
+                'error' => 'The requested resource does not exist'
             ], 404);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete kompetensi',
+                'message' => 'Gagal menghapus kompetensi',
                 'error' => $e->getMessage()
             ], 500);
         }

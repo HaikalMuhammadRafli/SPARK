@@ -11,7 +11,7 @@
 </div>
 <!-- Modal body -->
 @include('kelompok-bimbingan.partials.form', [
-    'action' =>  'http://127.0.0.1:8000/api/dosen-pembimbing-peran'.$dosenPembimbingPeran->peran_id,
+    'action' =>  'http://127.0.0.1:8000/api/dosen-pembimbing-peran/'.$dosenPembimbingPeran->peran_id,
     'method' => 'PUT',
     'buttonText' => 'Update',
     'buttonIcon' => 'fa-solid fa-plus',
