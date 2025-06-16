@@ -48,13 +48,15 @@
                     contentType: false,
                     success: function(response) {
                         if (response.status) {
-                            disposeModal();
+                            disposeModal('edit_modal');
+                            disposeModal('criteria_modal');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             }).then(() => {
-                                disposeModal();
+                                disposeModal('edit_modal');
+                                disposeModal('criteria_modal');
                                 window.location.reload();
                             });
                         } else {
