@@ -6,8 +6,6 @@ use App\Models\KelompokModel;
 use App\Models\MahasiswaModel;
 use App\Models\LombaModel;
 use App\Models\PrestasiModel;
-use Illuminate\Http\Request;
-use View;
 
 class DashboardController extends Controller
 {
@@ -26,7 +24,19 @@ class DashboardController extends Controller
 
     public function dosenPembimbing()
     {
-        return view('pages.dosen-pembimbing.dashboard');
+        return view(
+            'pages.dosen-pembimbing.dashboard',
+            [
+                'lomba_berlangsung_count' => LombaModel::where('lomba_status', 'Sedang Berlangsung')->count(),
+                'lomba_akan_datang_count' => LombaModel::where('lomba_status', 'Akan Datang')->count(),
+                'bimbingan_saya_count' => KelompokModel::whereHas('dosen_pembimbing_peran', function ($query) {
+                    $query->where('nip', auth()->user()->dosenPembimbing->nip);
+                })->count(),
+                'prestasi_bimbingan_count' => PrestasiModel::whereHas('kelompok.dosen_pembimbing_peran', function ($query) {
+                    $query->where('nip', auth()->user()->dosenPembimbing->nip);
+                })->count(),
+            ],
+        );
     }
 
     public function mahasiswa()
