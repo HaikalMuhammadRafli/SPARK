@@ -10,7 +10,6 @@ class KeahlianDosenPembimbingModel extends Model
     use HasFactory;
 
     protected $table = 't_keahlian_dosen_pembimbing';
-    protected $primaryKey = 'nip';
 
     protected $fillable = [
         'nip',
@@ -19,6 +18,11 @@ class KeahlianDosenPembimbingModel extends Model
 
     public function dosenPembimbing()
     {
-        return $this->belongsTo(MahasiswaModel::class, 'nip', 'nip');
+        return $this->belongsTo(DosenPembimbingModel::class, 'nip', 'nip');
+    }
+
+    public function bidang_keahlians()
+    {
+        return $this->belongsTo(BidangKeahlianModel::class, 'bidang_keahlian_id', 'bidang_keahlian_id');
     }
 }

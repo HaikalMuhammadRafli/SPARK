@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('t_kompetensi_dosen', function (Blueprint $table) {
+        Schema::create('t_kompetensi_dosen_pembimbing', function (Blueprint $table) {
             $table->string('nip');
             $table->unsignedBigInteger('kompetensi_id');
             $table->timestamps();

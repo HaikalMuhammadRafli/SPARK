@@ -94,19 +94,21 @@
         @if (auth()->user()->role != 'admin')
             <div class="flex flex-col md:w-1/2 gap-3">
                 <x-profile.criteria-card title="Bidang Keahlian"
-                    description="Daftar bidang keahlian yang dimiliki oleh mahasiswa." icon="fa-solid fa-briefcase"
-                    route="profile.destroy.bidang-keahlian" :data="auth()
+                    description="Daftar bidang keahlian yang dimiliki oleh {{ auth()->user()->role == 'mahasiswa' ? 'mahasiswa' : 'dosen pembimbing' }}."
+                    icon="fa-solid fa-briefcase" route="profile.destroy.bidang-keahlian" :data="auth()
                         ->user()
                         ->getCurrentData()
                         ->bidang_keahlians->pluck('bidang_keahlian_nama', 'bidang_keahlian_id')
                         ->toArray()"
                     onclick="modalAction('{{ route('profile.add.bidang-keahlian.form') }}', 'criteria_modal')" />
 
-                <x-profile.criteria-card title="Minat" description="Daftar minat yang dimiliki oleh mahasiswa."
+                <x-profile.criteria-card title="Minat"
+                    description="Daftar minat yang dimiliki oleh {{ auth()->user()->role == 'mahasiswa' ? 'mahasiswa' : 'dosen pembimbing' }}."
                     icon="fa-solid fa-heart" route="profile.destroy.minat" :data="auth()->user()->getCurrentData()->minats->pluck('minat_nama', 'minat_id')->toArray()"
                     onclick="modalAction('{{ route('profile.add.minat.form') }}', 'criteria_modal')" />
 
-                <x-profile.criteria-card title="Kompetensi" description="Daftar kompetensi yang dimiliki oleh mahasiswa."
+                <x-profile.criteria-card title="Kompetensi"
+                    description="Daftar kompetensi yang dimiliki oleh {{ auth()->user()->role == 'mahasiswa' ? 'mahasiswa' : 'dosen pembimbing' }}."
                     icon="fa-solid fa-certificate" :data="auth()
                         ->user()
                         ->getCurrentData()

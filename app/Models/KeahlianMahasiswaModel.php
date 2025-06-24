@@ -10,7 +10,6 @@ class KeahlianMahasiswaModel extends Model
     use HasFactory;
 
     protected $table = 't_keahlian_mahasiswa';
-    protected $primaryKey = 'nim';
 
     protected $fillable = [
         'nim',

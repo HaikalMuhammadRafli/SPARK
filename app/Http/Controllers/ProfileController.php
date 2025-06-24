@@ -7,12 +7,13 @@ use App\Http\Requests\ProfileAddMinatRequest;
 use App\Http\Requests\ProfileMahasiswaUpdateRequest;
 use App\Http\Requests\ProfileStaffUpdateRequest;
 use App\Models\BidangKeahlianModel;
+use App\Models\KeahlianDosenPembimbingModel;
 use App\Models\KeahlianMahasiswaModel;
 use App\Models\KompetensiModel;
+use App\Models\MinatDosenPembimbingModel;
 use App\Models\MinatMahasiswaModel;
 use App\Models\MinatModel;
 use Exception;
-use Illuminate\Http\Request;
 use Storage;
 
 class ProfileController extends Controller
@@ -116,8 +117,14 @@ class ProfileController extends Controller
 
     public function addBidangKeahlianForm()
     {
+        if (auth()->user()->role === 'mahasiswa') {
+            $bidang_keahlians = BidangKeahlianModel::whereNotIn('bidang_keahlian_id', auth()->user()->mahasiswa->keahlian_mahasiswas->pluck('bidang_keahlian_id'))->get();
+        } else if (auth()->user()->role === 'dosen_pembimbing') {
+            $bidang_keahlians = BidangKeahlianModel::whereNotIn('bidang_keahlian_id', auth()->user()->dosenPembimbing->keahlian_dosen_pembimbings->pluck('bidang_keahlian_id'))->get();
+        }
+
         return view('profile.modals.add-bidang-keahlian', [
-            'bidang_keahlians' => BidangKeahlianModel::whereNotIn('bidang_keahlian_id', auth()->user()->mahasiswa->keahlian_mahasiswas->pluck('bidang_keahlian_id'))->get(),
+            'bidang_keahlians' => $bidang_keahlians,
         ]);
     }
 
@@ -127,11 +134,20 @@ class ProfileController extends Controller
             $validated = $request->validated();
             $bidangKeahlianIds = $validated['bidang_keahlian'];
 
-            foreach ($bidangKeahlianIds as $bidangKeahlianId) {
-                KeahlianMahasiswaModel::create([
-                    'nim' => auth()->user()->mahasiswa->nim,
-                    'bidang_keahlian_id' => $bidangKeahlianId,
-                ]);
+            if (auth()->user()->role === 'mahasiswa') {
+                foreach ($bidangKeahlianIds as $bidangKeahlianId) {
+                    KeahlianMahasiswaModel::create([
+                        'nim' => auth()->user()->mahasiswa->nim,
+                        'bidang_keahlian_id' => $bidangKeahlianId,
+                    ]);
+                }
+            } else if (auth()->user()->role === 'dosen_pembimbing') {
+                foreach ($bidangKeahlianIds as $bidangKeahlianId) {
+                    KeahlianDosenPembimbingModel::create([
+                        'nip' => auth()->user()->dosenPembimbing->nip,
+                        'bidang_keahlian_id' => $bidangKeahlianId,
+                    ]);
+                }
             }
 
             return response()->json([
@@ -148,8 +164,14 @@ class ProfileController extends Controller
 
     public function addMinatForm()
     {
+        if (auth()->user()->role === 'mahasiswa') {
+            $minats = MinatModel::whereNotIn('minat_id', auth()->user()->mahasiswa->minat_mahasiswas->pluck('minat_id'))->get();
+        } else if (auth()->user()->role === 'dosen_pembimbing') {
+            $minats = MinatModel::whereNotIn('minat_id', auth()->user()->dosenPembimbing->minat_dosen_pembimbings->pluck('minat_id'))->get();
+        }
+
         return view('profile.modals.add-minat', [
-            'minats' => MinatModel::whereNotIn('minat_id', auth()->user()->mahasiswa->minat_mahasiswas->pluck('minat_id'))->get(),
+            'minats' => $minats,
         ]);
     }
 
@@ -159,11 +181,20 @@ class ProfileController extends Controller
             $validated = $request->validated();
             $minatIds = $validated['minat'];
 
-            foreach ($minatIds as $minatId) {
-                MinatMahasiswaModel::create([
-                    'nim' => auth()->user()->mahasiswa->nim,
-                    'minat_id' => $minatId,
-                ]);
+            if (auth()->user()->role === 'mahasiswa') {
+                foreach ($minatIds as $minatId) {
+                    MinatMahasiswaModel::create([
+                        'nim' => auth()->user()->mahasiswa->nim,
+                        'minat_id' => $minatId,
+                    ]);
+                }
+            } else if (auth()->user()->role === 'dosen_pembimbing') {
+                foreach ($minatIds as $minatId) {
+                    MinatDosenPembimbingModel::create([
+                        'nip' => auth()->user()->dosenPembimbing->nip,
+                        'minat_id' => $minatId,
+                    ]);
+                }
             }
 
             return response()->json([
@@ -180,17 +211,29 @@ class ProfileController extends Controller
 
     public function deleteBidangKeahlian(string $id)
     {
-        KeahlianMahasiswaModel::where('bidang_keahlian_id', $id)
-            ->where('nim', auth()->user()->mahasiswa->nim)
-            ->delete();
+        if (auth()->user()->role === 'mahasiswa') {
+            KeahlianMahasiswaModel::where('bidang_keahlian_id', $id)
+                ->where('nim', auth()->user()->mahasiswa->nim)
+                ->delete();
+        } else if (auth()->user()->role === 'dosen_pembimbing') {
+            KeahlianDosenPembimbingModel::where('bidang_keahlian_id', $id)
+                ->where('nip', auth()->user()->dosenPembimbing->nip)
+                ->delete();
+        }
         return redirect()->route('profile.index');
     }
 
     public function deleteMinat(string $id)
     {
-        MinatMahasiswaModel::where('minat_id', $id)
-            ->where('nim', auth()->user()->mahasiswa->nim)
-            ->delete();
+        if (auth()->user()->role === 'mahasiswa') {
+            MinatMahasiswaModel::where('minat_id', $id)
+                ->where('nim', auth()->user()->mahasiswa->nim)
+                ->delete();
+        } else if (auth()->user()->role === 'dosen_pembimbing') {
+            MinatDosenPembimbingModel::where('minat_id', $id)
+                ->where('nip', auth()->user()->dosenPembimbing->nip)
+                ->delete();
+        }
         return redirect()->route('profile.index');
     }
 }

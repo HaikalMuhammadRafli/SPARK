@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('t_keahlian_dosen', function (Blueprint $table) {
+        Schema::create('t_keahlian_dosen_pembimbing', function (Blueprint $table) {
             $table->string('nip');
             $table->unsignedBigInteger('bidang_keahlian_id');
             $table->timestamps();

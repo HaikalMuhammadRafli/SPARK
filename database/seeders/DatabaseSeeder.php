@@ -53,14 +53,14 @@ class DatabaseSeeder extends Seeder
         // 6️⃣ SEEDER RELASI KEAHLIAN (Pivot Tables)
         $this->call([
             KeahlianMahasiswaSeeder::class,     // t_keahlian_mahasiswa (10 data)
-            KeahlianDosenSeeder::class,         // t_keahlian_dosen (10 data)
+            KeahlianDosenPembimbingSeeder::class,         // t_keahlian_dosen (10 data)
             KeahlianLombaSeeder::class,         // t_keahlian_lomba (10 data)
         ]);
 
         // 7️⃣ SEEDER RELASI KOMPETENSI (Pivot Tables)
         $this->call([
             KompetensiMahasiswaSeeder::class,   // t_kompetensi_mahasiswa (10 data)
-            KompetensiDosenSeeder::class,       // t_kompetensi_dosen (10 data)
+            KompetensiDosenPembimbingSeeder::class,       // t_kompetensi_dosen (10 data)
             KompetensiLombaSeeder::class,       // t_kompetensi_lomba (10 data)
         ]);
 
@@ -97,10 +97,10 @@ class DatabaseSeeder extends Seeder
                 ['t_minat_dosen_pembimbing', 'MinatDosenPembimbingSeeder', '10'],
                 ['t_minat_lomba', 'MinatLombaSeeder', '10'],
                 ['t_keahlian_mahasiswa', 'KeahlianMahasiswaSeeder', '10'],
-                ['t_keahlian_dosen', 'KeahlianDosenSeeder', '10'],
+                ['t_keahlian_dosen_pembimbing', 'KeahlianDosenpembimbingSeeder', '10'],
                 ['t_keahlian_lomba', 'KeahlianLombaSeeder', '10'],
                 ['t_kompetensi_mahasiswa', 'KompetensiMahasiswaSeeder', '10'],
-                ['t_kompetensi_dosen', 'KompetensiDosenSeeder', '10'],
+                ['t_kompetensi_dosen_pembimbing', 'KompetensiDosenPembimbingSeeder', '10'],
                 ['t_kompetensi_lomba', 'KompetensiLombaSeeder', '10'],
                 ['t_mahasiswa_peran', 'MahasiswaPeranSeeder', '10'],
                 ['t_dosen_pembimbing_peran', 'DosenPembimbingPeranSeeder', '10'],

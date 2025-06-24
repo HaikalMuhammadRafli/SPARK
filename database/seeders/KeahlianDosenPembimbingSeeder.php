@@ -5,11 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class KeahlianDosenSeeder extends Seeder
+class KeahlianDosenPembimbingSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('t_keahlian_dosen')->insert([
+        DB::table('t_keahlian_dosen_pembimbing')->insert([
             // Dosen 1
             ['nip' => '198501012010121001', 'bidang_keahlian_id' => 1, 'created_at' => now(), 'updated_at' => now()],
             ['nip' => '198501012010121001', 'bidang_keahlian_id' => 2, 'created_at' => now(), 'updated_at' => now()],
