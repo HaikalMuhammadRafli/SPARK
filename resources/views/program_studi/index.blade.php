@@ -36,7 +36,7 @@
                     <td class="px-4 py-1">{{ $program_studi->program_studi_nama }}</td>
                     <td class="px-4 py-1 text-right">
                         <x-buttons.action route_prefix="admin.master.program-studi"
-                            id="{{ $program_studi->program_studi_id }}" />
+                            id="{{ $program_studi->program_studi_id }}" :showDetail="false"/>
                     </td>
                 </tr>
             @endforeach

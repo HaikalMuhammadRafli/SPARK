@@ -36,7 +36,7 @@
                     <td class="px-4 py-1">{{ $bidang_keahlian->bidang_keahlian_nama }}</td>
                     <td class="px-4 py-1">
                         <x-buttons.action route_prefix="admin.master.bidang-keahlian"
-                            id="{{ $bidang_keahlian->bidang_keahlian_id }}" />
+                            id="{{ $bidang_keahlian->bidang_keahlian_id }}" :showDetail="false"/>
                     </td>
                 </tr>
             @endforeach

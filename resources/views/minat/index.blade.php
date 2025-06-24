@@ -35,7 +35,7 @@
                     <td class="px-4 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
                     <td class="px-4 py-1">{{ $minat->minat_nama }}</td>
                     <td class="px-4 py-1 text-right">
-                        <x-buttons.action route_prefix="admin.master.minat" id="{{ $minat->minat_id }}" />
+                        <x-buttons.action route_prefix="admin.master.minat" id="{{ $minat->minat_id }}" :showDetail="false"/>
                     </td>
                 </tr>
             @endforeach

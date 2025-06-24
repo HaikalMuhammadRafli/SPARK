@@ -35,14 +35,14 @@ class PeriodeController extends Controller
             'data' => $periodes->map(function ($item, $index) {
                 $currentYear = date('Y');
                 $isActive = $currentYear >= $item->periode_tahun_awal && $currentYear <= $item->periode_tahun_akhir;
-                
+
                 return [
                     'no' => $index + 1,
                     'id' => $item->periode_id,
                     'nama' => $item->periode_nama,
                     'tahun_awal' => $item->periode_tahun_awal,
                     'tahun_akhir' => $item->periode_tahun_akhir,
-                    'status' => $isActive ? 
+                    'status' => $isActive ?
                         '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             <svg class="w-2 h-2 mr-1 fill-current" viewBox="0 0 8 8">
                                 <circle cx="4" cy="4" r="3"/>
@@ -57,7 +57,8 @@ class PeriodeController extends Controller
                         </span>',
                     'actions' => view('components.buttons.action', [
                         'route_prefix' => 'admin.master.periode',
-                        'id' => $item->periode_id
+                        'id' => $item->periode_id,
+                        'showDetail' => false,
                     ])->render()
                 ];
             })

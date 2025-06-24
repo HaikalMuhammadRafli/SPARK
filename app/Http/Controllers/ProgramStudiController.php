@@ -39,7 +39,8 @@ class ProgramStudiController extends Controller
                     'nama' => $item->program_studi_nama,
                     'actions' => view('components.buttons.action', [
                         'route_prefix' => 'admin.master.program-studi',
-                        'id' => $item->program_studi_id
+                        'id' => $item->program_studi_id,
+                        'showDetail' => false,
                     ])->render()
                 ];
             })

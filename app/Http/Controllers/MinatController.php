@@ -39,7 +39,8 @@ class MinatController extends Controller
                     'nama' => $item->minat_nama,
                     'actions' => view('components.buttons.action', [
                         'route_prefix' => 'admin.master.minat',
-                        'id' => $item->minat_id
+                        'id' => $item->minat_id,
+                        'showDetail' => false,
                     ])->render()
                 ];
             })

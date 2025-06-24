@@ -27,7 +27,7 @@ class BidangKeahlianController extends Controller
 
     public function data()
     {
-        $bidang_keahlians = BidangKeahlianModel::all(); 
+        $bidang_keahlians = BidangKeahlianModel::all();
 
         return response()->json([
             'status' => true,
@@ -38,7 +38,8 @@ class BidangKeahlianController extends Controller
                     'nama' => $item->bidang_keahlian_nama,
                     'actions' => view('components.buttons.action', [
                         'route_prefix' => 'admin.master.bidang-keahlian',
-                        'id' => $item->bidang_keahlian_id
+                        'id' => $item->bidang_keahlian_id,
+                        'showDetail' => false,
                     ])->render()
                 ];
             })
