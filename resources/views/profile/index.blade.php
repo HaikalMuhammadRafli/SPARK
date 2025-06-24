@@ -18,7 +18,7 @@
                     <p class="text-gray-500 text-sm mb-1">{{ auth()->user()->email }}</p>
                     <h1 class="text-xl font-semibold text-gray-900 mb-2">{{ auth()->user()->getCurrentData()->nama }}</h1>
                     <div class="flex items-center justify-center text-sm text-gray-500 mb-6">
-                        <span class="text-blue-500">{{ ucfirst(auth()->user()->role) }}</span>
+                        <span class="text-blue-500">{{ auth()->user()->role != 'dosen_pembimbing' ? ucfirst(auth()->user()->role) : 'Dosen Pembimbing' }}</span>
                     </div>
 
                     <!-- Action Buttons -->
