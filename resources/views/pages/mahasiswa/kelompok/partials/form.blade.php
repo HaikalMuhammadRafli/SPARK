@@ -190,9 +190,140 @@
         }),
     ) !!};
 
-    $(document).ready(function() {
-        console.log('DOM ready, initializing...');
+    window.addStudentToForm = function(mahasiswa) {
+        // Check if lomba is selected first
+        if (typeof lombaSelected !== 'undefined' && !lombaSelected) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Pilih lomba terlebih dahulu sebelum menambahkan mahasiswa!'
+            });
+            return;
+        }
 
+        // Check if we have reached maximum members
+        if (typeof currentRowCount !== 'undefined' && typeof maxMembers !== 'undefined' && currentRowCount >=
+            maxMembers) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Kelompok Penuh!',
+                html: `
+                    <div class="text-center">
+                        <i class="fa-solid fa-users-slash text-6xl text-red-500 mb-4"></i>
+                        <p class="text-lg font-semibold mb-2">Kapasitas kelompok sudah mencapai batas maksimal</p>
+                        <p class="text-gray-600">Maksimal <span class="font-bold text-red-600">${maxMembers} anggota</span> per kelompok</p>
+                        <p class="text-sm text-gray-500 mt-3">Silakan hapus anggota yang sudah ada atau pilih lomba dengan kapasitas yang lebih besar</p>
+                    </div>
+                `,
+                confirmButtonText: 'Mengerti',
+                confirmButtonColor: '#ef4444'
+            });
+            return;
+        }
+
+        // Check if student is already added
+        let isAlreadyAdded = false;
+        $('#memberTableBody tr').each(function() {
+            const existingNim = $(this).find('select[name^="mahasiswa"]').val();
+            if (existingNim === mahasiswa.nim) {
+                isAlreadyAdded = true;
+                return false;
+            }
+        });
+
+        if (isAlreadyAdded) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Sudah Ditambahkan',
+                html: `
+                    <div class="text-center">
+                        <i class="fa-solid fa-user-check text-5xl text-blue-500 mb-4"></i>
+                        <p class="text-lg font-semibold mb-2">${mahasiswa.nama}</p>
+                        <p class="text-gray-600">sudah ada dalam kelompok ini</p>
+                    </div>
+                `,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3b82f6'
+            });
+            return;
+        }
+
+        // Check if addNewRow function exists
+        if (typeof addNewRow !== 'function') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Fungsi tidak tersedia. Silakan refresh halaman.'
+            });
+            return;
+        }
+
+        try {
+            // Add new row first
+            addNewRow();
+
+            // Wait for the row to be properly added and rendered
+            setTimeout(() => {
+                const newestRow = $('#memberTableBody tr:last');
+                if (newestRow.length > 0) {
+                    setStudentInRow(newestRow, mahasiswa);
+                }
+            }, 200);
+
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan saat menambahkan mahasiswa.'
+            });
+        }
+    };
+
+    function setStudentInRow(row, mahasiswa) {
+        // Find the mahasiswa select element
+        const mahasiswaSelect = row.find('select[name^="mahasiswa"]');
+
+        if (mahasiswaSelect.length === 0) {
+            return;
+        }
+
+        // Set the value using multiple methods
+        mahasiswaSelect.val(mahasiswa.nim);
+
+        // Handle custom searchable select components
+        const selectContainer = mahasiswaSelect.closest('.relative, .select-container, fieldset');
+
+        if (selectContainer.length > 0) {
+            const selectedTextSpan = selectContainer.find('[data-selected-text], .selected-text');
+            const hiddenInput = selectContainer.find('input[type="hidden"], [data-hidden-select]');
+
+            if (selectedTextSpan.length > 0) {
+                selectedTextSpan.text(mahasiswa.nama);
+            }
+
+            if (hiddenInput.length > 0) {
+                hiddenInput.val(mahasiswa.nim);
+            }
+        }
+
+        // Trigger change events
+        mahasiswaSelect.trigger('change');
+
+        // Add visual feedback
+        row.addClass('bg-green-50 border-green-200');
+        setTimeout(() => {
+            row.removeClass('bg-green-50 border-green-200');
+        }, 2000);
+    }
+
+    window.switchToKelompokTab = function() {
+        const kelompokTab = $('button[data-tab="kelompok-form"]');
+        if (kelompokTab.length > 0) {
+            kelompokTab.click();
+        }
+    };
+
+    $(document).ready(function() {
         // Make sure the button exists before binding
         if ($('#addRowBtn').length === 0) {
             console.error('Add button not found!');
@@ -201,8 +332,6 @@
 
         $('#addRowBtn').off('click').on('click', function(e) {
             e.preventDefault();
-            console.log('Add button clicked, currentRowCount:', currentRowCount, 'maxMembers:',
-                maxMembers);
 
             if (!lombaSelected) {
                 Swal.fire({
@@ -234,7 +363,7 @@
 
         updateRemoveButtonStates();
         updateSubmitButtonState();
-        updateAddButtonState(); // Add this line
+        updateAddButtonState();
         updateRowNumbers();
     });
 
@@ -244,7 +373,7 @@
             $('#lombaNotice').show();
             lombaSelected = false;
             updateSubmitButtonState();
-            updateAddButtonState(); // Add this line
+            updateAddButtonState();
             return;
         }
 
@@ -490,20 +619,14 @@
                     success: function(response) {
                         if (response.status) {
                             resetForm();
-                            disposeModal('big-modal');
-                            disposeModal('small-modal');
+                            disposeModal();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',
                                 text: response.message
                             }).then(() => {
-                                disposeModal('big-modal');
-                                disposeModal('small-modal');
-                                if (response.reloadKelompokGrid) {
-                                    loadKelompokData();
-                                } else {
-                                    window.location.reload();
-                                }
+                                disposeModal();
+                                reloadDataTable();
                             });
                         } else {
                             $('.error-text, .invalid-feedback').text('');
@@ -553,8 +676,6 @@
     }
 
     function resetForm() {
-        console.log('Resetting form...');
-
         // Reset global variables
         rowIndex = 0;
         maxMembers = 0;

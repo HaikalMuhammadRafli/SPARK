@@ -103,7 +103,7 @@
             </div>
         </div>
 
-        <!-- Recommendation Table - Modified for full height without internal scrolling -->
+        <!-- Recommendation Table -->
         <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
             <div class="bg-gradient-to-r from-purple-600 to-purple-700 p-3">
                 <h4 class="text-sm font-bold text-white mb-0">
@@ -127,6 +127,9 @@
                             <th
                                 class="px-3 py-2 text-center font-semibold text-gray-700 uppercase tracking-wide w-20 text-xs">
                                 Skor</th>
+                            <th
+                                class="px-3 py-2 text-center font-semibold text-gray-700 uppercase tracking-wide w-24 text-xs">
+                                Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="spk-table-body" class="divide-y divide-gray-200">
@@ -141,6 +144,7 @@
 <script>
     $(document).ready(function() {
         let currentMethod = 'weighted';
+        let recommendationData = [];
 
         // Handle button clicks to set method
         $('button[data-method]').on('click', function(e) {
@@ -149,7 +153,33 @@
             $('#spk-form-element').submit();
         });
 
-        // Simple form submission
+        // Handle add student button
+        $(document).on('click', '.add-student-btn', function(e) {
+            e.preventDefault();
+
+            const nim = $(this).data('nim');
+
+            // Find student in recommendation data
+            const student = recommendationData.find(item => item.mahasiswa?.nim == nim);
+
+            if (student) {
+                addStudentToKelompok(student);
+            } else {
+                // Fallback: extract name from the row
+                const buttonRow = $(this).closest('tr');
+                const nama = buttonRow.find('td:nth-child(2)').text().trim() || 'Student ' + nim;
+
+                const fallbackStudent = {
+                    mahasiswa: {
+                        nim: nim,
+                        nama: nama
+                    }
+                };
+                addStudentToKelompok(fallbackStudent);
+            }
+        });
+
+        // Form submission
         $("#spk-form-element").on('submit', function(e) {
             e.preventDefault();
 
@@ -176,8 +206,6 @@
                 processData: false,
                 contentType: false,
                 success: function(response) {
-                    console.log('Response received:', response);
-
                     if (response.status) {
                         Swal.fire({
                             icon: 'success',
@@ -189,7 +217,6 @@
                         displaySPKResults(response.data, response.matrices);
                     } else {
                         Swal.close();
-
                         if (response.message) {
                             Swal.fire({
                                 icon: 'error',
@@ -200,15 +227,11 @@
                     }
                 },
                 error: function(xhr) {
-                    console.error('AJAX Error:', xhr);
-
                     let errorMessage = 'Terjadi kesalahan saat memproses SPK';
-
                     if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON
                         .message) {
                         errorMessage = xhr.responseJSON.message;
                     }
-
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
@@ -218,12 +241,36 @@
             });
         });
 
+        function addStudentToKelompok(student) {
+            // Check if we're in the modal context and can access the form functions
+            if (typeof window.addStudentToForm === 'function') {
+                window.addStudentToForm(student.mahasiswa);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: `${student.mahasiswa?.nama} telah ditambahkan ke kelompok`,
+                    timer: 2000
+                });
+
+                // Switch to kelompok form tab
+                if (typeof window.switchToKelompokTab === 'function') {
+                    window.switchToKelompokTab();
+                }
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Mahasiswa Terpilih',
+                    text: `Silakan tambahkan mahasiswa berikut ke kelompok:\n\n• ${student.mahasiswa?.nama} (${student.mahasiswa?.nim})`,
+                    width: '400px'
+                });
+            }
+        }
+
         function getTop5Scores(data) {
-            // Get all unique scores, sort them in descending order, and take top 5
             const uniqueScores = [...new Set(data.map(item => item.nilai_preferensi || 0))]
                 .sort((a, b) => b - a)
                 .slice(0, 5);
-
             return uniqueScores;
         }
 
@@ -239,7 +286,8 @@
         }
 
         function displaySPKResults(data, matrices) {
-            console.log('Displaying results with data:', data);
+            // Store the recommendation data globally
+            recommendationData = data;
 
             const resultsSection = $('#spk-results');
             const quickSummary = $('#quick-summary');
@@ -264,30 +312,34 @@
                 // Update info text
                 topPerformersInfo.text(`(${topPerformersCount} mahasiswa dengan skor tertinggi)`);
 
-                // Generate quick summary
+                // Generate quick summary with buttons
                 const top3 = data.slice(0, 3);
                 top3.forEach((item, index) => {
                     const medals = [{
                             color: 'from-yellow-400 to-yellow-600',
                             icon: 'fa-trophy',
                             textColor: 'text-gray-800',
-                            bgIcon: 'bg-yellow-500'
+                            bgIcon: 'bg-yellow-500',
+                            buttonColor: 'bg-yellow-600 hover:bg-yellow-700'
                         },
                         {
                             color: 'from-gray-400 to-gray-600',
                             icon: 'fa-medal',
                             textColor: 'text-gray-800',
-                            bgIcon: 'bg-gray-500'
+                            bgIcon: 'bg-gray-500',
+                            buttonColor: 'bg-gray-600 hover:bg-gray-700'
                         },
                         {
                             color: 'from-orange-400 to-orange-600',
                             icon: 'fa-award',
                             textColor: 'text-gray-800',
-                            bgIcon: 'bg-orange-500'
+                            bgIcon: 'bg-orange-500',
+                            buttonColor: 'bg-orange-600 hover:bg-orange-700'
                         }
                     ];
 
                     const medal = medals[index];
+                    const nim = item.mahasiswa?.nim || '';
                     const summaryCard = `
                     <div class="bg-gradient-to-br ${medal.color} rounded-lg p-4 text-center shadow-lg transform hover:scale-105 transition-all duration-300">
                         <div class="flex items-center justify-center mb-2">
@@ -299,22 +351,26 @@
                             <h3 class="text-sm font-bold ${medal.textColor} mb-1">Peringkat ${index + 1}</h3>
                             <h5 class="font-bold ${medal.textColor} text-base mb-1">${item.mahasiswa?.nama || 'N/A'}</h5>
                             <p class="text-sm ${medal.textColor} mb-2">${item.mahasiswa?.nim || 'N/A'}</p>
-                            <div class="bg-gray-100 rounded-md p-2">
+                            <div class="bg-gray-100 rounded-md p-2 mb-3">
                                 <p class="text-xs font-semibold ${medal.textColor}">Skor</p>
                                 <p class="text-lg font-bold ${medal.textColor}">${(item.nilai_preferensi || 0).toFixed(4)}</p>
                             </div>
+                            <button type="button" class="add-student-btn w-full ${medal.buttonColor} text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 shadow-sm" data-nim="${nim}" title="Masukkan ke Kelompok">
+                                <i class="fa-solid fa-plus me-1"></i>Masukkan
+                            </button>
                         </div>
                     </div>
                 `;
                     quickSummary.append(summaryCard);
                 });
 
-                // Display recommendations with unified highlighting
+                // Display recommendations with action buttons
                 data.forEach((item, index) => {
                     const score = item.nilai_preferensi || 0;
                     const isHighlighted = isTopPerformer(score, top5Scores);
+                    const nim = item.mahasiswa?.nim || '';
+                    const nama = item.mahasiswa?.nama || 'N/A';
 
-                    // Single color highlight for top performers
                     const rowClass = isHighlighted ?
                         'bg-gradient-to-r from-blue-50 to-indigo-100 border-l-4 border-blue-500 font-semibold' :
                         'bg-white hover:bg-gray-50';
@@ -329,12 +385,17 @@
                                 <span class="font-bold text-base ${isHighlighted ? 'text-blue-800' : 'text-gray-600'}">${index + 1}</span>
                             </div>
                         </td>
-                        <td class="px-3 py-3 text-sm ${isHighlighted ? 'text-blue-900 font-semibold' : 'text-gray-800'}">${item.mahasiswa?.nama || 'N/A'}</td>
-                        <td class="px-3 py-3 font-mono text-sm ${isHighlighted ? 'text-blue-800' : 'text-gray-700'}">${item.mahasiswa?.nim || 'N/A'}</td>
+                        <td class="px-3 py-3 text-sm ${isHighlighted ? 'text-blue-900 font-semibold' : 'text-gray-800'}">${nama}</td>
+                        <td class="px-3 py-3 font-mono text-sm ${isHighlighted ? 'text-blue-800' : 'text-gray-700'}">${nim}</td>
                         <td class="px-3 py-3 text-center">
-                            <span class="inline-block ${isHighlighted ? 'bg-gradient-to-r from-blue-600 to-indigo-700' : 'bg-gradient-to-r from-gray-500 to-gray-600'} text-white px-2 py-1 rounded-full text-xs font-bold font-mono">
+                            <span class="inline-block ${isHighlighted ? 'bg-gradient-to-r from-blue-600 to-indigo-700' : 'bg-gradient-to-r from-gray-500 to-gray-600'} text-white px-2 py-1 rounded-full text-xs font-medium">
                                 ${score.toFixed(4)}
                             </span>
+                        </td>
+                        <td class="px-3 py-3 text-center">
+                            <button type="button" class="add-student-btn bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors duration-200" data-nim="${nim}" title="Masukkan ke Kelompok">
+                                Masukkan
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -349,7 +410,7 @@
                 `);
                 spkTableBody.append(`
                     <tr>
-                        <td colspan="4" class="px-3 py-4 text-center text-gray-500 text-sm">
+                        <td colspan="5" class="px-3 py-4 text-center text-gray-500 text-sm">
                             Tidak ada data rekomendasi untuk ditampilkan
                         </td>
                     </tr>

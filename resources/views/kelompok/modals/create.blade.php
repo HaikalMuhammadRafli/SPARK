@@ -58,14 +58,9 @@
         const tabButtons = document.querySelectorAll('.tab-button');
         const tabPanes = document.querySelectorAll('.tab-pane');
 
-        console.log('Tab buttons found:', tabButtons.length);
-        console.log('Tab panes found:', tabPanes.length);
-
         tabButtons.forEach((button, index) => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Tab clicked:', this.getAttribute('data-tab'));
-
                 const targetTab = this.getAttribute('data-tab');
 
                 // Remove active classes from all buttons
@@ -91,9 +86,6 @@
                 if (targetPane) {
                     targetPane.classList.remove('hidden');
                     targetPane.classList.add('block', 'active');
-                    console.log('Switched to tab:', targetTab);
-                } else {
-                    console.error('Target pane not found:', targetTab);
                 }
             });
         });
@@ -105,8 +97,4 @@
     } else {
         initializeTabs();
     }
-
-    // Also initialize when modal is shown (if using a modal library)
-    document.addEventListener('shown.bs.modal', initializeTabs); // Bootstrap
-    // Or for other modal libraries, use their respective events
 </script>
