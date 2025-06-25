@@ -1,143 +1,42 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SPARK
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## TEAM MEMBER
+| No | Team Member | NIM | GitHub |
+|:--:|:------------|:---|:-------|
+| 1️⃣ | **Haikal Muhammad Rafli** |2341720008 | [![GitHub](https://img.shields.io/badge/HaikalMuhammadRafli-181717?style=flat&logo=github)](https://github.com/HaikalMuhammadRafli) |
+| 2️⃣ | **Dina Rahmawati** |2341720050 | [![GitHub](https://img.shields.io/badge/null-181717?style=flat&logo=github)](null) |
+| 3️⃣ | **Fawwaz Alifio Farsa** |2341720128 | [![GitHub](https://img.shields.io/badge/null-181717?style=flat&logo=github)](null) |
+| 4️⃣ | **Kevin Adika Saputra** |2341720017 | [![GitHub](https://img.shields.io/badge/null-181717?style=flat&logo=github)](null) |
+| 5️⃣ | **Ghaisan Rafa Pradipta** |2341720213 | [![GitHub](https://img.shields.io/badge/null-181717?style=flat&logo=github)](null) |
 
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
--   **[Vehikl](https://vehikl.com/)**
--   **[Tighten Co.](https://tighten.co)**
--   **[WebReinvent](https://webreinvent.com/)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
--   **[Cyber-Duck](https://cyber-duck.co.uk)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Jump24](https://jump24.co.uk)**
--   **[Redberry](https://redberry.international/laravel/)**
--   **[Active Logic](https://activelogic.com)**
--   **[byte5](https://byte5.de)**
--   **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## ✅ Task Tracking
-
-| Task                                                | Status     | Note                                       |
-| --------------------------------------------------- | ---------- | ------------------------------------------ |
-| Tampilan tabel prestasi dan aksi Edit/Hapus (admin) | ✅ Selesai | Ditampilkan di halaman `Kelola Prestasi`   |
-| Ekspor data prestasi ke PDF dan Excel (admin)       | ✅ selesai | Implementasi laporan masih berjalan        |
-| Mahasiswa: Tambah data prestasi (Create)            | ✅ selesai | Mahasiswa bisa input sendiri               |
-| Mahasiswa: Lihat dan analisis prestasi (Read)       | ✅ selesai | Tampilan laporan belum sepenuhnya jadi     |
-| Mahasiswa: Edit dan Hapus prestasi milik sendiri    | ✅ Selesai | Fitur CRUD dasar sudah tersedia            |
-| Bug fixing dan validasi form input prestasi         | 🔧 Ongoing | Fokus pada UX dan validasi data            |
-| Visualisasi laporan prestasi                        | 🔧 Ongoing | Fokus pada Chart dan Pengambilan data link |
-
----
-
-## Authentication
-
--   **Authentication**: All routes require authentication using **Sanctum** tokens.
--   **Authorization**: Some routes are restricted based on the user's role:
-    -   **Mahasiswa**: Requires the `authorize:mahasiswa` middleware.
-    -   **Admin**: Requires the `authorize:admin` middleware.
-
-### How to get your Authentication Token
-
-1. **Login**:
-   To access protected routes, you need to be logged in first. You can obtain a token by logging in via the **POST /login** endpoint.
-    ```bash
-    curl -X POST http://127.0.0.1:8000/api/login \
-    -H "Content-Type: application/json" \
-    -d '{"email": "your-email@example.com", "password": "your-password"}'
-    ```
-2. **Response**:
-   After successful login, you will receive an authentication token in the response:
-
-    ```json
-    {
-        "access_token": "your-access-token-here"
-    }
-    ```
-
-3. **Using the Token**:
-   Include the token in the `Authorization` header as `Bearer <your-access-token-here>` for all protected API requests.
-
----
-
-## Example Usage with Postman
-
-Follow these steps to test the API with **Postman**:
-
-1. **Open Postman**.
-2. **Set the Request Type** to `GET`, `POST`, `PUT`, or `DELETE` as required for the route you're testing.
-3. **Set the URL** to the API endpoint (e.g., `http://127.0.0.1:8000/api/prestasi`).
-4. **Add Authorization**:
-    - Go to the "Authorization" tab in Postman.
-    - Select **Bearer Token**.
-    - Paste your token into the "Token" field.
-5. **Add Headers**:
-    - Set `Content-Type: application/json` for the body, if you're sending data.
-6. **Send the Request**.
-
-### Example POST Request to Add a New Prestasi
-
--   **Method**: `POST`
--   **URL**: `http://127.0.0.1:8000/api/prestasi`
--   **Body**: Raw JSON
-
-```json
-{
-    "prestasi_juara": "Juara 1",
-    "prestasi_surat_tugas_url": "http://example.com/surat_tugas",
-    "prestasi_poster_url": "http://example.com/poster",
-    "prestasi_foto_juara_url": "http://example.com/foto_juara",
-    "prestasi_proposal_url": "http://example.com/proposal",
-    "prestasi_sertifikat_url": "http://example.com/sertifikat",
-    "kelompok_id": 1
-}
-```
+## TASK DONE
+| No | AUTHOR | TASK | STATUS | REVISION STATUS | NOTE |
+|:--:| :----- | :--- | :----: | :-------------: | :--- |
+| 1  | Haikal | Layout dashboard admin, mahasiswa, dosen pembimbing | DONE | NO REVISION | - |
+| 2  | Haikal | Login | DONE | NO REVISION | - |
+| 3  | Haikal | Register | DONE | NO REVISION | - |
+| 4  | Haikal | Rekomendasi Peserta Lomba (SPK) | DONE | DONE | Menambahkan button masukkan ke kelompok dari rekomendasi mahasiswa |
+| 5  | Haikal | Manajemen akun dan profil | DONE | NO REVISION | - |
+| 6  | Haikal | Manajemen kriteria | DONE | NO REVISION | - |
+| 7  | Haikal | Rekrutmen kelompok lomba | DONE | NO REVISION | - |
+| 8  | Haikal | Manajemen bidang keahlian | DONE | NO REVISION | - |
+| 9  | Haikal | Verifikasi prestasi mahasiswa | DONE | NO REVISION | - |
+| 10 | Haikal | Manajemen kelompok | DONE | NO REVISION | - |
+| 11 | Haikal | Manajemen kelompok mahasiswa | DONE | NO REVISION | - |
+| 12 | Haikal | Manajemen kelompok mahasiswa | DONE | NO REVISION | - |
+| 13 | Haikal | Rekrutmen Peserta Kelompok | DONE | NO REVISION | - |
+| 14 | Dina | Manajemen periode | DONE | NO REVISION | - |
+| 15 | Dina | Manajemen program studi | DONE | NO REVISION | - |
+| 16 | Dina | Manajemen minat | DONE | NO REVISION | - |
+| 17 | Dina | Melihat daftar lomba dan menambahkan data lomba | DONE | NO REVISION | - |
+| 18 | Dina | Manajemen data lomba | DONE | NO REVISION | - |
+| 19 | Dina | Verifikasi data lomba | DONE | NO REVISION | - |
+| 20 | Fawwaz | Manajemen mahasiswa bimbingan | DONE | IN PROGRESS | Dosen seharusnya tidak bisa mengedit kelompok yang dibimbing |
+| 21 | Fawwaz | Manajemen kompetensi | DONE | NO REVISION | - |
+| 22 | Fawwaz | Manajemen mahasiswa | DONE | NO REVISION | - |
+| 23 | Fawwaz | Manajemen dosen pembimbing | DONE | NO REVISION | - |
+| 24 | Fawwaz | Manajemen admin | DONE | NO REVISION | - |
+| 25 | Kevin | Laporan and analisis data prestasi | **MAJOR BUG** | NO REVISION | Chart tidak berfungsi |
+| 26 | Kevin | Pencatatan prestasi mahasiswa | **MAJOR BUG** | NO REVISION | Hanya bisa create prestasi (Kurang update ketika ditolak dan hapus ketika pending) |
+| 27 | Kevin | Manajemen prestasi mahasiswa | **NOT DONE** | NO REVISION | Hanya bisa delete (kurang create dan update) |
+| 28 | Kevin | Landing page | DONE | NO REVISION | Tidak sesuai dan belum 100% selesai |
